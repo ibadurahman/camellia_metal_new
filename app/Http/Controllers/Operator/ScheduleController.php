@@ -148,6 +148,10 @@ class ScheduleController extends Controller
             })
             ->addColumn('edited_by',function(Workorder $model){
                 $user = User::where('id',$model->edited_by)->first();
+                if(!$user)
+                {
+                    return '';
+                }
                 return $user->name;
             })
             ->addColumn('processed_by',function(Workorder $model){
