@@ -190,6 +190,10 @@
                                                             @if($i != $prod->bundle_num)
                                                                 @continue
                                                             @endif
+                                                            @if($prod->bundle_judgement == '0')
+                                                                bg-danger
+                                                                @continue
+                                                            @endif
                                                             bg-primary
                                                         @endforeach
                                                         "

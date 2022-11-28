@@ -190,6 +190,10 @@
                                                             @if($i != $prod->bundle_num)
                                                                 @continue
                                                             @endif
+                                                            @if($prod->bundle_judgement == '0')
+                                                                bg-danger
+                                                                @continue
+                                                            @endif
                                                             bg-primary
                                                         @endforeach
                                                         "
@@ -210,6 +214,10 @@
                                                     <a class="btn btn-transparent smelting-number 
                                                         @foreach ($productions as $prod)
                                                             @if($i != $prod->bundle_num)
+                                                                @continue
+                                                            @endif
+                                                            @if($prod->bundle_judgement == '0')
+                                                                bg-danger
                                                                 @continue
                                                             @endif
                                                             bg-primary

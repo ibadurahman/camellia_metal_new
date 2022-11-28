@@ -66,6 +66,10 @@ class SpvProductionController extends Controller
             })
             ->addColumn('edited_by',function(Workorder $model){
                 $user = User::where('id',$model->edited_by)->first();
+                if(!$user)
+                {
+                    return '';
+                }
                 return $user->name;
             })
             ->addColumn('updated_at',function(Workorder $model){
@@ -78,6 +82,10 @@ class SpvProductionController extends Controller
             })
             ->addColumn('processed_by',function(Workorder $model){
                 $user = User::where('id',$model->processed_by)->first();
+                if(!$user)
+                {
+                    return '';
+                }
                 return $user->name;
             })
             ->addColumn('process_start',function(Workorder $model){
