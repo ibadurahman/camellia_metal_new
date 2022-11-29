@@ -55,7 +55,7 @@ Route::middleware(['verified'])->group(function(){
     Route::post('/workorder/getDowntime',[WorkorderController::class,'getDowntime'])->name('workorder.getDowntime');
     Route::post('/workorder/getOee',[WorkorderController::class,'getOee'])->name('workorder.getOee');
     Route::get('/workorder/speedChart',[WorkorderController::class,'speedChart'])->name('workorder.speedChart');
-    Route::get('/workorder/{workorder}/export', [WorkorderController::class, 'export'])->name('workorder.export');
+    // Route::get('/workorder/{workorder}/export', [WorkorderController::class, 'export'])->name('workorder.export');
 
     // Route::get('/workorder/dataonprocess',[DataController::class,'workordersOnProcess'])->name('workorder.dataonprocess');
     Route::get('/workorder/dataclosed',[DataController::class,'workordersClosed'])->name('workorder.dataclosed');

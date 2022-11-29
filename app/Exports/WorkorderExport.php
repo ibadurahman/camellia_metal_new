@@ -8,8 +8,12 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 use App\Http\Resources\WorkorderReport\WorkorderReportCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class WorkorderExport implements FromCollection, WithCustomStartCell, WithHeadings
+class WorkorderExport implements WithMultipleSheets
 {
     protected $workorder;
 
@@ -18,25 +22,16 @@ class WorkorderExport implements FromCollection, WithCustomStartCell, WithHeadin
         $this->workorder = $workorder;
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    public function sheets(): array
     {
-        $workorderData = Workorder::where('id',$this->workorder->id)->get();
-        return new WorkorderReportCollection($workorderData);
-    }
-
-    public function startCell(): string
-    {
-        return 'B5';
-    }
-
-    public function headings(): array
-    {
-        return [
-            'Workorder',
-            'Machine',
+        $sheets = [
+            'Workorder'         => new WorkorderDataSheet($this->workorder),
+            'Production'        => new ProductionDataSheet($this->workorder),
+            'Downtime Record'   => new DowntimeDataSheet($this->workorder),
+            // 'Speed Record'      => new SpeedDataSheet($this->workorder),
         ];
+
+        return $sheets;
+        
     }
 }

@@ -189,6 +189,10 @@
                                                             @if($i != $prod->bundle_num)
                                                                 @continue
                                                             @endif
+                                                            @if($prod->pcs_per_bundle == 0)
+                                                                bg-secondary
+                                                                @continue
+                                                            @endif
                                                             @if($prod->bundle_judgement == '0')
                                                                 bg-danger
                                                                 @continue
@@ -213,6 +217,10 @@
                                                     <a class="btn btn-transparent smelting-number 
                                                         @foreach ($productions as $prod)
                                                             @if($i != $prod->bundle_num)
+                                                                @continue
+                                                            @endif
+                                                            @if($prod->pcs_per_bundle == 0)
+                                                                bg-secondary
                                                                 @continue
                                                             @endif
                                                             @if($prod->bundle_judgement == '0')
@@ -1233,7 +1241,7 @@
                                 '<span class="description-text float-left">Kelurusan Aktual: '+response['kelurusan_aktual']+'</span><br>' +
                                 '<span class="description-text float-left">Panjang Aktual: '+response['panjang_aktual']+' mm</span><br>' +
                                 '<hr>' +
-                                '<span class="description-text float-left">Berat FG: '+response['berat_fg']+' mm</span><br>' +
+                                '<span class="description-text float-left">Berat FG: '+response['berat_fg']+' Kg</span><br>' +
                                 '<span class="description-text float-left">QTY (Pcs): '+response['pcs_per_bundle']+' Pcs</span><br>' +
                             '</div>'+
                         '</div>'+
