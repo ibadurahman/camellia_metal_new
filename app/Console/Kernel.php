@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,9 +16,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('downtime:close')->dailyAt('07:00');
-        $schedule->command('downtime:close')->dailyAt('16:00');
-        $schedule->command('downtime:close')->dailyAt('00:00');
+        if (Carbon::now()->format('G') == '7') {
+            $schedule->command('downtime:close')->dailyAt('07:00');
+        }
+        if (Carbon::now()->format('G') == '16') {
+            $schedule->command('downtime:close')->dailyAt('16:00');
+        }
+        if (Carbon::now()->format('G') == '0') {
+            $schedule->command('downtime:close')->dailyAt('00:00');
+        }
     }
 
     /**

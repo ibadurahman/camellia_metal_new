@@ -13,6 +13,7 @@ use App\Models\Workorder;
 use App\Models\Production;
 use Illuminate\Http\Request;
 use App\Models\DowntimeRemark;
+use Illuminate\Support\Carbon;
 use App\Http\Requests\OeeRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
