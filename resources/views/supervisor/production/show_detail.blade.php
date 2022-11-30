@@ -80,6 +80,34 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-9">
+                                                    <input oninput="updateWasteDtMax(this)" type="range" id="wasteDt-slider" min="" max="999000" value="5000" style="width:100%">
+                                                    <label for="">scale</label>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <input onchange="updateWasteDtMax(this)" type="number" id="wasteDt-input" class="form-control" value="5000">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-9">
+                                                    <input oninput="updateManagementDtMax(this)" type="range" id="managementDt-slider" min="" max="999000" value="5000" style="width:100%">
+                                                    <label for="">scale</label>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input onchange="updateManagementDtMax(this)" type="number" id="managementDt-input" class="form-control" value="5000">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="card-footer">
                                     <div class="row">
@@ -621,6 +649,26 @@
         });
     }
 
+    var wasteChart = new Chart($('#wasteDtChart').get(0).getContext('2d'),{});
+    var managementChart = new Chart($('#managementDtChart').get(0).getContext('2d'),{});
+
+    function updateWasteDtMax(range)
+    {
+        $('#wasteDt-input').val(range.value);
+        $('#wasteDt-slider').val(range.value);
+        const num = range.value
+        wasteChart.config.options.scales.yAxes[0].ticks.max = parseInt(num);
+        wasteChart.update();
+    }
+    function updateManagementDtMax(range)
+    {
+        $('#managementDt-input').val(range.value);
+        $('#managementDt-slider').val(range.value);
+        const num = range.value
+        managementChart.config.options.scales.yAxes[0].ticks.max = parseInt(num);
+        managementChart.update();
+    }
+
     function updateDowntimeChart()
     {
         //Waste Downtime
@@ -663,6 +711,8 @@
                     uniqueDataList.push(dataList[i]);
                 }
             }
+
+            // Bar chart Instance
             var areaChartData = {
                 labels  : uniqueLabelList,
                 datasets: [
@@ -682,43 +732,43 @@
             }
             var areaChartOptions = {
                 maintainAspectRatio : false,
-                    responsive : true,
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        xAxes: [{
-                            gridLines : {
-                                display : false,
-                            },
-                            ticks: {
-                                beginAtZero: true,  // minimum value will be 0.
-                            }
-                        }],
-                        yAxes: [{
-                            gridLines : {
-                                display : true,
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Seconds'
-                            },
-                            ticks: {
-                                beginAtZero: true,   // minimum value will be 0.
-                                steps: 1,
-                                stepValue: 1,
-                            }
-                        }]
-                    }
+                responsive : true,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines : {
+                            display : false,
+                        },
+                        ticks: {
+                            beginAtZero: true,  // minimum value will be 0.
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines : {
+                            display : true,
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Seconds'
+                        },
+                        ticks: {
+                            max:5000,
+                            min:0,
+                            stepSize:0,
+                            beginAtZero: true,   // minimum value will be 0.
+                        }
+                    }]
+                }
             }
             var barChartCanvas = $('#wasteDtChart').get(0).getContext('2d');
-            var barChartData = $.extend(true, {}, areaChartData);
-            var barChartOptions = areaChartOptions;
-            new Chart(barChartCanvas, {
+            const config = {
                 type: 'bar',
-                data: barChartData,
-                options: barChartOptions
-            })
+                data: $.extend(true, {}, areaChartData),
+                options: areaChartOptions
+            }
+            wasteChart = new Chart(barChartCanvas, config);
           },
         });
 
@@ -799,9 +849,10 @@
                                 display : true,
                             },
                             ticks: {
+                                max:5000,
+                                min:0,
+                                stepSize:0,
                                 beginAtZero: true,   // minimum value will be 0.
-                                steps: 1,
-                                stepValue: 1,
                             },
                             scaleLabel: {
                                 display: true,
@@ -811,16 +862,13 @@
                     }
             }
             var barChartCanvas = $('#managementDtChart').get(0).getContext('2d')
-            var barChartData = $.extend(true, {}, areaChartData)
-            var barChartOptions = areaChartOptions;
-            new Chart(barChartCanvas, {
+            const config = {
                 type: 'bar',
-                data: barChartData,
-                options: barChartOptions
-            })
-
+                data: $.extend(true, {}, areaChartData),
+                options: areaChartOptions
+            }
+            managementChart = new Chart(barChartCanvas, config)
           },
-          
         });
     }
 
