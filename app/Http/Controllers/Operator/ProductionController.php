@@ -73,6 +73,7 @@ class ProductionController extends Controller
             }
         }
 
+        $workorder->timestamps = false;
         $workorder->update([
             'status_wo'=>'on check',
             'process_end'=>date('Y-m-d H:i:s'),
@@ -120,7 +121,7 @@ class ProductionController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(-'.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -385,9 +386,7 @@ class ProductionController extends Controller
         $totalDowntime = 0;
         $wasteDowntime = 0;
         $managementDowntime = 0;
-        $downtimes = Downtime::where('status','stop')
-                        ->where('workorder_id',$workorder->id)
-                        ->get();
+        $downtimes = Downtime::where('workorder_id',$workorder->id)->where('status','stop')->get();
         $downtimeSummary = Downtime::where('status','run')
                                 ->where('workorder_id',$workorder->id)
                                 ->get();

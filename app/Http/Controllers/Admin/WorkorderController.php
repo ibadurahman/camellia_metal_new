@@ -231,6 +231,7 @@ class WorkorderController extends Controller
             $woOrderNum = null;
         }
 
+        $workorder->timestamps = false;
         $workorder->update([
             'status_wo'     => $request->state,
             'wo_order_num'  => $woOrderNum

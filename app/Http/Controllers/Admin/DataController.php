@@ -69,7 +69,7 @@ class DataController extends Controller
                     return $combines;
                 })
                 ->addColumn('tolerance_combine',function(Workorder $model){
-                    $combines = '('.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+                    $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                     return $combines;
                 })
                 ->addColumn('color',function(Workorder $model){
@@ -145,7 +145,7 @@ class DataController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '('.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -221,7 +221,7 @@ class DataController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(-'.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -284,7 +284,7 @@ class DataController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(-'.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){

@@ -73,7 +73,7 @@ class ScheduleController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '('.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -129,7 +129,7 @@ class ScheduleController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(-'.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -178,6 +178,7 @@ class ScheduleController extends Controller
             return redirect(route('schedule.index'));
         }   
 
+        $id->timestamps = false;
         $id->update([
             'status_wo'=>'on process',
             'wo_order_num'=>null,
@@ -202,8 +203,8 @@ class ScheduleController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance',function(Workorder $model){
-                $combines = $model->tolerance_minus;
-                return round($combines,2);
+                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
+                return $combines;
             })
             ->addColumn('created_by',function(Workorder $model){
                 $user = User::where('id',$model->created_by)->first();

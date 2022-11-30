@@ -47,7 +47,7 @@ class SpvProductionController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(-'.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -144,6 +144,7 @@ class SpvProductionController extends Controller
             }
         }
 
+        $workorder->timestamps = false;
         $workorder->update([
             'status_wo'=>'closed',
             'process_end'=>date('Y-m-d H:i:s'),
@@ -272,16 +273,16 @@ class SpvProductionController extends Controller
         // Daily Report
         //
 
-            DailyReport::create([
-                'workorder_id'      => $workorder->id,
-                'total_runtime'     => $plannedTimeMinutes,
-                'total_downtime'    => $waste_downtime_min,
-                'total_pcs'         => $total_bad_product + $total_good_product,
-                'total_pcs_good'    => $total_good_product,
-                'total_pcs_bad'     => $total_bad_product,
-                'total_weight_fg'   => $total_weight,
-                'total_weight_bb'   => $workorder->bb_qty_pcs
-            ]);
+        DailyReport::create([
+            'workorder_id'      => $workorder->id,
+            'total_runtime'     => $plannedTimeMinutes,
+            'total_downtime'    => $waste_downtime_min,
+            'total_pcs'         => $total_bad_product + $total_good_product,
+            'total_pcs_good'    => $total_good_product,
+            'total_pcs_bad'     => $total_bad_product,
+            'total_weight_fg'   => $total_weight,
+            'total_weight_bb'   => $workorder->bb_qty_pcs
+        ]);
 
         return redirect(route('spvproduction.index'));
     }
@@ -458,9 +459,7 @@ class SpvProductionController extends Controller
         $totalDowntime = 0;
         $wasteDowntime = 0;
         $managementDowntime = 0;
-        $downtimes = Downtime::where('status','stop')
-                        ->where('workorder_id',$workorder->id)
-                        ->get();
+        $downtimes = Downtime::where('workorder_id',$workorder->id)->where('status','stop')->get();
         $downtimeSummary = Downtime::where('status','run')
                                 ->where('workorder_id',$workorder->id)
                                 ->get();

@@ -67,8 +67,8 @@ class SpvScheduleController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance',function(Workorder $model){
-                $combines = $model->tolerance_minus;
-                return round($combines,2);
+                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
+                return $combines;
             })
             // ->addColumn('status_prod',function(Workorder $model){
             //     $combines = $model->status_prod;
@@ -146,7 +146,7 @@ class SpvScheduleController extends Controller
             //     return 'Open';
             // })
             ->addColumn('tolerance',function(Workorder $model){
-                $combines = '-' . $model->tolerance_minus;
+                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('user',function(Workorder $model){

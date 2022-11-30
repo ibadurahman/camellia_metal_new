@@ -374,7 +374,7 @@ class WorkorderDataSheet implements ShouldAutoSize, WithTitle, WithEvents, WithD
                 $event->sheet->setCellValue('E25', 'size:');
                 $event->sheet->setCellValue('F25', $this->workorder->fg_size_1 . " mm X " . $this->workorder->fg_size_2 . " mm");
                 $event->sheet->setCellValue('E26', 'Tolerance:');
-                $event->sheet->setCellValue('F26', '('. $this->workorder->tolerance_minus . " mm , +" . $this->workorder->tolerance_plus . " mm)");
+                $event->sheet->setCellValue('F26', '(+'. $this->workorder->tolerance_plus . " mm , " . $this->workorder->tolerance_minus . " mm)");
                 $event->sheet->setCellValue('E27', 'Reduction Rate:');
                 $event->sheet->setCellValue('F27', $this->workorder->fg_reduction_rate. " %");
                 $event->sheet->setCellValue('E28', 'Shape:');

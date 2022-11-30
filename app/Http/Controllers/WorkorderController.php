@@ -48,7 +48,7 @@ class WorkorderController extends Controller
 
     public function ajaxRequestAll(Request $request)
     {
-        $workorder = Workorder::query();
+        $workorder = Workorder::query()->orderBy('created_at','DESC');
         
         return datatables()->of($workorder)
                 ->filter(function($query) use ($request){
@@ -222,9 +222,7 @@ class WorkorderController extends Controller
         $totalDowntime = 0;
         $wasteDowntime = 0;
         $managementDowntime = 0;
-        $downtimes = Downtime::where('status','stop')
-                        ->where('workorder_id',$workorder->id)
-                        ->get();
+        $downtimes = Downtime::where('workorder_id',$workorder->id)->where('status','stop')->get();
         $downtimeSummary = Downtime::where('status','run')
                                 ->where('workorder_id',$workorder->id)
                                 ->get();

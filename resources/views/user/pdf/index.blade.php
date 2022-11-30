@@ -44,7 +44,7 @@
                                     <tr>
                                         <td style="font-size:10px;"><b>Tolerance (mm)</b></td>
                                         <td>:</td>
-                                        <td style="border:1px solid black;padding-left:10px;font-size:12px"><b>({{$data->tolerance_minus}} , {{$data->tolerance_plus}} )</b></td>
+                                        <td style="border:1px solid black;padding-left:10px;font-size:12px"><b>(+{{$data->tolerance_plus}}, {{$data->tolerance_minus}})</b></td>
                                     </tr>
                                     <tr>
                                         <td style="font-size:10px"><b>Length (mm)</b></td>

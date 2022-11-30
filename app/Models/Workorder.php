@@ -14,6 +14,7 @@ class Workorder extends Model
      *
      * @var array<int, string>
      */
+    public $timestamps = true;
     protected $fillable = [
         'wo_number',
         'bb_supplier',

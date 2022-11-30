@@ -15,9 +15,9 @@ class ReportController extends Controller
     {
         $smeltings = Smelting::where('workorder_id',$production->workorder_id)->get();
         $data = [
-            'title'     => 'PT. CAMELLIA METAL INDONESIA',
-            'data'      => $production->workorder,
-            'smeltings' => $smeltings,
+            'title'         => 'PT. CAMELLIA METAL INDONESIA',
+            'data'          => $production->workorder,
+            'smeltings'     => $smeltings,
             'production'   => $production
         ];
            

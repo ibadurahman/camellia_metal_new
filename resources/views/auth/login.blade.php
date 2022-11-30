@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="register-box">
                 <div class="register-logo">
-                    <a href="{{url('/')}}"><b>Camelia Metal</b></a>
+                    <a href="{{url('/')}}"><b>Camellia Metal Indonesia</b></a>
                 </div>
                 <div class="card">
                     <div class="card-body register-card-body">

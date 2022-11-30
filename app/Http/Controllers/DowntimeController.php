@@ -18,9 +18,9 @@ class DowntimeController extends Controller
     {
         $downtimeData = Downtime::where('workorder_id',$request->workorder_id)
                             ->where('status','stop')
-                            ->orWhere('is_downtime_stopped',false)
                             ->orderBy('is_remark_filled','asc')
                             ->orderby('id','desc')->get();
+
         return new DowntimeCollection($downtimeData);
     }
 
