@@ -168,17 +168,15 @@ class SpvProductionController extends Controller
         //
         // Downtimes
         //
-            $totalDowntime = 0;
             $wasteDowntime = 0;
-            $managementDowntime = 0;
-            $downtimes = Downtime::where('status','stop')
-                            ->where('workorder_id',$workorder->id)
-                            ->get();
             $downtimeSummary = Downtime::where('status','run')
                                     ->where('workorder_id',$workorder->id)
                                     ->get();
             foreach($downtimeSummary as $dt)
             {
+                $downtimeRunId = Downtime::where('status','run')
+                                    ->where('downtime_number',$dt->downtime_number)
+                                    ->first();
                 $downtimeStopId = Downtime::where('status','stop')
                                     ->where('downtime_number',$dt->downtime_number)
                                     ->first();
@@ -189,56 +187,20 @@ class SpvProductionController extends Controller
                     continue;
                 }
 
+                $duration = date_diff(new DateTime($downtimeStopId->created_at),new DateTime($downtimeRunId->created_at));
+
+                $durationMin = $duration->days * 24 * 60;
+                $durationMin += $duration->h * 60;
+                $durationMin += $duration->i;
+
                 if($downtimeRemark->is_waste_downtime)
                 {
-                    $wasteDowntime += $dt->downtime;
+                    $wasteDowntime += $durationMin;
                 }
-                if(!$downtimeRemark->is_waste_downtime)
-                {
-                    $managementDowntime += $dt->downtime;
-                }
-                $totalDowntime += $dt->downtime;
             }
-            $total_downtime = 0;
             $waste_downtime = 0;
-            $management_downtime = 0;
-        //
-        // Total Downtime Calculation
-        //
-            if(($totalDowntime / 60) >=1)
-            {
-                $total_downtime_min = floor($totalDowntime/60);
-                $total_downtime_sec = $totalDowntime - ($total_downtime_min * 60);
-                $total_downtime = $total_downtime_min." min ".$total_downtime_sec." sec";
-            }
-            else{
-                $total_downtime = $totalDowntime." sec";
-            }
-        //
-        // Waste Downtime Calculation
-        //
-            $waste_downtime_min = 0;
-            if(($wasteDowntime / 60) >=1)
-            {
-                $waste_downtime_min = floor($wasteDowntime/60);
-                $waste_downtime_sec = $wasteDowntime - ($waste_downtime_min * 60);
-                $waste_downtime = $waste_downtime_min." min ".$waste_downtime_sec." sec";
-            }
-            else{
-                $waste_downtime = $wasteDowntime." sec";
-            }
-        //
-        // Management Downtime Calculation
-        //
-            if(($managementDowntime / 60) >=1)
-            {
-                $management_downtime_min = floor($managementDowntime/60);
-                $management_downtime_sec = $managementDowntime - ($management_downtime_min * 60);
-                $management_downtime = $management_downtime_min." min ".$management_downtime_sec." sec";
-            }
-            else{
-                $management_downtime = $managementDowntime." sec";
-            }
+            $waste_downtime = $wasteDowntime;
+
         //
         // Total Good Product Calculation
         //
@@ -276,7 +238,7 @@ class SpvProductionController extends Controller
         DailyReport::create([
             'workorder_id'      => $workorder->id,
             'total_runtime'     => $plannedTimeMinutes,
-            'total_downtime'    => $waste_downtime_min,
+            'total_downtime'    => $waste_downtime,
             'total_pcs'         => $total_bad_product + $total_good_product,
             'total_pcs_good'    => $total_good_product,
             'total_pcs_bad'     => $total_bad_product,

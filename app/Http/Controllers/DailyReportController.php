@@ -81,6 +81,7 @@ class DailyReportController extends Controller
         $totalWeightLoss = 0;
         
         foreach ($searchResult->get() as $search) {
+            
             $totalRuntime += $search->total_runtime;
             $totalDowntime += $search->total_downtime;
             $totalPcs += $search->total_pcs;

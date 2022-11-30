@@ -110,14 +110,14 @@
                                     <tr>
                                         <th>No.</th>
                                         <th>Wo Number</th>
-                                        <th>Total Runtime</th>
-                                        <th>Total Downtime</th>
+                                        <th>Total Runtime (min)</th>
+                                        <th>Total Downtime (min)</th>
                                         <th>Total Production (Pcs)</th>
                                         <th>Total Good (Pcs)</th>
                                         <th>Total Bad (Pcs)</th>
-                                        <th>Total Weight FG</th>
-                                        <th>Total Weight BB</th>
-                                        <th>Total Weight Loss</th>
+                                        <th>Total Weight FG (Kg)</th>
+                                        <th>Total Weight BB (Kg)</th>
+                                        <th>Total Weight Loss (Kg)</th>
                                     </tr>
                                 </thead>
                             </table>
