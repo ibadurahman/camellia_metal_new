@@ -301,7 +301,9 @@
                     }
                 });
             });
-
+            $('#customer-shape').on('change',function(){
+                recalculate();
+            })
             $('#color-cmbbx').on('change',function(){
                 $.ajax({
                     type:"POST",
@@ -357,7 +359,7 @@
                     {
                         return 0.03;
                     }
-                    return 0.75;
+                    return 0.075;
                 }
                 if(diameter>6.01 && diameter < 10.00)
                 {
@@ -365,7 +367,7 @@
                     {
                         return 0.03;
                     }
-                    return 0.90;
+                    return 0.090;
                 }
                 if(diameter>10.01 && diameter < 18.00)
                 {
@@ -373,7 +375,7 @@
                     {
                         return 0.04;
                     }
-                    return 1.1;
+                    return 0.110;
                 }
                 if(diameter>18.01 && diameter < 30.00)
                 {
@@ -381,7 +383,7 @@
                     {
                         return 0.05;
                     }
-                    return 1.3;
+                    return 0.13;
                 }
                 if(diameter>30.01 && diameter < 40.00)
                 {
@@ -389,7 +391,7 @@
                     {
                         return 0.06;
                     }
-                    return 1.6;
+                    return 0.160;
                 }
             }
             function addTolerancePlus(diameter=0)

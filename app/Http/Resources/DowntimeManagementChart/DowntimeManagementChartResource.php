@@ -77,10 +77,9 @@ class DowntimeManagementChartResource extends JsonResource
                         return 0;
                     }
                     $duration = date_diff(new DateTime($startTime->created_at),new DateTime($endTime->created_at));
-                    $durationSec = $duration->days * 24 * 60 * 60;
-                    $durationSec += $duration->h * 60 * 60;
-                    $durationSec += $duration->i * 60;
-                    $durationSec += $duration->s;
+                    $durationSec = $duration->days * 24 * 60;
+                    $durationSec += $duration->h * 60;
+                    $durationSec += $duration->i;
 
                     $totalDuration += $durationSec;
                 }

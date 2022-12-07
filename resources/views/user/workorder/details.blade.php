@@ -165,7 +165,7 @@
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <span class="description-text">PROCESS DURATION</span>
-                                                        <h5 class="description-header">{{$reports['planned_time']}} min</h5>
+                                                        <h5 class="description-header">{{$reports['planned_time']}}</h5>
                                                     </div>
                                                     <div class="col-6">
                                                         <span class="description-text">TOTAL DOWNTIME</span>
@@ -462,7 +462,7 @@
                         },
                         scaleLabel: {
                             display: true,
-                            labelString: 'Seconds'
+                            labelString: 'Minutes'
                         },
                         ticks: {
                             max:5000,
@@ -567,7 +567,7 @@
                             },
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Seconds'
+                                labelString: 'Minutes'
                             },
                         }]
                     }

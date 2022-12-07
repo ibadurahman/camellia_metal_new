@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\Supplier;
 use App\Models\Workorder;
 use Illuminate\Http\Request;
+use App\Rules\MatchOldPassword;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -258,6 +259,28 @@ class WorkorderController extends Controller
         else{
             return 0;
         }
+    }
+
+    //
+    // Confirm Password
+    //
+    public function confirmPassword(Request $request)
+    {
+        $isValid = [
+            'result' => true   
+        ];
+        
+        $validation = $request->validate([
+            'password' => ['required', new MatchOldPassword]
+        ]);
+
+        if(!$validation)
+        {
+            $isValid['result'] = false;
+            return response()->json($isValid);
+        }
+
+        return response()->json($isValid);
     }
 
 }

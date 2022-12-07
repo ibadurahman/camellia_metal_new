@@ -122,25 +122,5 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success','Password Changed Successfully');
     }
 
-    //
-    // Confirm Password
-    //
-    public function confirmPassword(Request $request)
-    {
-        $isValid = [
-            'result' => true   
-        ];
-        
-        $validation = $request->validate([
-            'password' => ['required', new MatchOldPassword]
-        ]);
-
-        if(!$validation)
-        {
-            $isValid['result'] = false;
-            return response()->json($isValid);
-        }
-
-        return response()->json($isValid);
-    }
+    
 }

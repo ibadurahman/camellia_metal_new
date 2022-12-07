@@ -30,7 +30,6 @@ Route::middleware(['verified'])->group(function(){
 
 Route::middleware(['verified'])->group(function(){
     Route::post('user/reset-password',[UserController::class,'resetPassword'])->name('user.reset.password');
-    Route::post('/confirm-password',[UserController::class,'confirmPassword'])->name('confirm.password');
     Route::resource('user','UserController');
 });
 
@@ -45,6 +44,7 @@ Route::middleware(['verified'])->group(function(){
     Route::post('workorder/updateOrder',[WorkorderController::class,'updateOrder'])->name('workorder.updateorder');
     Route::post('workorder/setWoStatus',[WorkorderController::class,'setWoStatus'])->name('workorder.setWoStatus');
     Route::post('workorder/calculatePcsPerBundle',[WorkorderController::class,'calculatePcsPerBundle'])->name('workorder.calculatePcsPerBundle');
+    Route::post('/confirm-password',[WorkorderController::class,'confirmPassword'])->name('confirm.password');
     Route::resource('workorder','WorkorderController');
 });
 
