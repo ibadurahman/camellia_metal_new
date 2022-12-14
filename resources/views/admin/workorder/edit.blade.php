@@ -388,7 +388,7 @@
             function addTolerance(diameter=0)
             {
                 var shape = $('#customer-shape').val();
-                if(diameter>3.01 && diameter < 6.00)
+                if(diameter>=3.01 && diameter <= 6.00)
                 {
                     if(shape == "Round")
                     {
@@ -396,7 +396,7 @@
                     }
                     return 0.075;
                 }
-                if(diameter>6.01 && diameter < 10.00)
+                if(diameter>=6.01 && diameter <= 10.00)
                 {
                     if(shape == "Round")
                     {
@@ -404,7 +404,7 @@
                     }
                     return 0.090;
                 }
-                if(diameter>10.01 && diameter < 18.00)
+                if(diameter>=10.01 && diameter <= 18.00)
                 {
                     if(shape == "Round")
                     {
@@ -412,15 +412,15 @@
                     }
                     return 0.110;
                 }
-                if(diameter>18.01 && diameter < 30.00)
+                if(diameter>=18.01 && diameter <= 30.00)
                 {
                     if(shape == "Round")
                     {
                         return 0.05;
                     }
-                    return 0.13;
+                    return 0.130;
                 }
-                if(diameter>30.01 && diameter < 40.00)
+                if(diameter>=30.01 && diameter <= 40.00)
                 {
                     if(shape == "Round")
                     {
@@ -432,7 +432,7 @@
             function addTolerancePlus(diameter=0)
             {
                 var shape = $('#customer-shape').val();
-                if(diameter>3.01 && diameter < 6.00)
+                if(diameter>=3.01 && diameter <= 6.00)
                 {
                     if(shape == "Round")
                     {
@@ -440,7 +440,7 @@
                     }
                     return 0.00;
                 }
-                if(diameter>6.01 && diameter < 10.00)
+                if(diameter>=6.01 && diameter <= 10.00)
                 {
                     if(shape == "Round")
                     {
@@ -448,7 +448,7 @@
                     }
                     return 0.00;
                 }
-                if(diameter>10.01 && diameter < 18.00)
+                if(diameter>=10.01 && diameter <= 18.00)
                 {
                     if(shape == "Round")
                     {
@@ -456,7 +456,7 @@
                     }
                     return 0.00;
                 }
-                if(diameter>18.01 && diameter < 30.00)
+                if(diameter>=18.01 && diameter <= 30.00)
                 {
                     if(shape == "Round")
                     {
@@ -464,7 +464,7 @@
                     }
                     return 0.00;
                 }
-                if(diameter>30.01 && diameter < 40.00)
+                if(diameter>=30.01 && diameter <= 40.00)
                 {
                     if(shape == "Round")
                     {
