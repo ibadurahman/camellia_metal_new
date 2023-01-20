@@ -134,6 +134,7 @@ class SpvProductionController extends Controller
             $downtimeRemarkUncomplete = Downtime::where('workorder_id',$workorder->id)->where('is_remark_filled',false)->first();
             if(!is_null($downtimeRemarkUncomplete))
             {
+
                 return redirect(route('spvproduction.show',$workorder));
             }
     
