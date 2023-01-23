@@ -7,7 +7,23 @@
             <div class="row">
                 <div class="col-12">
                     @include('templates.partials.alerts')
-
+                    <div class="card">
+                        <div class="card-header">
+                            Sorting by Machine
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <select name="" id="machine-selector" onchange="update_sorting()" class="form-control">
+                                        <option value="0">All</option>
+                                        @foreach ($machines as $machine)
+                                            <option value="{{$machine->id}}">{{$machine->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">On Process</h3>
@@ -68,11 +84,21 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(function () {
+        update_sorting()
+    });
 
+    function update_sorting(){
+        $('#waiting-table').DataTable().destroy()
+        $('#onprocess-table').DataTable().destroy()
         $('#onprocess-table').DataTable({
             processing:true,
             serverSide:true,
-            ajax:'{{route('operator.production.showOnProcess')}}',
+            ajax:{
+                "url"   :'{{route('operator.production.showOnProcess')}}',
+                "data"  :{
+                    "machine":$('#machine-selector').val()
+                }
+            },
             columns:[
                 // {data:'wo_order_num'},
 			    {data:'wo_number'},
@@ -111,7 +137,6 @@
             "autoWidth": false,
             "responsive": true,
         });
-        
-    });
+    }
 </script>
 @endpush

@@ -6,6 +6,7 @@ use DateTime;
 use App\Models\Oee;
 use App\Models\User;
 use App\Models\Color;
+use App\Models\Machine;
 use App\Models\Downtime;
 use App\Models\Realtime;
 use App\Models\Smelting;
@@ -13,7 +14,6 @@ use App\Models\Workorder;
 use App\Models\Production;
 use Illuminate\Http\Request;
 use App\Models\DowntimeRemark;
-use Illuminate\Support\Carbon;
 use App\Http\Requests\OeeRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +32,8 @@ class ProductionController extends Controller
     {
         //
         return view('operator.production.index',[
-            'title' => 'Operator Index'
+            'title' => 'Operator Index',
+            'machines' => Machine::all()
         ]);
     }
 
@@ -73,7 +74,6 @@ class ProductionController extends Controller
             }
         }
 
-        $workorder->timestamps = false;
         $workorder->update([
             'status_wo'=>'on check',
             'process_end'=>date('Y-m-d H:i:s'),
@@ -108,9 +108,12 @@ class ProductionController extends Controller
     }
 
     //OnProcess Data Controller
-    public function showOnProcess()
+    public function showOnProcess(Request $request)
     {
         $workorders = Workorder::where('status_wo','on process')->orderBy('wo_order_num','ASC');
+        if ($request->machine != 0) {
+            $workorders = Workorder::where('status_wo','on process')->where('machine_id',$request->machine)->orderBy('wo_order_num','ASC');
+        }
         return datatables()->of($workorders)
             ->addColumn('bb_qty_combine',function(Workorder $model){
                 $combines = $model->bb_qty_pcs . " / " . $model->bb_qty_coil;
@@ -121,7 +124,7 @@ class ProductionController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
+                $combines = '(-'.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -386,15 +389,14 @@ class ProductionController extends Controller
         $totalDowntime = 0;
         $wasteDowntime = 0;
         $managementDowntime = 0;
-        $downtimes = Downtime::where('workorder_id',$workorder->id)->where('status','stop')->get();
+        $downtimes = Downtime::where('status','stop')
+                        ->where('workorder_id',$workorder->id)
+                        ->get();
         $downtimeSummary = Downtime::where('status','run')
                                 ->where('workorder_id',$workorder->id)
                                 ->get();
         foreach($downtimeSummary as $dt)
         {
-            $downtimeRunId = Downtime::where('status','run')
-                                ->where('downtime_number',$dt->downtime_number)
-                                ->first();
             $downtimeStopId = Downtime::where('status','stop')
                                 ->where('downtime_number',$dt->downtime_number)
                                 ->first();
@@ -405,22 +407,15 @@ class ProductionController extends Controller
                 continue;
             }
 
-            $duration = date_diff(new DateTime($downtimeStopId->created_at),new DateTime($downtimeRunId->created_at));
-
-            $durationSec = $duration->days * 24 * 60 * 60;
-            $durationSec += $duration->h * 60 * 60;
-            $durationSec += $duration->i * 60;
-            $durationSec += $duration->s;
-                
             if($downtimeRemark->is_waste_downtime)
             {
-                $wasteDowntime += $durationSec;
+                $wasteDowntime += $dt->downtime;
             }
             if(!$downtimeRemark->is_waste_downtime)
             {
-                $managementDowntime += $durationSec;
+                $managementDowntime += $dt->downtime;
             }
-            $totalDowntime += $durationSec;
+            $totalDowntime += $dt->downtime;
         }
         $total_downtime = 0;
         $waste_downtime = 0;
@@ -431,29 +426,11 @@ class ProductionController extends Controller
         {
             $total_downtime_min = floor($totalDowntime/60);
             $total_downtime_sec = $totalDowntime - ($total_downtime_min * 60);
-            $total_downtime = $total_downtime_min." Mins ".$total_downtime_sec." Secs";
+            $total_downtime = $total_downtime_min." min ".$total_downtime_sec." sec";
         }
         else{
-            $total_downtime = $totalDowntime." Secs";
+            $total_downtime = $totalDowntime." sec";
         }
-
-        if(($totalDowntime / 3600) >=1)
-        {
-            $total_downtime_hour = floor($totalDowntime/3600);
-            $total_downtime_min = floor(($totalDowntime - ($total_downtime_hour * 60 * 60))/60);
-            $total_downtime_sec = $totalDowntime - ($total_downtime_hour * 60 * 60) - ($total_downtime_min * 60);
-            $total_downtime = $total_downtime_hour." Hours ".$total_downtime_min." Mins ".$total_downtime_sec." Secs";
-        }
-        if(($totalDowntime / 86400) >=1)
-        {
-            $total_downtime_days = floor($totalDowntime/86400);
-            $total_downtime_hour = floor(($totalDowntime - ($total_downtime_days * 24 * 60 * 60))/3600);
-            $total_downtime_min = floor(($totalDowntime - ($total_downtime_days * 24 * 60 * 60) - ($total_downtime_hour * 60 * 60))/60);
-            $total_downtime_sec = $totalDowntime - ($total_downtime_days * 24 * 60 * 60) - ($total_downtime_hour * 60 * 60) - ($total_downtime_min * 60);
-            $total_downtime = $total_downtime_days." Days ".$total_downtime_hour." Hours ".$total_downtime_min." Mins ".$total_downtime_sec." Secs";
-        }
-        
-        
 
         // Waste Downtime Calculation
         if(($wasteDowntime / 60) >=1)
@@ -465,21 +442,6 @@ class ProductionController extends Controller
         else{
             $waste_downtime = $wasteDowntime." sec";
         }
-        if(($wasteDowntime / 3600) >=1)
-        {
-            $waste_downtime_hour = floor($wasteDowntime/3600);
-            $waste_downtime_min = floor(($wasteDowntime - ($waste_downtime_hour * 60 * 60))/60);
-            $waste_downtime_sec = $wasteDowntime - ($waste_downtime_hour * 60 * 60) - ($waste_downtime_min * 60);
-            $waste_downtime = $waste_downtime_hour." Hours ".$waste_downtime_min." Mins ".$waste_downtime_sec." Secs";
-        }
-        if(($wasteDowntime / 86400) >=1)
-        {
-            $waste_downtime_days = floor($wasteDowntime/86400);
-            $waste_downtime_hour = floor(($wasteDowntime - ($waste_downtime_days * 24 * 60 * 60))/3600);
-            $waste_downtime_min = floor(($wasteDowntime - ($waste_downtime_days * 24 * 60 * 60) - ($waste_downtime_hour * 60 * 60))/60);
-            $waste_downtime_sec = $wasteDowntime - ($waste_downtime_days * 24 * 60 * 60) - ($waste_downtime_hour * 60 * 60) - ($waste_downtime_min * 60);
-            $waste_downtime = $waste_downtime_days." Days ".$waste_downtime_hour." Hours ".$waste_downtime_min." Mins ".$waste_downtime_sec." Secs";
-        }
 
         // Management Downtime Calculation
         if(($managementDowntime / 60) >=1)
@@ -490,21 +452,6 @@ class ProductionController extends Controller
         }
         else{
             $management_downtime = $managementDowntime." sec";
-        }
-        if(($managementDowntime / 3600) >=1)
-        {
-            $management_downtime_hour = floor($managementDowntime/3600);
-            $management_downtime_min = floor(($managementDowntime - ($management_downtime_hour * 60 * 60))/60);
-            $management_downtime_sec = $managementDowntime - ($management_downtime_hour * 60 * 60) - ($management_downtime_min * 60);
-            $management_downtime = $management_downtime_hour." Hours ".$management_downtime_min." Mins ".$management_downtime_sec." Secs";
-        }
-        if(($managementDowntime / 86400) >=1)
-        {
-            $management_downtime_days = floor($managementDowntime/86400);
-            $management_downtime_hour = floor(($managementDowntime - ($management_downtime_days * 24 * 60 * 60))/3600);
-            $management_downtime_min = floor(($managementDowntime - ($management_downtime_days * 24 * 60 * 60) - ($management_downtime_hour * 60 * 60))/60);
-            $management_downtime_sec = $managementDowntime - ($management_downtime_days * 24 * 60 * 60) - ($management_downtime_hour * 60 * 60) - ($management_downtime_min * 60);
-            $management_downtime = $management_downtime_days." Days ".$management_downtime_hour." Hours ".$management_downtime_min." Mins ".$management_downtime_sec." Secs";
         }
 
         // Total Good Product Calculation
@@ -549,16 +496,6 @@ class ProductionController extends Controller
         $plannedTimeMinutes += $plannedTime->h * 60;
         $plannedTimeMinutes += $plannedTime->i;
 
-        $fixedPlannedTime = '';
-        if ($plannedTime->days > 0) {
-            $fixedPlannedTime = $plannedTime->days . ' Days ';
-        }
-        if ($plannedTime->h > 0) {
-            $fixedPlannedTime .= $plannedTime->h . ' Hours ';
-        }
-
-        $fixedPlannedTime .= $plannedTime->i . ' Minutes ' ;
-
         $otr = 0;
         if (floor($wasteDowntime/60) == 0) {
             $otr = 100;
@@ -588,45 +525,14 @@ class ProductionController extends Controller
             $oee = 100;
         }
 
-        //
-        // createdBy
-        //
-        $createdBy = User::where('id',$workorder->created_by)->first();
-        if (!$createdBy) {
-            $createdBy = '';
-        }else{
-            $createdBy = $createdBy->name;
-        }
-
-        //
-        // editedBy
-        //
-        $editedBy = User::where('id',$workorder->edited_by)->first();
-        if (!$editedBy) {
-            $editedBy = '';
-        }
-        else{
-            $editedBy = $editedBy->name;
-        }
-
-        //
-        // processedBy
-        //
-        $processedBy = User::where('id',$workorder->processed_by)->first();
-        if (!$processedBy) {
-            $processedBy = '';
-        }else{
-            $processedBy = $processedBy->name;
-        }
-
 		return view('operator.production.show_detail',[
             'title'                 => 'Production Report',
             'workorder'             => $workorder,
             'color'                 => Color::where('id',$workorder->color)->first()->name,
             'user_involved'         => [
-                'created_by'        => $createdBy,
-                'edited_by'         => $editedBy,
-                'processed_by'      => $processedBy,
+                'created_by'        => User::where('id',$workorder->created_by)->first()->name,
+                'edited_by'         => (!$workorder->edited_by)?'':User::where('id',$workorder->edited_by)->first()->name,
+                'processed_by'      => User::where('id',$workorder->processed_by)->first()->name,
             ],
             'smeltings'             => $smeltings,
             'productions'           => $productions,
@@ -635,7 +541,7 @@ class ProductionController extends Controller
                 'production_count'  => $productionCount." Pcs",
 			    'total_good_product'=> $total_good_product." Pcs",
                 'total_bad_product' => $total_bad_product." Pcs",
-                'planned_time'      => $fixedPlannedTime,
+                'planned_time'      => $plannedTimeMinutes,
                 'total_downtime'    => $total_downtime,
                 'waste_downtime'    => $waste_downtime,
                 'management_downtime'   => $management_downtime,

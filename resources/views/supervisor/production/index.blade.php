@@ -9,6 +9,23 @@
                     @include('templates.partials.alerts')
                     <div class="card">
                         <div class="card-header">
+                            Sorting by Machine
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <select name="" id="machine-selector" onchange="update_sorting()" class="form-control">
+                                        <option value="0">All</option>
+                                        @foreach ($machines as $machine)
+                                            <option value="{{$machine->id}}">{{$machine->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
                             <h3 class="card-title">On Check</h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -67,10 +84,19 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(function () {
+        update_sorting()
+    });
+    function update_sorting(){
+        $('#oncheck-table').DataTable().destroy()
         $('#oncheck-table').DataTable({
             processing:true,
             serverSide:true,
-            ajax:'{{route('spvproduction.showOnCheck')}}',
+            ajax:{
+                "url"   :'{{route('spvproduction.showOnCheck')}}',
+                "data"  :{
+                    "machine":$('#machine-selector').val()
+                }
+            },
             columns:[
                 // {data:'wo_order_num'},
 			    {data:'wo_number'},
@@ -109,6 +135,6 @@
             "autoWidth": false,
             "responsive": true,
         });
-    });
+    }
 </script>
-@endpush
+@endpush 

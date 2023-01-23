@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Machine;
 use App\Models\Realtime;
 use App\Models\Workorder;
 use Illuminate\Http\Request;
@@ -16,11 +17,25 @@ class RealtimeController extends Controller
      */
     public function index()
     {
-        //
+        $machines = Machine::all();
+        foreach ($machines as $machine) {
+            $woOnProcess = Workorder::where('status_wo','on process')->where('machine_id',$machine->id)->first();
+            $data[$machine->name] =  [
+                'wo_number'     => (!$woOnProcess)?'':$woOnProcess->wo_number,
+                'createdBy'     => (!$woOnProcess)?'':User::where('id',$woOnProcess->created_by)->first()->name,
+                'processedBy'   => (!$woOnProcess)?'':User::where('id',$woOnProcess->processed_by)->first()->name,
+                'start_time'    => (!$woOnProcess)?'':Date('Y-m-d H:i:s',strtotime($woOnProcess->process_start)),
+                'customer'      => (!$woOnProcess)?'':$woOnProcess->fg_customer,
+                'machine'       => (!$woOnProcess)?'':$woOnProcess->machine->name,
+                'size'          => (!$woOnProcess)?'':$woOnProcess->fg_size_1 . 'mm X ' . $woOnProcess->fg_size_2 . ' mm',
+                'status'        => (!$woOnProcess)?'':$woOnProcess->status_wo
+            ];
+        }
+        // dd($data);
         return view('user.home',[
-            'title'     => 'Home',
-            'speed'     => 0,
-            'counter'   => 0
+            'title'=> 'Home',
+            'data' => $data,
+            'machines' => Machine::all(),
         ]);
     }
 

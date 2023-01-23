@@ -10,6 +10,7 @@ use App\Models\Workorder;
 use App\Models\Production;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Machine;
 use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
@@ -23,7 +24,8 @@ class ScheduleController extends Controller
     {
         //
         return view('operator.schedule.index',[
-            'title'=>'Workorder Schedule',
+            'title'     => 'Workorder Schedule',
+            'machines'  => Machine::all()
         ]);
     }
 
@@ -60,9 +62,12 @@ class ScheduleController extends Controller
     }
 
 
-    public function showWaiting()
+    public function showWaiting(Request $request)
     {
         $workorders = Workorder::where('status_wo','waiting')->orderBy('wo_order_num','ASC');
+        if ($request->machine != 0) {
+            $workorders = Workorder::where('status_wo','waiting')->where('machine_id',$request->machine)->orderBy('wo_order_num','ASC');
+        }
         return datatables()->of($workorders)
             ->addColumn('bb_qty_combine',function(Workorder $model){
                 $combines = $model->bb_qty_pcs . " / " . $model->bb_qty_coil;
@@ -73,7 +78,7 @@ class ScheduleController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
+                $combines = '('.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -116,9 +121,12 @@ class ScheduleController extends Controller
             ->toJson();
     }
 
-    public function showOnProcess()
+    public function showOnProcess(Request $request)
     {
         $workorders = Workorder::where('status_wo','on process')->orderBy('wo_order_num','ASC');
+        if ($request->machine != 0) {
+            $workorders = Workorder::where('status_wo','on process')->where('machine_id',$request->machine)->orderBy('wo_order_num','ASC');
+        }
         return datatables()->of($workorders)
             ->addColumn('bb_qty_combine',function(Workorder $model){
                 $combines = $model->bb_qty_pcs . " / " . $model->bb_qty_coil;
@@ -129,7 +137,7 @@ class ScheduleController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
+                $combines = '(-'.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -147,11 +155,10 @@ class ScheduleController extends Controller
                 return Date('Y-m-d H:i:s',strtotime($model->created_at));
             })
             ->addColumn('edited_by',function(Workorder $model){
-                $user = User::where('id',$model->edited_by)->first();
-                if(!$user)
-                {
+                if(!$model->edited_by){
                     return '';
                 }
+                $user = User::where('id',$model->edited_by)->first();
                 return $user->name;
             })
             ->addColumn('processed_by',function(Workorder $model){
@@ -172,13 +179,12 @@ class ScheduleController extends Controller
 
     public function process(Workorder $id)
     {
-        $workorder = Workorder::where('status_wo','on process')->first();
+        $workorder = Workorder::where('machine_id',$id->machine_id)->where('status_wo','on process')->first();
         if($workorder != null)
         {
             return redirect(route('schedule.index'));
         }   
 
-        $id->timestamps = false;
         $id->update([
             'status_wo'=>'on process',
             'wo_order_num'=>null,
@@ -203,8 +209,8 @@ class ScheduleController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance',function(Workorder $model){
-                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
-                return $combines;
+                $combines = $model->tolerance_minus;
+                return round($combines,2);
             })
             ->addColumn('created_by',function(Workorder $model){
                 $user = User::where('id',$model->created_by)->first();
