@@ -210,6 +210,12 @@
 		  @hasanyrole('supervisor|super-admin|owner')
             <li class="nav-header">SUPERVISOR</li>
             <li class="nav-item">
+              <a href="{{route('production.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-file-alt"></i>
+                <p>On Process Reports</p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="{{route('spvproduction.index')}}" class="nav-link">
                 <i class="nav-icon fas fa-file-alt"></i>
                 <p>Report Check</p>
