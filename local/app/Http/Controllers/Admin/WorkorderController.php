@@ -32,7 +32,8 @@ class WorkorderController extends Controller
     {
         //
         return view('admin.workorder.index',[
-            'title' => 'Admin: Workorder'
+            'title' => 'Admin: Workorder',
+            'machines' => Machine::all()
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DailyReport;
+use App\Models\Machine;
 use Illuminate\Http\Request;
 
 class DailyReportController extends Controller
@@ -17,6 +18,7 @@ class DailyReportController extends Controller
         //
         return view('user.daily_report.index',[
             'title' => 'Summary Report',
+            'machines' => Machine::all()
         ]);
     }
 

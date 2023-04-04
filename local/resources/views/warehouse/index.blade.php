@@ -138,7 +138,7 @@
             processing:true,
             serverSide:true,
             ajax:{
-                "url"   :'{{route('workorder.showWaiting')}}',
+                "url"   :'{{route("workorder.showWaiting")}}',
                 "data"  :{
                     "machine":$('#machine-selector').val()
                 }
@@ -182,7 +182,7 @@
             processing:true,
             serverSide:true,
             ajax:{
-                "url"   :'{{route('workorder.showOnProcess')}}',
+                "url"   :'{{route("workorder.showOnProcess")}}',
                 "data"  :{
                     "machine":$('#machine-selector').val()
                 }

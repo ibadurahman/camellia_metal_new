@@ -132,9 +132,12 @@ class DataController extends Controller
     }
 
     //Workorder Data Controller
-    public function workordersWaiting()
+    public function workordersWaiting(Request $request)
     {
         $workorders = Workorder::where('status_wo','waiting')->orderBy('wo_order_num','ASC');
+        if ($request->machine != 0) {
+            $workorders = Workorder::where('status_wo','waiting')->where('machine_id',$request->machine)->orderBy('wo_order_num','asc');
+        }
         return datatables()->of($workorders)
             ->addColumn('bb_qty_combine',function(Workorder $model){
                 $combines = $model->bb_qty_pcs . " / " . $model->bb_qty_coil;
