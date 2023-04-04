@@ -9,6 +9,7 @@ use App\Models\Oee;
 use App\Models\User;
 use App\Models\Color;
 use App\Models\Downtime;
+use App\Models\Machine;
 use App\Models\Realtime;
 use App\Models\Smelting;
 use App\Models\Workorder;
@@ -29,7 +30,8 @@ class WorkorderController extends Controller
     {
         //
         return view('user.workorder.index',[
-            'title'=>'Workorder',
+            'title'     =>'Workorder',
+            'machines'  => Machine::all()
         ]);
     }
 
@@ -50,6 +52,10 @@ class WorkorderController extends Controller
     public function ajaxRequestAll(Request $request)
     {
         $workorder = Workorder::query()->orderBy('created_at','DESC');
+
+        if ($request->machine_id != "0") {
+            $workorder = $workorder->where('machine_id',$request->machine_id);
+        }
         
         return datatables()->of($workorder)
                 ->filter(function($query) use ($request){
@@ -70,6 +76,9 @@ class WorkorderController extends Controller
                 })
                 ->addColumn('wo_number',function(Workorder $model){
                     return $model->wo_number;
+                })
+                ->addColumn('machine',function(Workorder $model){
+                    return $model->machine->name;
                 })
                 ->addColumn('total_production',function(Workorder $model){
                     $productions = Production::where('workorder_id',$model->id)->get();

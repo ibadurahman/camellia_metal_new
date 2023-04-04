@@ -119,6 +119,7 @@
                                 <tr>
                                     <th>No.</th>
                                     <th>Wo Number</th>
+                                    <th>Machine</th>
                                     <th>Total Runtime (min)</th>
                                     <th>Total Downtime (min)</th>
                                     <th>Total Production (Pcs)</th>
@@ -148,7 +149,6 @@
         $('#reservationdatetime2').datetimepicker({
             format: 'YYYY-MM-DD',
         });
-
     });
 </script>
 <script>
@@ -160,7 +160,7 @@
             data: function(d) {
                 d.report_date_1 = $('input[name=report_date_1]').val();
                 d.report_date_2 = $('input[name=report_date_2]').val();
-                d.machine_id    = $('input[name=machine_id]').val();
+                d.machine_id    = $('select[name=machine_id]').val();
             }
         },
         columns: [{
@@ -170,6 +170,9 @@
             },
             {
                 data: 'wo_number'
+            },
+            {
+                data: 'machine'
             },
             {
                 data: 'total_runtime'
@@ -216,14 +219,13 @@
             method: 'POST',
             url: '{{route("dailyReport.calculateSearchResult")}}',
             data: {
-                report_date_1: $('input[name=report_date_1]').val(),
-                report_date_2: $('input[name=report_date_2]').val(),
-                machine_id : $('input[name=machine_id]').val(),
+                report_date_1   : $('input[name=report_date_1]').val(),
+                report_date_2   : $('input[name=report_date_2]').val(),
+                machine_id      : $('select[name=machine_id]').val(),
                 _token: '{{csrf_token()}}'
             },
             dataType: 'json',
             success: function(response) {
-                console.log(response);
                 $('#total_runtime').html(response.total_runtime);
                 $('#total_downtime').html(response.total_downtime);
                 $('#total_pcs').html(response.total_pcs);

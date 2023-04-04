@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DailyReport;
 use App\Models\Machine;
+use App\Models\Workorder;
 use Illuminate\Http\Request;
 
 class DailyReportController extends Controller
@@ -35,6 +36,15 @@ class DailyReportController extends Controller
     {
         $dailyReport    = DailyReport::query()->orderBy('created_at','DESC');
 
+        if ($request->machine_id != "0") {
+            $workorders = Workorder::where('machine_id',$request->machine_id)->get();
+            $workorderArray = [];
+            foreach ($workorders as $wo) {
+                $workorderArray[] = $wo->id;
+            }
+            $dailyReport = $dailyReport->whereIn('workorder_id',$workorderArray);
+        }
+
         return datatables()->of($dailyReport)
             ->filter(function($query) use ($request){
                 if($request->report_date_1 != '')
@@ -51,6 +61,9 @@ class DailyReportController extends Controller
             ->addColumn('wo_number',function(DailyReport $model){
                 return $model->workorder->wo_number;
             })
+            ->addColumn('machine',function(DailyReport $model){
+                return $model->workorder->machine->name;
+            })
             ->addColumn('weight_loss',function(DailyReport $model){
                 return $model->total_weight_bb - $model->total_weight_fg;
             })
@@ -64,6 +77,15 @@ class DailyReportController extends Controller
     public function calculateSearchResult(Request $request)
     {
         $searchResult    = DailyReport::query();
+
+        if ($request->machine_id != "0") {
+            $workorders = Workorder::where('machine_id',$request->machine_id)->get();
+            $workorderArray = [];
+            foreach ($workorders as $wo) {
+                $workorderArray[] = $wo->id;
+            }
+            $searchResult = $searchResult->whereIn('workorder_id',$workorderArray);
+        }
 
         if($request->report_date_1 != '')
         {
