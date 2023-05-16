@@ -67,6 +67,7 @@
                                 <tr>
                                     <th>No.</th>
                                     <th>WO Number</th>
+                                    <th>Machine</th>
                                     <th>Start Time</th>
                                     <th>End Time</th>
                                     <th>Status WO</th>

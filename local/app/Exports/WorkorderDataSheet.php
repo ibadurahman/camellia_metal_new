@@ -8,6 +8,7 @@ use App\Models\Color;
 use App\Models\Downtime;
 use App\Models\Smelting;
 use App\Models\Workorder;
+use App\Models\Realtime;
 use App\Models\Production;
 use App\Models\DowntimeRemark;
 use Maatwebsite\Excel\Events\AfterSheet;
@@ -45,6 +46,24 @@ class WorkorderDataSheet implements ShouldAutoSize, WithTitle, WithEvents, WithD
         $drawing->setCoordinates('B2');
 
         return $drawing;
+    }
+
+    public function calculatePcsPerBundle($shape)
+    {
+        if($shape == "Round"){
+            return 0.0061654;
+        }
+        elseif($shape == "Hexagon")
+        {
+            return 0.006798;
+        }
+        elseif($shape == "Square")
+        {
+            return 0.00785;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function registerEvents(): array
@@ -171,14 +190,34 @@ class WorkorderDataSheet implements ShouldAutoSize, WithTitle, WithEvents, WithD
         }
 
         //
+        // Machine Average Speed
+        //
+        $realtimeQuery = Realtime::select('speed')->where('workorder_id',$this->workorder->id)->where('speed','>=','20');
+        if($realtimeQuery->count() != 0){
+            $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
+        }else{
+            $machineAvgSpeed = 5;
+        }
+
+        //
+        // Cycle Time Calculation
+        //
+        if ($machineAvgSpeed != 0) {
+            $cycleTime = (($this->workorder->fg_size_2*60/$machineAvgSpeed))/1000;
+        }else{
+            $cycleTime = 0;
+        }
+
+        //
         // Performance Calculation
         //
+        $productionPlanned = round($this->workorder->bb_qty_pcs / $this->workorder->fg_size_1 / $this->workorder->fg_size_1 / $this->workorder->fg_size_2 / $this->calculatePcsPerBundle($this->workorder->fg_shape) *1000,0);
         $per = 0;
-        $productionPlanned = ($this->workorder->fg_qty_pcs * $this->workorder->bb_qty_bundle);
+        // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
         if ($productionCount == 0) {
             $per = 100;
         }else{
-            $per = ($productionCount / $productionPlanned)*100;
+            $per = ((($productionCount*$cycleTime)/60) / (($productionPlanned*$cycleTime)/60))*100;
         }
 
         //

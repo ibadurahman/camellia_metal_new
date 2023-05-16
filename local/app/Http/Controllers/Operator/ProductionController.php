@@ -501,6 +501,37 @@ class ProductionController extends Controller
             $total_bad_product += $bad_pro->pcs_per_bundle;
         }
 
+        // //
+        // // Performance Calculation
+        // //
+        // $productionPlanned = round($workorder->bb_qty_pcs / $workorder->fg_size_1 / $workorder->fg_size_1 / $workorder->fg_size_2 / $this->calculatePcsPerBundle($workorder->fg_shape) *1000,0);
+        // $per = 0;
+        // // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
+        // if ($productionCount == 0) {
+        //     $per = 100;
+        // }else{
+        //     $per = ($productionCount / $productionPlanned)*100;
+        // }
+
+        //
+        // Machine Average Speed
+        //
+        $realtimeQuery = Realtime::select('speed')->where('workorder_id',$workorder->id)->where('speed','>=','20');
+        if($realtimeQuery->count() != 0){
+            $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
+        }else{
+            $machineAvgSpeed = 5;
+        }
+
+        //
+        // Cycle Time Calculation
+        //
+        if ($machineAvgSpeed != 0) {
+            $cycleTime = (($workorder->fg_size_2*60/$machineAvgSpeed))/1000;
+        }else{
+            $cycleTime = 0;
+        }
+
         //
         // Performance Calculation
         //
@@ -510,7 +541,7 @@ class ProductionController extends Controller
         if ($productionCount == 0) {
             $per = 100;
         }else{
-            $per = ($productionCount / $productionPlanned)*100;
+            $per = ((($productionCount*$cycleTime)/60) / (($productionPlanned*$cycleTime)/60))*100;
         }
 
         //
