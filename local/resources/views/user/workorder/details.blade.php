@@ -183,13 +183,18 @@
                                         <div class="col-sm-4 col-4">
                                             <div class="description-block border-right">
                                                 <div class="row">
-                                                    <div class="col-6">
-                                                        <span class="description-text">TOTAL PRODUCTION</span>
+                                                <div class="col-4">
+                                                        <span class="description-text text-sm">AVERAGE SPEED</span>
+                                                        <h5 class="description-header">{{ round($reports['average_speed'],2) }} M/Min
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <span class="description-text text-sm">TOTAL PRODUCTION</span>
                                                         <h5 class="description-header">{{ $reports['production_count'] }}
                                                         </h5>
                                                     </div>
-                                                    <div class="col-6">
-                                                        <span class="description-text">PLANNED PRODUCTION</span>
+                                                    <div class="col-4">
+                                                        <span class="description-text text-sm">PLANNED PRODUCTION</span>
                                                         <h5 class="description-header">{{ $reports['production_plan'] }}
                                                             Pcs</h5>
                                                     </div>

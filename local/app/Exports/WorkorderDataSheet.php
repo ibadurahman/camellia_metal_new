@@ -98,9 +98,8 @@ class WorkorderDataSheet implements ShouldAutoSize, WithTitle, WithEvents, WithD
         $totalDowntime = 0;
         $wasteDowntime = 0;
         $managementDowntime = 0;
-        $downtimes = Downtime::where('status','stop')
-                        ->where('workorder_id',$this->workorder->id)
-                        ->get();
+        $offProductionTime = 0;
+        $downtimes = Downtime::where('workorder_id',$this->workorder->id)->where('status','stop')->get();
         $downtimeSummary = Downtime::where('status','run')
                                 ->where('workorder_id',$this->workorder->id)
                                 ->get();
@@ -126,32 +125,54 @@ class WorkorderDataSheet implements ShouldAutoSize, WithTitle, WithEvents, WithD
             $durationSec += $duration->i * 60;
             $durationSec += $duration->s;
                 
-            if($downtimeRemark->is_waste_downtime)
+            if($downtimeRemark->downtime_category == 'waste')
             {
                 $wasteDowntime += $durationSec;
             }
-            if(!$downtimeRemark->is_waste_downtime)
+            if($downtimeRemark->downtime_category == 'management')
             {
                 $managementDowntime += $durationSec;
+            }
+            if($downtimeRemark->downtime_category == 'off')
+            {
+                $offProductionTime += $durationSec;
             }
             $totalDowntime += $durationSec;
         }
         $total_downtime = 0;
         $waste_downtime = 0;
         $management_downtime = 0;
+        $off_production_time = 0;
 
         // Total Downtime Calculation
         if(($totalDowntime / 60) >=1)
         {
             $total_downtime_min = floor($totalDowntime/60);
             $total_downtime_sec = $totalDowntime - ($total_downtime_min * 60);
-            $total_downtime = $total_downtime_min." min ".$total_downtime_sec." sec";
+            $total_downtime = $total_downtime_min." Mins ".$total_downtime_sec." Secs";
         }
         else{
-            $total_downtime = $totalDowntime." sec";
+            $total_downtime = $totalDowntime." Secs";
+        }
+
+        if(($totalDowntime / 3600) >=1)
+        {
+            $total_downtime_hour = floor($totalDowntime/3600);
+            $total_downtime_min = floor(($totalDowntime - ($total_downtime_hour * 60 * 60))/60);
+            $total_downtime_sec = $totalDowntime - ($total_downtime_hour * 60 * 60) - ($total_downtime_min * 60);
+            $total_downtime = $total_downtime_hour." Hours ".$total_downtime_min." Mins ".$total_downtime_sec." Secs";
+        }
+        if(($totalDowntime / 86400) >=1)
+        {
+            $total_downtime_days = floor($totalDowntime/86400);
+            $total_downtime_hour = floor(($totalDowntime - ($total_downtime_days * 24 * 60 * 60))/3600);
+            $total_downtime_min = floor(($totalDowntime - ($total_downtime_days * 24 * 60 * 60) - ($total_downtime_hour * 60 * 60))/60);
+            $total_downtime_sec = $totalDowntime - ($total_downtime_days * 24 * 60 * 60) - ($total_downtime_hour * 60 * 60) - ($total_downtime_min * 60);
+            $total_downtime = $total_downtime_days." Days ".$total_downtime_hour." Hours ".$total_downtime_min." Mins ".$total_downtime_sec." Secs";
         }
 
         // Waste Downtime Calculation
+        $waste_downtime_min = 0;
         if(($wasteDowntime / 60) >=1)
         {
             $waste_downtime_min = floor($wasteDowntime/60);
@@ -161,8 +182,24 @@ class WorkorderDataSheet implements ShouldAutoSize, WithTitle, WithEvents, WithD
         else{
             $waste_downtime = $wasteDowntime." sec";
         }
+        if(($wasteDowntime / 3600) >=1)
+        {
+            $waste_downtime_hour = floor($wasteDowntime/3600);
+            $waste_downtime_min = floor(($wasteDowntime - ($waste_downtime_hour * 60 * 60))/60);
+            $waste_downtime_sec = $wasteDowntime - ($waste_downtime_hour * 60 * 60) - ($waste_downtime_min * 60);
+            $waste_downtime = $waste_downtime_hour." Hours ".$waste_downtime_min." Mins ".$waste_downtime_sec." Secs";
+        }
+        if(($wasteDowntime / 86400) >=1)
+        {
+            $waste_downtime_days = floor($wasteDowntime/86400);
+            $waste_downtime_hour = floor(($wasteDowntime - ($waste_downtime_days * 24 * 60 * 60))/3600);
+            $waste_downtime_min = floor(($wasteDowntime - ($waste_downtime_days * 24 * 60 * 60) - ($waste_downtime_hour * 60 * 60))/60);
+            $waste_downtime_sec = $wasteDowntime - ($waste_downtime_days * 24 * 60 * 60) - ($waste_downtime_hour * 60 * 60) - ($waste_downtime_min * 60);
+            $waste_downtime = $waste_downtime_days." Days ".$waste_downtime_hour." Hours ".$waste_downtime_min." Mins ".$waste_downtime_sec." Secs";
+        }
 
         // Management Downtime Calculation
+        $management_downtime_min = 0;
         if(($managementDowntime / 60) >=1)
         {
             $management_downtime_min = floor($managementDowntime/60);
@@ -171,6 +208,48 @@ class WorkorderDataSheet implements ShouldAutoSize, WithTitle, WithEvents, WithD
         }
         else{
             $management_downtime = $managementDowntime." sec";
+        }
+        if(($managementDowntime / 3600) >=1)
+        {
+            $management_downtime_hour = floor($managementDowntime/3600);
+            $management_downtime_min = floor(($managementDowntime - ($management_downtime_hour * 60 * 60))/60);
+            $management_downtime_sec = $managementDowntime - ($management_downtime_hour * 60 * 60) - ($management_downtime_min * 60);
+            $management_downtime = $management_downtime_hour." Hours ".$management_downtime_min." Mins ".$management_downtime_sec." Secs";
+        }
+        if(($managementDowntime / 86400) >=1)
+        {
+            $management_downtime_days = floor($managementDowntime/86400);
+            $management_downtime_hour = floor(($managementDowntime - ($management_downtime_days * 24 * 60 * 60))/3600);
+            $management_downtime_min = floor(($managementDowntime - ($management_downtime_days * 24 * 60 * 60) - ($management_downtime_hour * 60 * 60))/60);
+            $management_downtime_sec = $managementDowntime - ($management_downtime_days * 24 * 60 * 60) - ($management_downtime_hour * 60 * 60) - ($management_downtime_min * 60);
+            $management_downtime = $management_downtime_days." Days ".$management_downtime_hour." Hours ".$management_downtime_min." Mins ".$management_downtime_sec." Secs";
+        }
+
+        // OFf Production Calculation
+        $off_production_time_min = 0;
+        if(($offProductionTime / 60) >=1)
+        {
+            $off_production_time_min = floor($offProductionTime/60);
+            $off_production_time_sec = $offProductionTime - ($off_production_time_min * 60);
+            $off_production_time = $off_production_time_min." min ".$off_production_time_sec." sec";
+        }
+        else{
+            $off_production_time = $offProductionTime." sec";
+        }
+        if(($offProductionTime / 3600) >=1)
+        {
+            $off_production_time_hour = floor($offProductionTime/3600);
+            $off_production_time_min = floor(($offProductionTime - ($off_production_time_hour * 60 * 60))/60);
+            $off_production_time_sec = $offProductionTime - ($off_production_time_hour * 60 * 60) - ($off_production_time_min * 60);
+            $off_production_time = $off_production_time_hour." Hours ".$off_production_time_min." Mins ".$off_production_time_sec." Secs";
+        }
+        if(($offProductionTime / 86400) >=1)
+        {
+            $off_production_time_days = floor($offProductionTime/86400);
+            $off_production_time_hour = floor(($offProductionTime - ($off_production_time_days * 24 * 60 * 60))/3600);
+            $off_production_time_min = floor(($offProductionTime - ($off_production_time_days * 24 * 60 * 60) - ($off_production_time_hour * 60 * 60))/60);
+            $off_production_time_sec = $offProductionTime - ($off_production_time_days * 24 * 60 * 60) - ($off_production_time_hour * 60 * 60) - ($off_production_time_min * 60);
+            $off_production_time = $off_production_time_days." Days ".$off_production_time_hour." Hours ".$off_production_time_min." Mins ".$off_production_time_sec." Secs";
         }
 
         // Total Good Product Calculation
@@ -187,37 +266,6 @@ class WorkorderDataSheet implements ShouldAutoSize, WithTitle, WithEvents, WithD
         foreach($bad_products as $bad_pro)
         {
             $total_bad_product += $bad_pro->pcs_per_bundle;
-        }
-
-        //
-        // Machine Average Speed
-        //
-        $realtimeQuery = Realtime::select('speed')->where('workorder_id',$this->workorder->id)->where('speed','>=','20');
-        if($realtimeQuery->count() != 0){
-            $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
-        }else{
-            $machineAvgSpeed = 5;
-        }
-
-        //
-        // Cycle Time Calculation
-        //
-        if ($machineAvgSpeed != 0) {
-            $cycleTime = (($this->workorder->fg_size_2*60/$machineAvgSpeed))/1000;
-        }else{
-            $cycleTime = 0;
-        }
-
-        //
-        // Performance Calculation
-        //
-        $productionPlanned = round($this->workorder->bb_qty_pcs / $this->workorder->fg_size_1 / $this->workorder->fg_size_1 / $this->workorder->fg_size_2 / $this->calculatePcsPerBundle($this->workorder->fg_shape) *1000,0);
-        $per = 0;
-        // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
-        if ($productionCount == 0) {
-            $per = 100;
-        }else{
-            $per = ((($productionCount*$cycleTime)/60) / (($productionPlanned*$cycleTime)/60))*100;
         }
 
         //
@@ -240,7 +288,7 @@ class WorkorderDataSheet implements ShouldAutoSize, WithTitle, WithEvents, WithD
             $otr = 100;
         }
         else{
-            $otr = (($plannedTimeMinutes - (floor($wasteDowntime/60))) / $plannedTimeMinutes)*100;
+            $otr = ((($plannedTimeMinutes-($managementDowntime/60)-($offProductionTime/60)) - (floor($wasteDowntime/60))) / ($plannedTimeMinutes-($managementDowntime/60)-($offProductionTime/60)))*100;
         }
 
         //
@@ -251,8 +299,41 @@ class WorkorderDataSheet implements ShouldAutoSize, WithTitle, WithEvents, WithD
         if ($productionCount == 0) {
             $qr = 100;
         }else{
-            $qr = ($total_good_product / $productionCount)*100;
+            $qr = (($total_good_product - $total_bad_product) / $total_good_product)*100;
         }
+
+        //
+        // Machine Average Speed
+        //
+        $realtimeQuery = Realtime::select('speed')->where('workorder_id',$this->workorder->id)->where('speed','>=','20');
+        if($realtimeQuery->count() != 0){
+            $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
+        }else{
+            $machineAvgSpeed = 5;
+        }
+
+        //
+        // Cycle Time Calculation
+        //
+        if ($machineAvgSpeed != 0) {
+            $cycleTime = ($this->workorder->fg_size_2*60/$machineAvgSpeed)/1000;
+        }else{
+            $cycleTime = 0;
+        }
+
+        //
+        // Performance Calculation
+        //
+        $productionPlanned = round($this->workorder->bb_qty_pcs / $this->workorder->fg_size_1 / $this->workorder->fg_size_1 / $this->workorder->fg_size_2 / $this->calculatePcsPerBundle($this->workorder->fg_shape) *1000,0);
+        $per = 0;
+        // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
+        if ($productionCount == 0) {
+            $per = 100;
+        }else{
+            $per = ($total_good_product/((($plannedTimeMinutes-($managementDowntime/60)-($offProductionTime/60))-($wasteDowntime/60))*60/$cycleTime))*100;
+        }
+
+        // dd($cycleTime);
 
         //
         // OEE

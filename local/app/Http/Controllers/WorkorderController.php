@@ -211,6 +211,7 @@ class WorkorderController extends Controller
         {
             $productionCount += $prod->pcs_per_bundle;
         }
+        // dd($productions);
 
         //
         // Smeltings
@@ -308,6 +309,7 @@ class WorkorderController extends Controller
         
 
         // Waste Downtime Calculation
+        $waste_downtime_min = 0;
         if(($wasteDowntime / 60) >=1)
         {
             $waste_downtime_min = floor($wasteDowntime/60);
@@ -334,6 +336,7 @@ class WorkorderController extends Controller
         }
 
         // Management Downtime Calculation
+        $management_downtime_min = 0;
         if(($managementDowntime / 60) >=1)
         {
             $management_downtime_min = floor($managementDowntime/60);
@@ -360,6 +363,7 @@ class WorkorderController extends Controller
         }
 
         // OFf Production Calculation
+        $off_production_time_min = 0;
         if(($offProductionTime / 60) >=1)
         {
             $off_production_time_min = floor($offProductionTime/60);
@@ -415,37 +419,6 @@ class WorkorderController extends Controller
         // }
 
         //
-        // Machine Average Speed
-        //
-        $realtimeQuery = Realtime::select('speed')->where('workorder_id',$workorder->id)->where('speed','>=','20');
-        if($realtimeQuery->count() != 0){
-            $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
-        }else{
-            $machineAvgSpeed = 5;
-        }
-
-        //
-        // Cycle Time Calculation
-        //
-        if ($machineAvgSpeed != 0) {
-            $cycleTime = (($workorder->fg_size_2*60/$machineAvgSpeed))/1000;
-        }else{
-            $cycleTime = 0;
-        }
-
-        //
-        // Performance Calculation
-        //
-        $productionPlanned = round($workorder->bb_qty_pcs / $workorder->fg_size_1 / $workorder->fg_size_1 / $workorder->fg_size_2 / $this->calculatePcsPerBundle($workorder->fg_shape) *1000,0);
-        $per = 0;
-        // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
-        if ($productionCount == 0) {
-            $per = 100;
-        }else{
-            $per = ((($productionCount*$cycleTime)/60) / (($productionPlanned*$cycleTime)/60))*100;
-        }
-
-        //
         // Availability Calculation
         //
         $plannedTime = 100;
@@ -476,7 +449,7 @@ class WorkorderController extends Controller
             $otr = 100;
         }
         else{
-            $otr = (($plannedTimeMinutes - (floor($wasteDowntime/60))) / $plannedTimeMinutes)*100;
+            $otr = ((($plannedTimeMinutes-($managementDowntime/60)-($offProductionTime/60)) - (floor($wasteDowntime/60))) / ($plannedTimeMinutes-($managementDowntime/60)-($offProductionTime/60)))*100;
         }
 
         //
@@ -487,9 +460,40 @@ class WorkorderController extends Controller
         if ($productionCount == 0) {
             $qr = 100;
         }else{
-            $qr = ($total_good_product / $productionCount)*100;
+            $qr = (($total_good_product - $total_bad_product) / $total_good_product)*100;
         }
 
+        //
+        // Machine Average Speed
+        //
+        $realtimeQuery = Realtime::select('speed')->where('workorder_id',$workorder->id)->where('speed','>=','20');
+        if($realtimeQuery->count() != 0){
+            $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
+        }else{
+            $machineAvgSpeed = 30;
+        }
+
+        //
+        // Cycle Time Calculation
+        //
+        if ($machineAvgSpeed != 0) {
+            $cycleTime = ($workorder->fg_size_2*60/$machineAvgSpeed)/1000;
+        }else{
+            $cycleTime = 0;
+        }
+
+        //
+        // Performance Calculation
+        //
+        $productionPlanned = round($workorder->bb_qty_pcs / $workorder->fg_size_1 / $workorder->fg_size_1 / $workorder->fg_size_2 / $this->calculatePcsPerBundle($workorder->fg_shape) *1000,0);
+        $per = 0;
+        // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
+        if ($productionCount == 0) {
+            $per = 100;
+        }else{
+            $per = ($total_good_product/((($plannedTimeMinutes-($managementDowntime/60)-($offProductionTime/60))-($wasteDowntime/60))*60/$cycleTime))*100;
+        }
+        // dd($offProductionTime);
         //
         // OEE
         //
@@ -557,6 +561,7 @@ class WorkorderController extends Controller
                 'waste_downtime'    => $waste_downtime,
                 'management_downtime'   => $management_downtime,
                 'off_production_time'   => $off_production_time,
+                'average_speed'         => $machineAvgSpeed
             ],
             'indicator'             => [
                 'performance'   => round($per,1),
