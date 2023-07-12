@@ -235,7 +235,7 @@ class WorkorderController extends Controller
         $managementDowntime = 0;
         $offProductionTime = 0;
         $downtimes = Downtime::where('workorder_id',$workorder->id)->where('status','stop')->get();
-        $downtimeSummary = Downtime::where('status','run')
+        $downtimeSummary = Downtime::where('status','stop')
                                 ->where('workorder_id',$workorder->id)
                                 ->get();
         foreach($downtimeSummary as $dt)
@@ -273,6 +273,7 @@ class WorkorderController extends Controller
                 $offProductionTime += $durationSec;
             }
             $totalDowntime += $durationSec;
+            
         }
         $total_downtime = 0;
         $waste_downtime = 0;
