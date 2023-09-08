@@ -556,6 +556,8 @@ class ProductionController extends Controller
         $qr = 0;
         if ($productionCount == 0) {
             $qr = 100;
+        }else if($total_good_product == 0){
+            $qr = 0;
         }else{
             $qr = (($total_good_product - $total_bad_product) / $total_good_product)*100;
         }
