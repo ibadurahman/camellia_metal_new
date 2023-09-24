@@ -265,6 +265,13 @@
                                         <span class="text-danger help-block">{{$message}}</span>
                                     @enderror
                                 </div>
+                                <div class="form-group">
+                                    <label for="">Label Remarks</label>
+                                    <textarea name="label_remarks" class="form-control @error('label_remarks') is-invalid @enderror" placeholder="Keterangan pada label produksi(kosongkan jika tidak dibutuhkan)" cols="30" rows="1">{{$workorder->label_remarks ?? old('label_remarks')}}</textarea>
+                                    @error('label_remarks')
+                                        <span class="text-danger help-block">{{$message}}</span>
+                                    @enderror
+                                </div>
                                 <input type="hidden" value="{{$workorder->wo_order_num}}" name="wo_order_num" />
                                 <div class="form-group">
                                     <input value="Apply" type="submit" class="btn btn-primary">
@@ -295,63 +302,63 @@
             $('#kg-per-bundle').on('keyup',function(){
                 recalculate();
             });
-            $('#supplier-cmbbx').on('change',function(){
-                $.ajax({
-                    type:"POST",
-                    dataType:"json",
-                    url:"{{route('admin.supplier.getSupplierData')}}",
-                    data:{
-                        name:$('#supplier-cmbbx').val(),
-                        _token:'{{csrf_token()}}'
-                    },
-                    success:function(response){
-                        $('#supplier-grade').val(response[0].grade);
-                        $('#supplier-diameter').val(response[0].diameter);
-                        $('#supplier-qty-kg').val(response[0].qty_kg);
-                        $('#supplier-qty-coil').val(response[0].qty_coil);
-                        recalculate();
-                    }
-                });
-            });
+            // $('#supplier-cmbbx').on('change',function(){
+            //     $.ajax({
+            //         type:"POST",
+            //         dataType:"json",
+            //         url:"{{route('admin.supplier.getSupplierData')}}",
+            //         data:{
+            //             name:$('#supplier-cmbbx').val(),
+            //             _token:'{{csrf_token()}}'
+            //         },
+            //         success:function(response){
+            //             $('#supplier-grade').val(response[0].grade);
+            //             $('#supplier-diameter').val(response[0].diameter);
+            //             $('#supplier-qty-kg').val(response[0].qty_kg);
+            //             $('#supplier-qty-coil').val(response[0].qty_coil);
+            //             recalculate();
+            //         }
+            //     });
+            // });
             $('#customer-shape').on('change',function(){
                 recalculate();
             })
-            $('#customer-cmbbx').on('change',function(){
-                $.ajax({
-                    type:"POST",
-                    dataType:"json",
-                    url:"{{route('admin.customer.getCustomerData')}}",
-                    data:{
-                        name:$('#customer-cmbbx').val(),
-                        _token:'{{csrf_token()}}'
-                    },
-                    success:function(response){
-                        $('#customer-straight-standard').val(response[0].straightness_standard);
-                        $('#customer-size-1').val(response[0].size_1);
-                        $('#customer-size-2').val(response[0].size_2);
+            // $('#customer-cmbbx').on('change',function(){
+            //     $.ajax({
+            //         type:"POST",
+            //         dataType:"json",
+            //         url:"{{route('admin.customer.getCustomerData')}}",
+            //         data:{
+            //             name:$('#customer-cmbbx').val(),
+            //             _token:'{{csrf_token()}}'
+            //         },
+            //         success:function(response){
+            //             $('#customer-straight-standard').val(response[0].straightness_standard);
+            //             $('#customer-size-1').val(response[0].size_1);
+            //             $('#customer-size-2').val(response[0].size_2);
                         
-                        if(response[0].shape == "Round")
-                        {
-                            $('#shape-round').attr('selected',true)
-                            $('#shape-square').attr('selected',false)
-                            $('#shape-hexagon').attr('selected',false)
-                        }
-                        if(response[0].shape == "Square")
-                        {
-                            $('#shape-round').attr('selected',false)
-                            $('#shape-square').attr('selected',true)
-                            $('#shape-hexagon').attr('selected',false)
-                        }
-                        if(response[0].shape == "Hexagon")
-                        {
-                            $('#shape-round').attr('selected',false)
-                            $('#shape-square').attr('selected',false)
-                            $('#shape-hexagon').attr('selected',true)
-                        }
-                        recalculate();
-                    }
-                });
-            });
+            //             if(response[0].shape == "Round")
+            //             {
+            //                 $('#shape-round').attr('selected',true)
+            //                 $('#shape-square').attr('selected',false)
+            //                 $('#shape-hexagon').attr('selected',false)
+            //             }
+            //             if(response[0].shape == "Square")
+            //             {
+            //                 $('#shape-round').attr('selected',false)
+            //                 $('#shape-square').attr('selected',true)
+            //                 $('#shape-hexagon').attr('selected',false)
+            //             }
+            //             if(response[0].shape == "Hexagon")
+            //             {
+            //                 $('#shape-round').attr('selected',false)
+            //                 $('#shape-square').attr('selected',false)
+            //                 $('#shape-hexagon').attr('selected',true)
+            //             }
+            //             recalculate();
+            //         }
+            //     });
+            // });
 
             function recalculate()
             {

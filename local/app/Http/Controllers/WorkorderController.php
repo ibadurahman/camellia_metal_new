@@ -56,6 +56,10 @@ class WorkorderController extends Controller
         if ($request->machine_id != "0") {
             $workorder = $workorder->where('machine_id',$request->machine_id);
         }
+
+        if($request->status != ''){
+            $workorder = $workorder->where('status_wo',$request->status);
+        }
         
         return datatables()->of($workorder)
                 ->filter(function($query) use ($request){

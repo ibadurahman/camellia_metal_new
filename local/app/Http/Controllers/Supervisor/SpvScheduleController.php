@@ -21,38 +21,6 @@ class SpvScheduleController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
     public function showWaiting()
     {
         $workorders = Workorder::where('status_wo','waiting')->orderBy('wo_order_num','ASC');
@@ -69,20 +37,6 @@ class SpvScheduleController extends Controller
                 $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
-            // ->addColumn('status_prod',function(Workorder $model){
-            //     $combines = $model->status_prod;
-            //     if($combines){
-            //         return 'On Process';
-            //     }
-            //     return 'Waiting';
-            // })
-            // ->addColumn('status_wo',function(Workorder $model){
-            //     $combines = $model->status_wo;
-            //     if($combines){
-            //         return 'Closed';
-            //     }
-            //     return 'Open';
-            // })
             ->addColumn('user',function(Workorder $model){
                 return $model->user->name;
             })
@@ -130,20 +84,6 @@ class SpvScheduleController extends Controller
                 $combines = $model->fg_size_1 . " / " . $model->fg_size_2;
                 return $combines;
             })
-            // ->addColumn('status_prod',function(Workorder $model){
-            //     $combines = $model->status_prod;
-            //     if($combines){
-            //         return 'On Process';
-            //     }
-            //     return 'Waiting';
-            // })
-            // ->addColumn('status_wo',function(Workorder $model){
-            //     $combines = $model->status_wo;
-            //     if($combines){
-            //         return 'Closed';
-            //     }
-            //     return 'Open';
-            // })
             ->addColumn('tolerance',function(Workorder $model){
                 $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
@@ -203,37 +143,4 @@ class SpvScheduleController extends Controller
         return redirect(route('spvproduction.index'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

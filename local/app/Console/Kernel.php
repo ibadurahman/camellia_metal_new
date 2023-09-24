@@ -19,6 +19,12 @@ class Kernel extends ConsoleKernel
         if (Carbon::now()->format('G') == '7') {
             $schedule->command('downtime:close')->dailyAt('07:00');
         }
+        if (Carbon::now()->format('G') == '12') {
+            $schedule->command('downtime:close')->dailyAt('12:00');
+        }
+        if (Carbon::now()->format('G') == '13') {
+            $schedule->command('downtime:close')->dailyAt('13:00');
+        }
         if (Carbon::now()->format('G') == '16') {
             $schedule->command('downtime:close')->dailyAt('16:00');
         }

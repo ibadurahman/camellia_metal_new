@@ -5,12 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RealtimeController;
-use App\Http\Controllers\WorkorderController;
-use App\Http\Controllers\Admin\DataController;
-use App\Http\Controllers\DailyReportController;
 use App\Http\Controllers\Operator\ScheduleController;
-use App\Http\Controllers\Operator\ProductionController;
-use App\Http\Controllers\Supervisor\SpvProductionController;
 use App\Http\Controllers\WorkorderReportController;
 
 /*
@@ -40,27 +35,25 @@ Route::middleware(['verified'])->group(function(){
 //
 // Daily Report Controller Route
 //
-Route::middleware(['verified'])->group(function(){
-    Route::get('/dailyReport',[DailyReportController::class,'index'])->name('dailyReport.index');
-    Route::get('/dailyReport/ajaxRequestAll',[DailyReportController::class,'ajaxRequestAll'])->name('dailyReport.ajaxRequestAll');
-    Route::get('/dailyReport/getCustomFilterData',[DailyReportController::class,'getCustomFilterData'])->name('dailyReport.getCustomFilterData');
-    Route::post('/dailyReport/calculateSearchResult',[DailyReportController::class,'calculateSearchResult'])->name('dailyReport.calculateSearchResult');
+Route::prefix('dailyReport')->controller(DailyReportController::class)->middleware(['verified'])->group(function(){
+    Route::get('/','index')->name('dailyReport.index');
+    Route::get('/ajaxRequestAll','ajaxRequestAll')->name('dailyReport.ajaxRequestAll');
+    Route::get('/getCustomFilterData','getCustomFilterData')->name('dailyReport.getCustomFilterData');
+    Route::post('/calculateSearchResult','calculateSearchResult')->name('dailyReport.calculateSearchResult');
 });
 
 //
 // Workorder Controller Route
 //
-Route::middleware(['verified'])->group(function(){
-    Route::get('/workorder',[WorkorderController::class,'index'])->name('workorder.index');
-    Route::get('/workorder/ajaxRequestWorkorder',[WorkorderController::class,'ajaxRequestAll'])->name('workorder.ajaxRequestAll');
-    Route::get('/workorder/{workorder}/show',[WorkorderController::class,'show'])->name('workorder.show');
-    Route::post('/workorder/getDowntime',[WorkorderController::class,'getDowntime'])->name('workorder.getDowntime');
-    Route::post('/workorder/getOee',[WorkorderController::class,'getOee'])->name('workorder.getOee');
-    Route::get('/workorder/speedChart',[WorkorderController::class,'speedChart'])->name('workorder.speedChart');
-    // Route::get('/workorder/{workorder}/export', [WorkorderController::class, 'export'])->name('workorder.export');
+Route::prefix('workorder')->controller(WorkorderController::class)->middleware(['verified'])->group(function(){
+    Route::get('/','index')->name('workorder.index');
+    Route::get('/ajaxRequestWorkorder','ajaxRequestAll')->name('workorder.ajaxRequestAll');
+    Route::get('/{workorder}/show','show')->name('workorder.show');
+    Route::post('/getDowntime','getDowntime')->name('workorder.getDowntime');
+    Route::post('/getOee','getOee')->name('workorder.getOee');
+    Route::get('/speedChart','speedChart')->name('workorder.speedChart');
 
-    // Route::get('/workorder/dataonprocess',[DataController::class,'workordersOnProcess'])->name('workorder.dataonprocess');
-    Route::get('/workorder/dataclosed',[DataController::class,'workordersClosed'])->name('workorder.dataclosed');
+    Route::get('/dataclosed','workordersClosed')->name('workorder.dataclosed');
 });
 
 //
@@ -92,44 +85,52 @@ Route::middleware(['verified'])->group(function(){
 //
 // Production Controller Route
 //
-Route::middleware(['verified'])->group(function(){
-    Route::get('/operator/production',[ProductionController::class,'index'])->name('production.index');
-	Route::get('/operator/production/{workorder}/show',[ProductionController::class,'show'])->name('operator.production.show');
-    Route::get('/operator/production/showOnProcess',[ProductionController::class,'showOnProcess'])->name('operator.production.showOnProcess');
+Route::prefix('operator/production')->controller(Operator\ProductionController::class)->middleware(['verified'])->group(function(){
+    Route::get('/','index')->name('production.index');
+	Route::get('/{workorder}/show','show')->name('operator.production.show');
+    Route::get('/showOnProcess','showOnProcess')->name('operator.production.showOnProcess');
 
-    Route::post('/operator/production/store',[ProductionController::class,'store'])->name('production.store');
-    Route::get('/operator/production/{production}/edit',[ProductionController::class,'edit'])->name('production.edit');
-    Route::put('/operator/production/{production}/update',[ProductionController::class,'update'])->name('production.update');
-    Route::delete('/operator/production/{production}/delete',[ProductionController::class,'destroy'])->name('production.delete');
+    Route::post('/store','store')->name('production.store');
+    Route::get('/{production}/edit','edit')->name('production.edit');
+    Route::put('/{production}/update','update')->name('production.update');
+    Route::delete('/{production}/delete','destroy')->name('production.delete');
     
-    Route::post('/operator/production/getSmeltingNum',[ProductionController::class,'getSmeltingNum'])->name('production.getSmeltingNum');
-    Route::post('/operator/production/storeOee',[ProductionController::class,'storeOee'])->name('production.storeOee');
-    Route::post('/operator/production/getProductionInfo',[ProductionController::class,'getProductionInfo'])->name('production.getProductionInfo');
-    Route::get('/operator/production/speedChart',[ProductionController::class,'speedChart'])->name('production.speedChart');
+    Route::post('/getSmeltingNum','getSmeltingNum')->name('production.getSmeltingNum');
+    Route::post('/storeOee','storeOee')->name('production.storeOee');
+    Route::post('/getProductionInfo','getProductionInfo')->name('production.getProductionInfo');
+    Route::get('/speedChart','speedChart')->name('production.speedChart');
 
-	Route::post('/operator/production/{workorder}/finish',[ProductionController::class,'finish'])->name('operator.production.finish');
-	Route::post('/operator/production/{workorder}/finishWithDelete',[ProductionController::class,'finishWithDelete'])->name('operator.production.finishWithDelete');
+	Route::post('/{workorder}/finish','finish')->name('operator.production.finish');
+	Route::post('/{workorder}/finishWithDelete','finishWithDelete')->name('operator.production.finishWithDelete');
+
+    Route::post('/{workorder}/forceCloseInitiation','forceCloseInitiation')->name('operator.production.forceCloseInitiation');
+    Route::post('/{workorder}/forceCloseApproved','forceCloseApproved')->name('operator.production.forceCloseApproved');
+});
+
+//
+// Bypass Workorder
+//
+Route::prefix('bypass')->controller(BypassWorkorderController::class)->middleware(['auth'])->group(function(){
+    Route::get('/','index')->name('bypass.index');
+    Route::get('/initiated','initiated')->name('bypass.initiated');
+    Route::get('/history','history')->name('bypass.history');
 });
 
 //
 // SPV Production Controller Route
 //
-Route::middleware(['verified'])->group(function(){
-    Route::get('/supervisor/production',[SpvProductionController::class,'index'])->name('spvproduction.index');
-    Route::get('/supervisor/production/showOnCheck',[SpvProductionController::class,'showOnCheck'])->name('spvproduction.showOnCheck');
-	Route::get('/supervisor/production/{workorder}/show',[SpvProductionController::class,'show'])->name('spvproduction.show');
-    Route::get('/supervisor/production/speedChart',[SpvProductionController::class,'speedChart'])->name('spvproduction.speedChart');
+Route::prefix('supervisor/production')->controller(Supervisor\SpvProductionController::class)->middleware(['verified'])->group(function(){
+    Route::get('/','index')->name('spvproduction.index');
+    Route::get('/showOnCheck','showOnCheck')->name('spvproduction.showOnCheck');
+	Route::get('/{workorder}/show','show')->name('spvproduction.show');
+    Route::get('/speedChart','speedChart')->name('spvproduction.speedChart');
 
-    Route::post('/supervisor/production/store',[SpvProductionController::class,'store'])->name('spvproduction.store');
-    Route::get('/supervisor/production/{production}/edit',[SpvProductionController::class,'edit'])->name('spvproduction.edit');
-    Route::put('/supervisor/production/{production}/update',[SpvProductionController::class,'update'])->name('spvproduction.update');
-    Route::delete('/supervisor/production/{production}/delete',[SpvProductionController::class,'destroy'])->name('spvproduction.delete');
+    Route::post('/store','store')->name('spvproduction.store');
+    Route::get('/{production}/edit','edit')->name('spvproduction.edit');
+    Route::put('/{production}/update','update')->name('spvproduction.update');
+    Route::delete('/{production}/delete','destroy')->name('spvproduction.delete');
 
-	Route::post('/supervisor/production/{workorder}/finish',[SpvProductionController::class,'finish'])->name('spvproduction.finish');
-
- 	// // Route::get('/operator/production/{id}/spvshow',[ProductionController::class,'spvshow'])->name('spvshow.show');
-    // Route::post('/supervisor/production/{id}/finish',[ProductionController::class,'finish'])->name('spvproduction.finish');
-	// Route::get('/supervisor/production/{workorder}/show_details',[SpvProductionController::class,'spvshow'])->name('supervisor.production.show_details');
+	Route::post('/{workorder}/finish','finish')->name('spvproduction.finish');
 });
 
 

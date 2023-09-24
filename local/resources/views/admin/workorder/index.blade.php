@@ -47,6 +47,7 @@
                                     <th>Edited By</th>
                                     <th>Updated at</th>
                                     <th>Remarks</th>
+                                    <th>Label Remarks</th>
                                     <th>Leburan</th>
                                     <th>Action</th>
                                 </tr>
@@ -103,6 +104,7 @@
                                     <th>Edited By</th>
                                     <th>Updated at</th>
                                     <th>Remarks</th>
+                                    <th>Label Remarks</th>
                                     <th>Leburan</th>
                                     <th>Action</th>
                                 </tr>
@@ -148,6 +150,7 @@
                                     <th>Processed By</th>
                                     <th>Process Start</th>
                                     <th>Remarks</th>
+                                    <th>Label Remarks</th>
                                     <th>Leburan</th>
                                 </tr>
                             </thead>
@@ -243,6 +246,9 @@
                 },
                 {
                     data: 'remarks'
+                },
+                {
+                    data: 'label_remarks'
                 },
                 {
                     data: 'smelting'
@@ -431,6 +437,9 @@
                     data: 'remarks'
                 },
                 {
+                    data: 'label_remarks'
+                },
+                {
                     data: 'smelting'
                 },
             ],
@@ -526,6 +535,9 @@
                 },
                 {
                     data: 'remarks'
+                },
+                {
+                    data: 'label_remarks'
                 },
                 {
                     data: 'smelting'

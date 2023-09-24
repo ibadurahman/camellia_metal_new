@@ -15,36 +15,7 @@ class Workorder extends Model
      * @var array<int, string>
      */
     public $timestamps = true;
-    protected $fillable = [
-        'wo_number',
-        'bb_supplier',
-        'bb_grade',
-        'bb_diameter',
-        'bb_qty_pcs',
-        'bb_qty_coil',
-        'bb_qty_bundle',
-        'fg_customer',
-        'straightness_standard',
-        'fg_size_1',
-        'fg_size_2',
-        'tolerance_minus',
-		'tolerance_plus',
-        'fg_reduction_rate',
-        'fg_shape',
-        'fg_qty_kg',
-        'fg_qty_pcs',
-        'wo_order_num',
-        'status_wo',
-        'processed_by',
-        'process_start',
-        'process_end',
-		'chamfer',
-	    'color',
-        'machine_id',
-        'created_by',
-        'edited_by',
-        'remarks'
-    ];
+    protected $guarded = [];
 
     public function user()
     {
@@ -61,23 +32,32 @@ class Workorder extends Model
         return $this->hasMany(Production::class);
     }
 
-    public function smeltings(){
+    public function smeltings()
+    {
         return $this->hasMany(Smelting::class);
     }
-    
-    public function oees(){
+
+    public function oees()
+    {
         return $this->hasMany(Oee::class);
     }
 
-    public function realtimes(){
+    public function realtimes()
+    {
         return $this->hasMany(Realtime::class);
     }
 
-    public function color(){
+    public function color()
+    {
         return $this->belongsTo(Color::class);
     }
 
-    public function dailyReport(){
+    public function dailyReport()
+    {
         return $this->belongsTo(dailyReport::class);
+    }
+
+    public function processedBy(){
+        return $this->belongsTo(User::class,'processed_by','id');
     }
 }

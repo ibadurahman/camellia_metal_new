@@ -48,13 +48,19 @@ class MachineController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(MachineRequest $request)
+    public function store(Request $request)
     {
         //
+        $request->validate([
+            'name'          => 'required|unique:machines,name',
+            'line_id'       => 'required',
+            'ip_address'    => 'required'
+        ]);
+
         $supplier = Machine::create([
             'name'          => $request->name,
             'line_id'       => $request->line_id,
-            'ip_address'   => $request->ip_address
+            'ip_address'    => $request->ip_address
         ]);
 
         return redirect()->route('admin.machine.index')->with('success','Data Added Successfully');
@@ -94,13 +100,19 @@ class MachineController extends Controller
      * @param  \App\Models\Machine  $machine
      * @return \Illuminate\Http\Response
      */
-    public function update(MachineRequest $request, Machine $machine)
+    public function update(Request $request, Machine $machine)
     {
         //
+        $request->validate([
+            'name'          => 'required|unique:machines,name,'.$machine->id,
+            'line_id'       => 'required',
+            'ip_address'    => 'required'
+        ]);
+
         $machine->update([
             'name'          => $request->name,
             'line_id'       => $request->line_id,
-            'ip_address'   => $request->ip_address
+            'ip_address'    => $request->ip_address
         ]);
 
         return redirect()->route('admin.machine.index')->with('success','Data Updated Successfully');

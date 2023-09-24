@@ -679,7 +679,6 @@
                         .end_time + '</h3>';
                     var downtimeListBody = '</div>';
 
-
                     if (data[index].end_time == null) {
                         cardOpeningDiv = '<div class="card card-danger collapsed-card">';
                         dtTime = '<h3 class="card-title">' + data[index].start_time + ' - Now</h3>';

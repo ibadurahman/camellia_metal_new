@@ -1,4 +1,3 @@
-
 @extends('templates.default')
 @section('content')
     <!-- Main content -->
@@ -29,11 +28,12 @@
                                                     <div class="form-group" style="width:50%">
                                                         <div class="input-group">
                                                             <label style="padding-right: 10px;">Show :</label>
-                                                                <div class="input-group-prepend">
-                                                                    <span class="input-group-text"><i
-                                                                            class="far fa-clock"></i></span>
-                                                                </div>
-                                                                <input type="text" class="form-control float-right" id="reservationtime" autocomplete="off">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text"><i
+                                                                        class="far fa-clock"></i></span>
+                                                            </div>
+                                                            <input type="text" class="form-control float-right"
+                                                                id="reservationtime" autocomplete="off">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -181,9 +181,10 @@
                                         <div class="col-sm-4 col-4">
                                             <div class="description-block border-right">
                                                 <div class="row">
-                                                <div class="col-4">
+                                                    <div class="col-4">
                                                         <span class="description-text text-sm">AVERAGE SPEED</span>
-                                                        <h5 class="description-header">{{ round($reports['average_speed'],2) }} M/Min
+                                                        <h5 class="description-header">
+                                                            {{ round($reports['average_speed'], 2) }} M/Min
                                                         </h5>
                                                     </div>
                                                     <div class="col-4">
@@ -239,7 +240,8 @@
                                                     </div>
                                                     <div class="col-md-4">
                                                         <span class="description-text text-black">OFF</span>
-                                                        <h5 class="description-header">{{ $reports['off_production_time'] }}
+                                                        <h5 class="description-header">
+                                                            {{ $reports['off_production_time'] }}
                                                         </h5>
                                                     </div>
                                                 </div>
@@ -552,44 +554,57 @@
     @endif
     <?php $checkRemarkEmpty = true; ?>
 
-    <?php $downtimeDataPending = false; ?>
-    @foreach ($downtimes as $downtime)
-        @if ($downtime->is_remark_filled == false && $downtime->is_downtime_stopped == false)
-            <?php $downtimeDataPending = true; ?>
-        @break;
-    @endif
-    <?php $downtimeDataPending = false; ?>
-@endforeach
-
-<div class="row">
-    <div class="col-4">
-        <div class="card card-outline card-primary">
-            <div class="card-header" id="div_str_finish">
-                Finish Workorder Button
-            </div>
-            <div class="card-body">
-                <div class="text-center">
-                    <form action="" method="POST" id="finishForm">
-                        @csrf
-                        <input type="submit" value="Process" style="display:none">
-                        @if ($allProductionDataComplete == false || $allDowntimeDataComplete == false)
-                            <p class="text-danger">Please Finish All Report First</p>
-                        @elseif ($downtimeDataPending == true)
-                            <p class="">There is a downtime that still running. Do you want to
-                                force it done?</p>
-                            <p class="text-danger">Note: This downtime will be deleted</p>
-                            <a href="{{ url('/operator/production/' . $workorder->id . '/finishWithDelete') }}"
-                                class="btn btn-success finish-button">Finish Workorder</a>
-                        @else
-                            <a href="{{ url('/operator/production/' . $workorder->id . '/finish') }}"
-                                class="btn btn-success finish-button">Finish Workorder</a>
-                        @endif
-                    </form>
+    <div class="row">
+        <div class="col-4">
+            <div class="card card-outline card-primary">
+                <div class="card-header" id="div_str_finish">
+                    Finish Workorder Button
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <form action="" method="POST" id="finishForm">
+                            @csrf
+                            <input type="submit" value="Process" style="display:none">
+                            @if ($allProductionDataComplete == false || $allDowntimeDataComplete == false)
+                                <p class="text-danger">Please Finish All Report First</p>
+                            @else
+                                <a href="{{ url('/operator/production/' . $workorder->id . '/finish') }}"
+                                    class="btn btn-success finish-button">Finish Workorder</a>
+                            @endif
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
+        @if (auth()->user()->hasRole(['super-admin', 'supervisor', 'owner', 'office-admin']))
+            <div class="col-4">
+                <div class="card card-outline card-primary">
+                    <div class="card-header" id="div_str_finish">
+                        Force Close Workorder
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            @if ($bypass_workorder && $bypass_workorder->initiatedBy->name)
+                                <p>This workorder is initiated to force close by
+                                    {{ $bypass_workorder->initiatedBy->name }}. The reason is
+                                    {{ $bypass_workorder->remarks }}.</p>
+
+                                @if (auth()->user()->hasRole(['office-admin', 'super-admin', 'owner']))
+                                    <button class="btn btn-primary" id="approve-force-close-btn">Approve
+                                        this</button>
+                                @endif
+                            @elseif(
+                                !$bypass_workorder &&
+                                    auth()->user()->hasRole(['supervisor', 'super-admin', 'owner']))
+                                <button class="btn btn-primary" id="force-close-btn">Initiate Force
+                                    Close</button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
-</div>
 
 </div>
 
@@ -604,16 +619,95 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
+        $(document).on('click', '#force-close-btn', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Are you sure want to force close this workorder?',
+                input: 'text',
+                inputAttributes: {
+                    placeholder: 'Put your reason here...',
+                    autocapitalize: 'off'
+                },
+                text: "After this initiation, it needs to approved by production planning beureu to complete the force close!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, force close it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: "POST",
+                        url: '{{ route('operator.production.forceCloseInitiation', $workorder->id) }}',
+                        data: {
+                            reason: result.value,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        dataType: 'json',
+                        error: function(xhr) {
+                            console.log(xhr);
+                        },
+                    }).done(function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Force Close Initiated',
+                            showConfirmButton: false,
+                            timer: 3000
+                        }).then(function() {
+                            //reload page
+                            location.reload();
+                        });
+                    })
+                }
+            })
+        })
+        $(document).on('click', '#approve-force-close-btn', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Are you sure want to force close this workorder?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, force close it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: "POST",
+                        url: '{{ route('operator.production.forceCloseApproved', $workorder->id) }}',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        dataType: 'json',
+                        error: function(xhr) {
+                            console.log(xhr);
+                        },
+                    }).done(function(response) {
+                        console.log(response)
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Wokorder Closed Successfully',
+                            showConfirmButton: false,
+                            timer: 3000
+                        }).then((result) => {
+                            window.location.href =
+                                '{{ route('bypass.index') }}'
+                        });
+                    })
+                }
+            })
+        })
+    })
+</script>
+<script>
+    $(document).ready(function() {
         $('#reservationtime').daterangepicker({
             timePicker: true,
-            defaultValue:null,
+            defaultValue: null,
             timePickerIncrement: 30,
             locale: {
                 format: 'YYYY-MM-DD HH:mm:ss'
             }
         })
         $('#reservationtime').val('')
-        
+
         $('#search-form').on('submit', function(e) {
             e.preventDefault();
             updateSpeedChart();
@@ -630,7 +724,7 @@
             url: '{{ route('realtime.searchSpeedProduction') }}',
             data: {
                 timeRange: $('#reservationtime').val(),
-                workorder: '{{$workorder->id}}',
+                workorder: '{{ $workorder->id }}',
                 _token: '{{ csrf_token() }}'
             },
             dataType: 'json',
@@ -685,7 +779,7 @@
 
     let aChannel = Echo.channel('channel-downtime');
     aChannel.listen('DowntimeCaptured', function(data) {
-        if (data.downtime.machine != '{{$workorder->machine->name}}') {
+        if (data.downtime.machine != '{{ $workorder->machine->name }}') {
             return
         }
         if (data.downtime.status == 'stop') {
@@ -956,7 +1050,7 @@
                     if (downtimeCategory == 'waste') {
                         downtimeCategory = 'Waste Downtime';
                         textColor = 'text-danger';
-                    } else if(downtimeCategory == 'management') {
+                    } else if (downtimeCategory == 'management') {
                         downtimeCategory = 'Management Downtime';
                         textColor = 'text-white';
                     } else {
@@ -1012,7 +1106,8 @@
                     }
                     if (data[index].is_remark_filled == true) {
                         cardOpeningDiv = '<div class="card card-success collapsed-card">';
-                        dtTime = '<h3 class="card-title"> <b class="' + textColor + '">' + downtimeCategory +
+                        dtTime = '<h3 class="card-title"> <b class="' + textColor + '">' +
+                            downtimeCategory +
                             '</b> | ' + data[index].start_time + ' - ' + data[index].end_time + ' | ' +
                             data[index].duration + ' | ' + data[index].downtime_reason + ' | ' + data[index]
                             .remarks + '</h3>';
@@ -1255,7 +1350,7 @@
                 '<span class="description-text float-left">Created By: {{ $user_involved['created_by'] }}</span><br>' +
                 '<span class="description-text float-left">Created at: {{ $workorder->created_at }}</span><br>' +
                 '<span class="description-text float-left">Edited By: {{ $user_involved['edited_by'] }}</span><br>' +
-                '<span class="description-text float-left">Updated at: @if ($user_involved['edited_by'] == '') {{''}} @else {{ $workorder->updated_at }} @endif</span><br>' +
+                '<span class="description-text float-left">Updated at: @if ($user_involved['edited_by'] == '') {{ '' }} @else {{ $workorder->updated_at }} @endif</span><br>' +
                 '<hr>' +
                 '<span class="description-text float-left">Processed By: {{ $user_involved['processed_by'] }}</span><br>' +
                 '<span class="description-text float-left">Start: {{ $workorder->process_start }}</span><br>' +

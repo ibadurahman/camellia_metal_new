@@ -18,7 +18,7 @@ class ReportController extends Controller
             'title'         => 'PT. CAMELLIA METAL INDONESIA',
             'data'          => $production->workorder,
             'smeltings'     => $smeltings,
-            'production'   => $production
+            'production'    => $production
         ];
            
         $pdf = PDF::loadView('user.pdf.index', $data);

@@ -320,3 +320,9 @@ Breadcrumbs::for('spvproduction.edit', function ($trail, $workorder) {
 Breadcrumbs::for('warehouse.index', function ($trail) {
     $trail->push('Warehouse', route('home'));
 });
+
+// Bypass Breadcrumb
+Breadcrumbs::for('bypass.index', function ($trail) {
+    $trail->push('Home', route('home'));
+    $trail->push('Bypass', route('bypass.index'));
+});

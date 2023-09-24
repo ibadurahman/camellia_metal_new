@@ -50,6 +50,7 @@ class WorkorderRequest extends FormRequest
             'fg_qty_pcs'            =>['required','numeric'], 
             'color'                 =>['required','numeric'],
             'machine_id'            =>['required'],
+            'label_remarks'         =>['max: 20']
         ];
     }
 

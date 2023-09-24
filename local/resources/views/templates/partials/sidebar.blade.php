@@ -159,6 +159,12 @@
                     <p>Closed Workorder</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="{{route('bypass.index')}}" class="nav-link">
+                    <i class="nav-icon fas fa-file-alt"></i>
+                    <p>Bypass Workorder</p>
+                  </a>
+                </li>
               </ul>
             </li>
           @endhasanyrole
@@ -219,6 +225,12 @@
               <a href="{{route('spvproduction.index')}}" class="nav-link">
                 <i class="nav-icon fas fa-file-alt"></i>
                 <p>Report Check</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('bypass.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-file-alt"></i>
+                <p>Bypass Workorder</p>
               </a>
             </li>
           @endhasanyrole

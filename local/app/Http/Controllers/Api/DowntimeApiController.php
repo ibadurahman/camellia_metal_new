@@ -39,12 +39,34 @@ class DowntimeApiController extends Controller
         {
             return response()->json([
                 'message' => 'No Workorder is Running'
-            ],200);
+            ],400);
         }
         if (count($workorder)>1) {
             return response()->json([
                 'message' => 'More than one workorder is running'
-            ],200);
+            ],400);
+        }
+
+        if($aRequest['status']=='stop')
+        {
+            $lastDowntimeRun = Downtime::where('workorder_id',$workorder[0]->id)->orderBy('id','desc')->first();
+            if(!is_null($lastDowntimeRun) && $lastDowntimeRun->status=='stop')
+            {
+                return response()->json([
+                    'message' => 'Downtime is already stopped'
+                ],400);
+            }
+        }
+
+        if($aRequest['status']=='run')
+        {
+            $lastDowntimeRun = Downtime::where('workorder_id',$workorder[0]->id)->orderBy('id','desc')->first();
+            if(!is_null($lastDowntimeRun) && $lastDowntimeRun->status=='run')
+            {
+                return response()->json([
+                    'message' => 'Downtime is already running'
+                ],400);
+            }
         }
 
         $downtime = Downtime::create([

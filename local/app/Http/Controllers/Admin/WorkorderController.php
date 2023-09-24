@@ -110,6 +110,7 @@ class WorkorderController extends Controller
 			'color'                 =>$request->color,
             'machine_id'            =>$request->machine_id,
             'remarks'               =>preg_replace( "/\r|\n/", "", $request->remarks),
+            'label_remarks'         =>preg_replace( "/\r|\n/", "", $request->label_remarks)
         ]);
 
         return redirect()->route('admin.workorder.index')->with('success','Data Added Successfully');
@@ -182,7 +183,8 @@ class WorkorderController extends Controller
 			'chamfer'               =>$request->chamfer,
 			'color'                 =>$request->color,
             'machine_id'            =>$request->machine_id,
-            'remarks'               =>preg_replace( "/\r|\n/", "", $request->remarks)
+            'remarks'               =>preg_replace( "/\r|\n/", "", $request->remarks),
+            'label_remarks'         =>preg_replace( "/\r|\n/", "", $request->label_remarks)
         ]);
 
         return redirect()->route('admin.workorder.index')->with('success','Data Updated Successfully');

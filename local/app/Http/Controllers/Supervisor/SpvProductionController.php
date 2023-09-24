@@ -30,7 +30,7 @@ class SpvProductionController extends Controller
      */
     public function index()
     {
-        return view('supervisor.production.index',[
+        return view('supervisor.production.index', [
             'title' => 'Supervisor Index',
             'machines' => Machine::all()
         ]);
@@ -38,73 +38,72 @@ class SpvProductionController extends Controller
 
     public function showOnCheck(Request $request)
     {
-        $workorders = Workorder::where('status_wo','on check')->orderBy('wo_order_num','ASC');
+        $workorders = Workorder::where('status_wo', 'on check')->orderBy('wo_order_num', 'ASC');
         if ($request->machine != 0) {
-            $workorders = Workorder::where('status_wo','on check')->where('machine_id',$request->machine)->orderBy('wo_order_num','ASC');
+            $workorders = Workorder::where('status_wo', 'on check')->where('machine_id', $request->machine)->orderBy('wo_order_num', 'ASC');
         }
         return datatables()->of($workorders)
-            ->addColumn('bb_qty_combine',function(Workorder $model){
+            ->addColumn('bb_qty_combine', function (Workorder $model) {
                 $combines = $model->bb_qty_pcs . " / " . $model->bb_qty_coil;
                 return $combines;
             })
-            ->addColumn('fg_size_combine',function(Workorder $model){
+            ->addColumn('fg_size_combine', function (Workorder $model) {
                 $combines = $model->fg_size_1 . " x " . $model->fg_size_2;
                 return $combines;
             })
-            ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(-'.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+            ->addColumn('tolerance_combine', function (Workorder $model) {
+                $combines = '(-' . $model->tolerance_minus . ',+' . $model->tolerance_plus . ')';
                 return $combines;
             })
-            ->addColumn('color',function(Workorder $model){
-                $color = Color::where('id',$model->color)->first();
+            ->addColumn('color', function (Workorder $model) {
+                $color = Color::where('id', $model->color)->first();
                 return $color->name;
             })
-            ->addColumn('machine',function(Workorder $model){
+            ->addColumn('machine', function (Workorder $model) {
                 return $model->machine->name;
             })
-            ->addColumn('created_by',function(Workorder $model){
-                $user = User::where('id',$model->created_by)->first();
+            ->addColumn('created_by', function (Workorder $model) {
+                $user = User::where('id', $model->created_by)->first();
                 return $user->name;
             })
-            ->addColumn('created_at',function(Workorder $model){
-                return Date('Y-m-d H:i:s',strtotime($model->created_at));
+            ->addColumn('created_at', function (Workorder $model) {
+                return Date('Y-m-d H:i:s', strtotime($model->created_at));
             })
-            ->addColumn('edited_by',function(Workorder $model){
-                if(!$model->edited_by){
+            ->addColumn('edited_by', function (Workorder $model) {
+                if (!$model->edited_by) {
                     return '';
                 }
-                $user = User::where('id',$model->edited_by)->first();
+                $user = User::where('id', $model->edited_by)->first();
                 return $user->name;
             })
-            ->addColumn('updated_at',function(Workorder $model){
-                $user = User::where('id',$model->edited_by)->first();
-                if(!$user)
-                {
+            ->addColumn('updated_at', function (Workorder $model) {
+                $user = User::where('id', $model->edited_by)->first();
+                if (!$user) {
                     return '';
                 }
-                return Date('Y-m-d H:i:s',strtotime($user->updated_at));
+                return Date('Y-m-d H:i:s', strtotime($user->updated_at));
             })
-            ->addColumn('processed_by',function(Workorder $model){
-                $user = User::where('id',$model->processed_by)->first();
+            ->addColumn('processed_by', function (Workorder $model) {
+                $user = User::where('id', $model->processed_by)->first();
                 return $user->name;
             })
-            ->addColumn('process_start',function(Workorder $model){
-                return Date('Y-m-d H:i:s',strtotime($model->process_start));
+            ->addColumn('process_start', function (Workorder $model) {
+                return Date('Y-m-d H:i:s', strtotime($model->process_start));
             })
-            ->addColumn('action','supervisor.production.action')
-            ->setRowId(function(Workorder $model){
+            ->addColumn('action', 'supervisor.production.action')
+            ->setRowId(function (Workorder $model) {
                 return $model->id;
             })
-            ->addColumn('smelting','user.smelting.smelting')
-            ->rawColumns(['smelting','action'])
+            ->addColumn('smelting', 'user.smelting.smelting')
+            ->rawColumns(['smelting', 'action'])
             ->addIndexColumn()
             ->toJson();
     }
 
     public function getSmeltingNum(Request $request)
     {
-        $workorder = Workorder::where('id',$request->workorder_id)->first();
-        $smelting   = Smelting::where('workorder_id',$workorder->id)->where('bundle_num',$request->bundle_num)->first();
+        $workorder = Workorder::where('id', $request->workorder_id)->first();
+        $smelting   = Smelting::where('workorder_id', $workorder->id)->where('bundle_num', $request->bundle_num)->first();
         return response()->json([
             $smelting->smelting_num
         ]);
@@ -112,286 +111,51 @@ class SpvProductionController extends Controller
 
     public function getProductionInfo(Request $request)
     {
-        $production = Production::where('workorder_id',$request->workorder_id)
-                        ->where('bundle_num',$request->smelting_number)->first();
+        $production = Production::where('workorder_id', $request->workorder_id)
+            ->where('bundle_num', $request->smelting_number)->first();
         if (!$production) {
-            return response()->json('Data not found',404);
+            return response()->json('Data not found', 404);
         }
-        return response()->json($production,200);
+        return response()->json($production, 200);
     }
 
     public function finish(Workorder $workorder)
     {
-        $downtime = Downtime::where('workorder_id',$workorder->id)->get();
+        $downtime = Downtime::where('workorder_id', $workorder->id)->get();
 
-        $production = Production::where('workorder_id',$workorder->id)->get();
-        if($workorder->bb_qty_bundle != count($production))
-        {
-            return redirect(route('spvproduction.show',$workorder));
+        $production = Production::where('workorder_id', $workorder->id)->get();
+        if ($workorder->bb_qty_bundle != count($production)) {
+            return redirect(route('spvproduction.show', $workorder));
         }
 
         if (count($downtime) > 0) {
-            $downtimeRemarkUncomplete = Downtime::where('workorder_id',$workorder->id)->where('is_remark_filled',false)->first();
-            if(!is_null($downtimeRemarkUncomplete))
-            {
-                return redirect(route('spvproduction.show',$workorder));
-            }
-    
-            $downtimeRun = Downtime::where('workorder_id',$workorder->id)->where('is_downtime_stopped',false)->first();
-            if(!is_null($downtimeRun))
-            {
-                return redirect(route('spvproduction.show',$workorder));
+            Downtime::where('workorder_id', $workorder->id)->where('is_downtime_stopped', false)->delete();
+
+            $downtimeDataUncomplete = Downtime::where('workorder_id', $workorder->id)->where(function($query){
+                $query->where('is_remark_filled', false)->orWhere('is_downtime_stopped', false);
+            })->first();
+            if (!is_null($downtimeDataUncomplete)) {
+                return redirect(route('spvproduction.show', $workorder));
             }
         }
 
         $workorder->timestamps = false;
         $workorder->update([
-            'status_wo'=>'closed',
-            // 'process_end'=>date('Y-m-d H:i:s'),
+            'status_wo' => 'closed',
         ]);
 
         //
         // total runtime calculation
         //
-            $plannedTime = 100;
-            if(is_null($workorder->process_end))
-            {
-                $plannedTime = date_diff(new DateTime($workorder->process_start),new DateTime(now()));
-                // $plannedTime = $workorder->process_start->date_diff(strtotime(date('Y-m-d H:i:s')));
-            }else{
-                $plannedTime = date_diff(new DateTime($workorder->process_start),new DateTime($workorder->process_end));
-            }
-            $plannedTimeMinutes = $plannedTime->days * 24 * 60;
-            $plannedTimeMinutes += $plannedTime->h * 60;
-            $plannedTimeMinutes += $plannedTime->i;
-
-        //
-        // Downtimes
-        //
-            $totalDowntime = 0;
-            $wasteDowntime = 0;
-            $managementDowntime = 0;
-            $downtimes = Downtime::where('status','stop')
-                            ->where('workorder_id',$workorder->id)
-                            ->get();
-            $downtimeSummary = Downtime::where('status','run')
-                                    ->where('workorder_id',$workorder->id)
-                                    ->get();
-            foreach($downtimeSummary as $dt)
-            {
-                $downtimeStopId = Downtime::where('status','stop')
-                                    ->where('downtime_number',$dt->downtime_number)
-                                    ->first();
-                $downtimeRemark = DowntimeRemark::where('downtime_id',$downtimeStopId->id)->first();
-
-                if(!$downtimeRemark)
-                {
-                    continue;
-                }
-
-                if($downtimeRemark->is_waste_downtime)
-                {
-                    $wasteDowntime += $dt->downtime;
-                }
-                if(!$downtimeRemark->is_waste_downtime)
-                {
-                    $managementDowntime += $dt->downtime;
-                }
-                $totalDowntime += $dt->downtime;
-            }
-            $total_downtime = 0;
-            $waste_downtime = 0;
-            $management_downtime = 0;
-        //
-        // Total Downtime Calculation
-        //
-            if(($totalDowntime / 60) >=1)
-            {
-                $total_downtime_min = floor($totalDowntime/60);
-                $total_downtime_sec = $totalDowntime - ($total_downtime_min * 60);
-                $total_downtime = $total_downtime_min." min ".$total_downtime_sec." sec";
-            }
-            else{
-                $total_downtime = $totalDowntime." sec";
-            }
-        //
-        // Waste Downtime Calculation
-        //
-            $waste_downtime_min = 0;
-            if(($wasteDowntime / 60) >=1)
-            {
-                $waste_downtime_min = floor($wasteDowntime/60);
-                $waste_downtime_sec = $wasteDowntime - ($waste_downtime_min * 60);
-                $waste_downtime = $waste_downtime_min." min ".$waste_downtime_sec." sec";
-            }
-            else{
-                $waste_downtime = $wasteDowntime." sec";
-            }
-        //
-        // Management Downtime Calculation
-        //
-            if(($managementDowntime / 60) >=1)
-            {
-                $management_downtime_min = floor($managementDowntime/60);
-                $management_downtime_sec = $managementDowntime - ($management_downtime_min * 60);
-                $management_downtime = $management_downtime_min." min ".$management_downtime_sec." sec";
-            }
-            else{
-                $management_downtime = $managementDowntime." sec";
-            }
-        //
-        // Total Good Product Calculation
-        //
-            $total_good_product = 0;
-            $good_products = Production::select('pcs_per_bundle')->where('workorder_id',$workorder->id)->where('bundle_judgement',1)->get();  
-            foreach($good_products as $good_pro)
-            {
-                $total_good_product += $good_pro->pcs_per_bundle;
-            }
-
-        //
-        // Total Bad Product Calculation
-        //
-            $total_bad_product = 0;
-            $bad_products = Production::select('pcs_per_bundle')->where('workorder_id',$workorder->id)->where('bundle_judgement',0)->get();  
-            foreach($bad_products as $bad_pro)
-            {
-                $total_bad_product += $bad_pro->pcs_per_bundle;
-            }
-        //
-        // Total Weight Product Calculation
-        //
-            $total_weight = 0;
-            $weights = Production::select('berat_fg')->where('workorder_id',$workorder->id)->get();  
-            foreach($weights as $weight)
-            {
-                $total_weight += $weight->berat_fg;
-            }
-
-
-        //
-        // Daily Report
-        //
-
-            DailyReport::create([
-                'workorder_id'      => $workorder->id,
-                'total_runtime'     => $plannedTimeMinutes,
-                'total_downtime'    => $waste_downtime_min,
-                'total_pcs'         => $total_bad_product + $total_good_product,
-                'total_pcs_good'    => $total_good_product,
-                'total_pcs_bad'     => $total_bad_product,
-                'total_weight_fg'   => $total_weight,
-                'total_weight_bb'   => $workorder->bb_qty_pcs
-            ]);
-
-        return redirect(route('spvproduction.index'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(ProductionRequest $request)
-    {
-        //
-        $workorder = Workorder::where('id',$request->workorder_id)->first();
-        if(!$workorder)
-        {
-            return response()->json([
-                'message' => 'Workorder Not Found'
-            ],400);
+        $plannedTime = 100;
+        if (is_null($workorder->process_end)) {
+            $plannedTime = date_diff(new DateTime($workorder->process_start), new DateTime(now()));
+        } else {
+            $plannedTime = date_diff(new DateTime($workorder->process_start), new DateTime($workorder->process_end));
         }
-        $production = Production::where('workorder_id',$request->workorder_id)->where('bundle_num',$request->bundle_num)->get();
-        if(count($production) != 0)
-        {
-            return response()->json([
-                'message' => 'Data Already Input'
-            ],400);
-        }
-        $production = Production::create([
-            'workorder_id'      => $request->workorder_id,
-            'bundle_num'        => $request->bundle_num,
-            'dies_num'          => $request->dies_num,
-            'diameter_ujung'    => $request->diameter_ujung,
-            'diameter_tengah'   => $request->diameter_tengah,
-            'diameter_ekor'     => $request->diameter_ekor,
-            'kelurusan_aktual'  => $request->kelurusan_aktual,
-            'panjang_aktual'    => $request->panjang_aktual,
-            'berat_fg'          => $request->berat_fg,
-            'pcs_per_bundle'    => $request->pcs_per_bundle,
-            'bundle_judgement'  => $request->bundle_judgement,
-            'visual'            => $request->visual
-        ]);
-
-        $smeltingData = Smelting::select('id')->where('workorder_id',$workorder->id)->get();
-        $smeltingNum = count($smeltingData);
-        $productionData = Production::select('id')->where('workorder_id',$workorder->id)->get();
-        $productionNum = count($productionData);
-        $oeeData        = Oee::select('id')->where('workorder_id',$workorder->id)->first();
-        if($smeltingNum == $productionNum && $oeeData != null){
-            Workorder::where('id',$workorder->id)->update(['status_wo'=>'closed']);
-        }
-
-        return response()->json([
-            'message' => 'Submitted Successfully'
-        ],201);
-    }
-
-    public function speedChart(Request $request)
-    {
-        //
-        $data = json_decode(Realtime::select('speed','created_at')->where('workorder_id',$request->workorder)->orderBy('created_at','desc')->limit(20)->get());
-        $response = [
-            'speed'         => array_column($data,'speed'),
-            'created_at'    => array_column($data,'created_at')
-        ];
-        for ($i=0; $i < count($response['created_at']); $i++) { 
-            $response['created_at'][$i] = date('H:i:s',strtotime($response['created_at'][$i]));
-        }
-        return response()->json($response);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Workorder $workorder)
-    {
-        //
-        // Check Workorder is on process
-        //
-        if($workorder->status_wo != 'on check')
-        {
-            return redirect(route('production.index'));
-        }
-
-        //
-        // Poductions
-        //
-        $productions    = Production::where('workorder_id',$workorder->id)->get();
-        $productionCount = 0;
-        foreach($productions as $prod)
-        {
-            $productionCount += $prod->pcs_per_bundle;
-        }
-
-        //
-        // Smeltings
-        //
-        $smeltings      = Smelting::where('workorder_id',$workorder->id)->orderBy('coil_num','ASC')->get();
-        $smeltingInputList = [];
-        foreach ($smeltings as $smelting) 
-        {
-            $productionCheck = Production::where('workorder_id',$workorder->id)->where('coil_num',$smelting->bundle_num)->first();
-            if($productionCheck == null)
-            {
-                $smeltingInputList[] = $smelting->coil_num;
-            }
-        }
+        $plannedTimeMinutes = $plannedTime->days * 24 * 60;
+        $plannedTimeMinutes += $plannedTime->h * 60;
+        $plannedTimeMinutes += $plannedTime->i;
 
         //
         // Downtimes
@@ -400,12 +164,11 @@ class SpvProductionController extends Controller
         $wasteDowntime = 0;
         $managementDowntime = 0;
         $offProductionTime = 0;
-        $downtimes = Downtime::where('workorder_id',$workorder->id)->where('status','stop')->get();
-        $downtimeSummary = Downtime::where('status','stop')
-                                ->where('workorder_id',$workorder->id)
-                                ->get();
-        foreach($downtimeSummary as $dt)
-        {
+        
+        $downtimeSummary = Downtime::where('status', 'stop')
+            ->where('workorder_id', $workorder->id)
+            ->get();
+        foreach ($downtimeSummary as $dt) {
             $downtimeRunId = Downtime::where('status','run')
                                 ->where('downtime_number',$dt->downtime_number)
                                 ->first();
@@ -413,11 +176,6 @@ class SpvProductionController extends Controller
                                 ->where('downtime_number',$dt->downtime_number)
                                 ->first();
             $downtimeRemark = DowntimeRemark::where('downtime_id',$downtimeStopId->id)->first();
-
-            if(!$downtimeRemark)
-            {
-                continue;
-            }
 
             $duration = date_diff(new DateTime($downtimeStopId->created_at),new DateTime($downtimeRunId->created_at));
 
@@ -440,134 +198,311 @@ class SpvProductionController extends Controller
             }
             $totalDowntime += $durationSec;
         }
+
+        //
+        // Waste Downtime Calculation
+        //
+        $waste_downtime_min = 0;
+        if (($wasteDowntime / 60) >= 1) {
+            $waste_downtime_min = floor($wasteDowntime / 60);
+        } 
+        
+        //
+        // Total Good Product Calculation
+        //
+        $total_good_product = 0;
+        $good_products = Production::select('pcs_per_bundle')->where('workorder_id', $workorder->id)->where('bundle_judgement', 1)->get();
+        foreach ($good_products as $good_pro) {
+            $total_good_product += $good_pro->pcs_per_bundle;
+        }
+
+        //
+        // Total Bad Product Calculation
+        //
+        $total_bad_product = 0;
+        $bad_products = Production::select('pcs_per_bundle')->where('workorder_id', $workorder->id)->where('bundle_judgement', 0)->get();
+        foreach ($bad_products as $bad_pro) {
+            $total_bad_product += $bad_pro->pcs_per_bundle;
+        }
+
+        //
+        // Total Weight Product Calculation
+        //
+        $total_weight = 0;
+        $weights = Production::select('berat_fg')->where('workorder_id', $workorder->id)->get();
+        foreach ($weights as $weight) {
+            $total_weight += $weight->berat_fg;
+        }
+
+        //
+        // Daily Report
+        //
+        DailyReport::create([
+            'workorder_id'      => $workorder->id,
+            'total_runtime'     => $plannedTimeMinutes,
+            'total_downtime'    => $waste_downtime_min,
+            'total_pcs'         => $total_bad_product + $total_good_product,
+            'total_pcs_good'    => $total_good_product,
+            'total_pcs_bad'     => $total_bad_product,
+            'total_weight_fg'   => $total_weight,
+            'total_weight_bb'   => $workorder->bb_qty_pcs
+        ]);
+
+        return redirect(route('spvproduction.index'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(ProductionRequest $request)
+    {
+        //
+        $workorder = Workorder::where('id', $request->workorder_id)->first();
+        if (!$workorder) {
+            return response()->json([
+                'message' => 'Workorder Not Found'
+            ], 400);
+        }
+        $production = Production::where('workorder_id', $request->workorder_id)->where('bundle_num', $request->bundle_num)->get();
+        if (count($production) != 0) {
+            return response()->json([
+                'message' => 'Data Already Input'
+            ], 400);
+        }
+        $production = Production::create([
+            'workorder_id'      => $request->workorder_id,
+            'bundle_num'        => $request->bundle_num,
+            'dies_num'          => $request->dies_num,
+            'diameter_ujung'    => $request->diameter_ujung,
+            'diameter_tengah'   => $request->diameter_tengah,
+            'diameter_ekor'     => $request->diameter_ekor,
+            'kelurusan_aktual'  => $request->kelurusan_aktual,
+            'panjang_aktual'    => $request->panjang_aktual,
+            'berat_fg'          => $request->berat_fg,
+            'pcs_per_bundle'    => $request->pcs_per_bundle,
+            'bundle_judgement'  => $request->bundle_judgement,
+            'visual'            => $request->visual
+        ]);
+
+        $smeltingData = Smelting::select('id')->where('workorder_id', $workorder->id)->get();
+        $smeltingNum = count($smeltingData);
+        $productionData = Production::select('id')->where('workorder_id', $workorder->id)->get();
+        $productionNum = count($productionData);
+        $oeeData        = Oee::select('id')->where('workorder_id', $workorder->id)->first();
+        if ($smeltingNum == $productionNum && $oeeData != null) {
+            Workorder::where('id', $workorder->id)->update(['status_wo' => 'closed']);
+        }
+
+        return response()->json([
+            'message' => 'Submitted Successfully'
+        ], 201);
+    }
+
+    public function speedChart(Request $request)
+    {
+        //
+        $data = json_decode(Realtime::select('speed', 'created_at')->where('workorder_id', $request->workorder)->orderBy('created_at', 'desc')->limit(20)->get());
+        $response = [
+            'speed'         => array_column($data, 'speed'),
+            'created_at'    => array_column($data, 'created_at')
+        ];
+        for ($i = 0; $i < count($response['created_at']); $i++) {
+            $response['created_at'][$i] = date('H:i:s', strtotime($response['created_at'][$i]));
+        }
+        return response()->json($response);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Workorder $workorder)
+    {
+        //
+        // Check Workorder is on process
+        //
+        if ($workorder->status_wo != 'on check') {
+            return redirect(route('production.index'));
+        }
+
+        //
+        // Poductions
+        //
+        $productions    = Production::where('workorder_id', $workorder->id)->get();
+        $productionCount = 0;
+        foreach ($productions as $prod) {
+            $productionCount += $prod->pcs_per_bundle;
+        }
+
+        //
+        // Smeltings
+        //
+        $smeltings      = Smelting::where('workorder_id', $workorder->id)->orderBy('coil_num', 'ASC')->get();
+        $smeltingInputList = [];
+        foreach ($smeltings as $smelting) {
+            $productionCheck = Production::where('workorder_id', $workorder->id)->where('coil_num', $smelting->bundle_num)->first();
+            if ($productionCheck == null) {
+                $smeltingInputList[] = $smelting->coil_num;
+            }
+        }
+
+        //
+        // Downtimes
+        //
+        $totalDowntime = 0;
+        $wasteDowntime = 0;
+        $managementDowntime = 0;
+        $offProductionTime = 0;
+        $downtimes = Downtime::where('workorder_id', $workorder->id)->where('status', 'stop')->get();
+        $downtimeSummary = Downtime::where('status', 'stop')
+            ->where('workorder_id', $workorder->id)
+            ->get();
+        foreach ($downtimeSummary as $dt) {
+            $downtimeRunId = Downtime::where('status', 'run')
+                ->where('downtime_number', $dt->downtime_number)
+                ->first();
+            $downtimeStopId = Downtime::where('status', 'stop')
+                ->where('downtime_number', $dt->downtime_number)
+                ->first();
+            $downtimeRemark = DowntimeRemark::where('downtime_id', $downtimeStopId->id)->first();
+
+            if (!$downtimeRemark) {
+                continue;
+            }
+
+            $duration = date_diff(new DateTime($downtimeStopId->created_at), new DateTime($downtimeRunId->created_at));
+
+            $durationSec = $duration->days * 24 * 60 * 60;
+            $durationSec += $duration->h * 60 * 60;
+            $durationSec += $duration->i * 60;
+            $durationSec += $duration->s;
+
+            if ($downtimeRemark->downtime_category == 'waste') {
+                $wasteDowntime += $durationSec;
+            }
+            if ($downtimeRemark->downtime_category == 'management') {
+                $managementDowntime += $durationSec;
+            }
+            if ($downtimeRemark->downtime_category == 'off') {
+                $offProductionTime += $durationSec;
+            }
+            $totalDowntime += $durationSec;
+        }
         $total_downtime = 0;
         $waste_downtime = 0;
         $management_downtime = 0;
         $off_production_time = 0;
 
         // Total Downtime Calculation
-        if(($totalDowntime / 60) >=1)
-        {
-            $total_downtime_min = floor($totalDowntime/60);
+        if (($totalDowntime / 60) >= 1) {
+            $total_downtime_min = floor($totalDowntime / 60);
             $total_downtime_sec = $totalDowntime - ($total_downtime_min * 60);
-            $total_downtime = $total_downtime_min." Mins ".$total_downtime_sec." Secs";
-        }
-        else{
-            $total_downtime = $totalDowntime." Secs";
+            $total_downtime = $total_downtime_min . " Mins " . $total_downtime_sec . " Secs";
+        } else {
+            $total_downtime = $totalDowntime . " Secs";
         }
 
-        if(($totalDowntime / 3600) >=1)
-        {
-            $total_downtime_hour = floor($totalDowntime/3600);
-            $total_downtime_min = floor(($totalDowntime - ($total_downtime_hour * 60 * 60))/60);
+        if (($totalDowntime / 3600) >= 1) {
+            $total_downtime_hour = floor($totalDowntime / 3600);
+            $total_downtime_min = floor(($totalDowntime - ($total_downtime_hour * 60 * 60)) / 60);
             $total_downtime_sec = $totalDowntime - ($total_downtime_hour * 60 * 60) - ($total_downtime_min * 60);
-            $total_downtime = $total_downtime_hour." Hours ".$total_downtime_min." Mins ".$total_downtime_sec." Secs";
+            $total_downtime = $total_downtime_hour . " Hours " . $total_downtime_min . " Mins " . $total_downtime_sec . " Secs";
         }
-        if(($totalDowntime / 86400) >=1)
-        {
-            $total_downtime_days = floor($totalDowntime/86400);
-            $total_downtime_hour = floor(($totalDowntime - ($total_downtime_days * 24 * 60 * 60))/3600);
-            $total_downtime_min = floor(($totalDowntime - ($total_downtime_days * 24 * 60 * 60) - ($total_downtime_hour * 60 * 60))/60);
+        if (($totalDowntime / 86400) >= 1) {
+            $total_downtime_days = floor($totalDowntime / 86400);
+            $total_downtime_hour = floor(($totalDowntime - ($total_downtime_days * 24 * 60 * 60)) / 3600);
+            $total_downtime_min = floor(($totalDowntime - ($total_downtime_days * 24 * 60 * 60) - ($total_downtime_hour * 60 * 60)) / 60);
             $total_downtime_sec = $totalDowntime - ($total_downtime_days * 24 * 60 * 60) - ($total_downtime_hour * 60 * 60) - ($total_downtime_min * 60);
-            $total_downtime = $total_downtime_days." Days ".$total_downtime_hour." Hours ".$total_downtime_min." Mins ".$total_downtime_sec." Secs";
+            $total_downtime = $total_downtime_days . " Days " . $total_downtime_hour . " Hours " . $total_downtime_min . " Mins " . $total_downtime_sec . " Secs";
         }
-        
-        
+
+
 
         // Waste Downtime Calculation
         $waste_downtime_min = 0;
-        if(($wasteDowntime / 60) >=1)
-        {
-            $waste_downtime_min = floor($wasteDowntime/60);
+        if (($wasteDowntime / 60) >= 1) {
+            $waste_downtime_min = floor($wasteDowntime / 60);
             $waste_downtime_sec = $wasteDowntime - ($waste_downtime_min * 60);
-            $waste_downtime = $waste_downtime_min." min ".$waste_downtime_sec." sec";
+            $waste_downtime = $waste_downtime_min . " min " . $waste_downtime_sec . " sec";
+        } else {
+            $waste_downtime = $wasteDowntime . " sec";
         }
-        else{
-            $waste_downtime = $wasteDowntime." sec";
-        }
-        if(($wasteDowntime / 3600) >=1)
-        {
-            $waste_downtime_hour = floor($wasteDowntime/3600);
-            $waste_downtime_min = floor(($wasteDowntime - ($waste_downtime_hour * 60 * 60))/60);
+        if (($wasteDowntime / 3600) >= 1) {
+            $waste_downtime_hour = floor($wasteDowntime / 3600);
+            $waste_downtime_min = floor(($wasteDowntime - ($waste_downtime_hour * 60 * 60)) / 60);
             $waste_downtime_sec = $wasteDowntime - ($waste_downtime_hour * 60 * 60) - ($waste_downtime_min * 60);
-            $waste_downtime = $waste_downtime_hour." Hours ".$waste_downtime_min." Mins ".$waste_downtime_sec." Secs";
+            $waste_downtime = $waste_downtime_hour . " Hours " . $waste_downtime_min . " Mins " . $waste_downtime_sec . " Secs";
         }
-        if(($wasteDowntime / 86400) >=1)
-        {
-            $waste_downtime_days = floor($wasteDowntime/86400);
-            $waste_downtime_hour = floor(($wasteDowntime - ($waste_downtime_days * 24 * 60 * 60))/3600);
-            $waste_downtime_min = floor(($wasteDowntime - ($waste_downtime_days * 24 * 60 * 60) - ($waste_downtime_hour * 60 * 60))/60);
+        if (($wasteDowntime / 86400) >= 1) {
+            $waste_downtime_days = floor($wasteDowntime / 86400);
+            $waste_downtime_hour = floor(($wasteDowntime - ($waste_downtime_days * 24 * 60 * 60)) / 3600);
+            $waste_downtime_min = floor(($wasteDowntime - ($waste_downtime_days * 24 * 60 * 60) - ($waste_downtime_hour * 60 * 60)) / 60);
             $waste_downtime_sec = $wasteDowntime - ($waste_downtime_days * 24 * 60 * 60) - ($waste_downtime_hour * 60 * 60) - ($waste_downtime_min * 60);
-            $waste_downtime = $waste_downtime_days." Days ".$waste_downtime_hour." Hours ".$waste_downtime_min." Mins ".$waste_downtime_sec." Secs";
+            $waste_downtime = $waste_downtime_days . " Days " . $waste_downtime_hour . " Hours " . $waste_downtime_min . " Mins " . $waste_downtime_sec . " Secs";
         }
 
         // Management Downtime Calculation
         $management_downtime_min = 0;
-        if(($managementDowntime / 60) >=1)
-        {
-            $management_downtime_min = floor($managementDowntime/60);
+        if (($managementDowntime / 60) >= 1) {
+            $management_downtime_min = floor($managementDowntime / 60);
             $management_downtime_sec = $managementDowntime - ($management_downtime_min * 60);
-            $management_downtime = $management_downtime_min." min ".$management_downtime_sec." sec";
+            $management_downtime = $management_downtime_min . " min " . $management_downtime_sec . " sec";
+        } else {
+            $management_downtime = $managementDowntime . " sec";
         }
-        else{
-            $management_downtime = $managementDowntime." sec";
-        }
-        if(($managementDowntime / 3600) >=1)
-        {
-            $management_downtime_hour = floor($managementDowntime/3600);
-            $management_downtime_min = floor(($managementDowntime - ($management_downtime_hour * 60 * 60))/60);
+        if (($managementDowntime / 3600) >= 1) {
+            $management_downtime_hour = floor($managementDowntime / 3600);
+            $management_downtime_min = floor(($managementDowntime - ($management_downtime_hour * 60 * 60)) / 60);
             $management_downtime_sec = $managementDowntime - ($management_downtime_hour * 60 * 60) - ($management_downtime_min * 60);
-            $management_downtime = $management_downtime_hour." Hours ".$management_downtime_min." Mins ".$management_downtime_sec." Secs";
+            $management_downtime = $management_downtime_hour . " Hours " . $management_downtime_min . " Mins " . $management_downtime_sec . " Secs";
         }
-        if(($managementDowntime / 86400) >=1)
-        {
-            $management_downtime_days = floor($managementDowntime/86400);
-            $management_downtime_hour = floor(($managementDowntime - ($management_downtime_days * 24 * 60 * 60))/3600);
-            $management_downtime_min = floor(($managementDowntime - ($management_downtime_days * 24 * 60 * 60) - ($management_downtime_hour * 60 * 60))/60);
+        if (($managementDowntime / 86400) >= 1) {
+            $management_downtime_days = floor($managementDowntime / 86400);
+            $management_downtime_hour = floor(($managementDowntime - ($management_downtime_days * 24 * 60 * 60)) / 3600);
+            $management_downtime_min = floor(($managementDowntime - ($management_downtime_days * 24 * 60 * 60) - ($management_downtime_hour * 60 * 60)) / 60);
             $management_downtime_sec = $managementDowntime - ($management_downtime_days * 24 * 60 * 60) - ($management_downtime_hour * 60 * 60) - ($management_downtime_min * 60);
-            $management_downtime = $management_downtime_days." Days ".$management_downtime_hour." Hours ".$management_downtime_min." Mins ".$management_downtime_sec." Secs";
+            $management_downtime = $management_downtime_days . " Days " . $management_downtime_hour . " Hours " . $management_downtime_min . " Mins " . $management_downtime_sec . " Secs";
         }
 
         // OFf Production Calculation
         $off_production_time_min = 0;
-        if(($offProductionTime / 60) >=1)
-        {
-            $off_production_time_min = floor($offProductionTime/60);
+        if (($offProductionTime / 60) >= 1) {
+            $off_production_time_min = floor($offProductionTime / 60);
             $off_production_time_sec = $offProductionTime - ($off_production_time_min * 60);
-            $off_production_time = $off_production_time_min." min ".$off_production_time_sec." sec";
+            $off_production_time = $off_production_time_min . " min " . $off_production_time_sec . " sec";
+        } else {
+            $off_production_time = $offProductionTime . " sec";
         }
-        else{
-            $off_production_time = $offProductionTime." sec";
-        }
-        if(($offProductionTime / 3600) >=1)
-        {
-            $off_production_time_hour = floor($offProductionTime/3600);
-            $off_production_time_min = floor(($offProductionTime - ($off_production_time_hour * 60 * 60))/60);
+        if (($offProductionTime / 3600) >= 1) {
+            $off_production_time_hour = floor($offProductionTime / 3600);
+            $off_production_time_min = floor(($offProductionTime - ($off_production_time_hour * 60 * 60)) / 60);
             $off_production_time_sec = $offProductionTime - ($off_production_time_hour * 60 * 60) - ($off_production_time_min * 60);
-            $off_production_time = $off_production_time_hour." Hours ".$off_production_time_min." Mins ".$off_production_time_sec." Secs";
+            $off_production_time = $off_production_time_hour . " Hours " . $off_production_time_min . " Mins " . $off_production_time_sec . " Secs";
         }
-        if(($offProductionTime / 86400) >=1)
-        {
-            $off_production_time_days = floor($offProductionTime/86400);
-            $off_production_time_hour = floor(($offProductionTime - ($off_production_time_days * 24 * 60 * 60))/3600);
-            $off_production_time_min = floor(($offProductionTime - ($off_production_time_days * 24 * 60 * 60) - ($off_production_time_hour * 60 * 60))/60);
+        if (($offProductionTime / 86400) >= 1) {
+            $off_production_time_days = floor($offProductionTime / 86400);
+            $off_production_time_hour = floor(($offProductionTime - ($off_production_time_days * 24 * 60 * 60)) / 3600);
+            $off_production_time_min = floor(($offProductionTime - ($off_production_time_days * 24 * 60 * 60) - ($off_production_time_hour * 60 * 60)) / 60);
             $off_production_time_sec = $offProductionTime - ($off_production_time_days * 24 * 60 * 60) - ($off_production_time_hour * 60 * 60) - ($off_production_time_min * 60);
-            $off_production_time = $off_production_time_days." Days ".$off_production_time_hour." Hours ".$off_production_time_min." Mins ".$off_production_time_sec." Secs";
+            $off_production_time = $off_production_time_days . " Days " . $off_production_time_hour . " Hours " . $off_production_time_min . " Mins " . $off_production_time_sec . " Secs";
         }
 
         // Total Good Product Calculation
         $total_good_product = 0;
-        $good_products = Production::select('pcs_per_bundle')->where('workorder_id',$workorder->id)->where('bundle_judgement',1)->get();  
-        foreach($good_products as $good_pro)
-        {
+        $good_products = Production::select('pcs_per_bundle')->where('workorder_id', $workorder->id)->where('bundle_judgement', 1)->get();
+        foreach ($good_products as $good_pro) {
             $total_good_product += $good_pro->pcs_per_bundle;
         }
 
         // Total Bad Product Calculation
         $total_bad_product = 0;
-        $bad_products = Production::select('pcs_per_bundle')->where('workorder_id',$workorder->id)->where('bundle_judgement',0)->get();  
-        foreach($bad_products as $bad_pro)
-        {
+        $bad_products = Production::select('pcs_per_bundle')->where('workorder_id', $workorder->id)->where('bundle_judgement', 0)->get();
+        foreach ($bad_products as $bad_pro) {
             $total_bad_product += $bad_pro->pcs_per_bundle;
         }
 
@@ -587,12 +522,11 @@ class SpvProductionController extends Controller
         // Availability Calculation
         //
         $plannedTime = 100;
-        if(is_null($workorder->process_end))
-        {
-            $plannedTime = date_diff(new DateTime($workorder->process_start),new DateTime(now()));
+        if (is_null($workorder->process_end)) {
+            $plannedTime = date_diff(new DateTime($workorder->process_start), new DateTime(now()));
             // $plannedTime = $workorder->process_start->date_diff(strtotime(date('Y-m-d H:i:s')));
-        }else{
-            $plannedTime = date_diff(new DateTime($workorder->process_start),new DateTime($workorder->process_end));
+        } else {
+            $plannedTime = date_diff(new DateTime($workorder->process_start), new DateTime($workorder->process_end));
         }
         $plannedTimeMinutes = $plannedTime->days * 24 * 60;
         $plannedTimeMinutes += $plannedTime->h * 60;
@@ -606,14 +540,13 @@ class SpvProductionController extends Controller
             $fixedPlannedTime .= $plannedTime->h . ' Hours ';
         }
 
-        $fixedPlannedTime .= $plannedTime->i . ' Minutes ' ;
+        $fixedPlannedTime .= $plannedTime->i . ' Minutes ';
 
         $otr = 0;
-        if (floor($wasteDowntime/60) == 0) {
+        if (floor($wasteDowntime / 60) == 0) {
             $otr = 100;
-        }
-        else{
-            $otr = ((($plannedTimeMinutes-($managementDowntime/60)-($offProductionTime/60)) - (floor($wasteDowntime/60))) / ($plannedTimeMinutes-($managementDowntime/60)-($offProductionTime/60)))*100;
+        } else {
+            $otr = ((($plannedTimeMinutes - ($managementDowntime / 60) - ($offProductionTime / 60)) - (floor($wasteDowntime / 60))) / ($plannedTimeMinutes - ($managementDowntime / 60) - ($offProductionTime / 60))) * 100;
         }
 
         //
@@ -623,20 +556,20 @@ class SpvProductionController extends Controller
         $qr = 0;
         if ($productionCount == 0) {
             $qr = 100;
-        }else if($total_good_product == 0){
+        } else if ($total_good_product == 0) {
             $qr = 0;
-        }else{
-            $qr = (($total_good_product - $total_bad_product) / $total_good_product)*100;
+        } else {
+            $qr = (($total_good_product - $total_bad_product) / $total_good_product) * 100;
         }
 
 
         //
         // Machine Average Speed
         //
-        $realtimeQuery = Realtime::select('speed')->where('workorder_id',$workorder->id)->where('speed','>=','20');
-        if($realtimeQuery->count() != 0){
+        $realtimeQuery = Realtime::select('speed')->where('workorder_id', $workorder->id)->where('speed', '>=', '20');
+        if ($realtimeQuery->count() != 0) {
             $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
-        }else{
+        } else {
             $machineAvgSpeed = 5;
         }
 
@@ -644,21 +577,21 @@ class SpvProductionController extends Controller
         // Cycle Time Calculation
         //
         if ($machineAvgSpeed != 0) {
-            $cycleTime = (($workorder->fg_size_2*60/$machineAvgSpeed))/1000;
-        }else{
+            $cycleTime = (($workorder->fg_size_2 * 60 / $machineAvgSpeed)) / 1000;
+        } else {
             $cycleTime = 0;
         }
 
         //
         // Performance Calculation
         //
-        $productionPlanned = round($workorder->bb_qty_pcs / $workorder->fg_size_1 / $workorder->fg_size_1 / $workorder->fg_size_2 / $this->calculatePcsPerBundle($workorder->fg_shape) *1000,0);
+        $productionPlanned = round($workorder->bb_qty_pcs / $workorder->fg_size_1 / $workorder->fg_size_1 / $workorder->fg_size_2 / $this->calculatePcsPerBundle($workorder->fg_shape) * 1000, 0);
         $per = 0;
         // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
         if ($productionCount == 0) {
             $per = 100;
-        }else{
-            $per = ($total_good_product/((($plannedTimeMinutes-($managementDowntime/60)-($offProductionTime/60))-($wasteDowntime/60))*60/$cycleTime))*100;
+        } else {
+            $per = ($total_good_product / ((($plannedTimeMinutes - ($managementDowntime / 60) - ($offProductionTime / 60)) - ($wasteDowntime / 60)) * 60 / $cycleTime)) * 100;
         }
 
         //
@@ -666,47 +599,46 @@ class SpvProductionController extends Controller
         //
 
         $oee = 0;
-        $oee = (($per/100) * ($otr/100) * ($qr/100))*100;
-        if($oee > 100){
+        $oee = (($per / 100) * ($otr / 100) * ($qr / 100)) * 100;
+        if ($oee > 100) {
             $oee = 100;
         }
 
         //
         // createdBy
         //
-        $createdBy = User::where('id',$workorder->created_by)->first();
+        $createdBy = User::where('id', $workorder->created_by)->first();
         if (!$createdBy) {
             $createdBy = '';
-        }else{
+        } else {
             $createdBy = $createdBy->name;
         }
 
         //
         // editedBy
         //
-        $editedBy = User::where('id',$workorder->edited_by)->first();
+        $editedBy = User::where('id', $workorder->edited_by)->first();
         if (!$editedBy) {
             $editedBy = '';
-        }
-        else{
+        } else {
             $editedBy = $editedBy->name;
         }
 
         //
         // processedBy
         //
-        $processedBy = User::where('id',$workorder->processed_by)->first();
+        $processedBy = User::where('id', $workorder->processed_by)->first();
         if (!$processedBy) {
             $processedBy = '';
-        }else{
+        } else {
             $processedBy = $processedBy->name;
         }
 
 
-		return view('supervisor.production.show_detail',[
+        return view('supervisor.production.show_detail', [
             'title'                 => 'Production Report',
             'workorder'             => $workorder,
-            'color'                 => Color::where('id',$workorder->color)->first()->name,
+            'color'                 => Color::where('id', $workorder->color)->first()->name,
             'user_involved'         => [
                 'created_by'        => $createdBy,
                 'edited_by'         => $editedBy,
@@ -716,9 +648,9 @@ class SpvProductionController extends Controller
             'productions'           => $productions,
             'reports'               => [
                 'production_plan'   => $productionPlanned,
-                'production_count'  => $productionCount." Pcs",
-			    'total_good_product'=> $total_good_product." Pcs",
-                'total_bad_product' => $total_bad_product." Pcs",
+                'production_count'  => $productionCount . " Pcs",
+                'total_good_product' => $total_good_product . " Pcs",
+                'total_bad_product' => $total_bad_product . " Pcs",
                 'planned_time'      => $fixedPlannedTime,
                 'total_downtime'    => $total_downtime,
                 'waste_downtime'    => $waste_downtime,
@@ -727,14 +659,14 @@ class SpvProductionController extends Controller
                 'average_speed'   => $machineAvgSpeed,
             ],
             'indicator'             => [
-                'performance'   => round($per,1),
-                'availability'  => round($otr,1),
-                'quality'       => round($qr,1),
-                'oee'           => round($oee,1),
+                'performance'   => round($per, 1),
+                'availability'  => round($otr, 1),
+                'quality'       => round($qr, 1),
+                'oee'           => round($oee, 1),
             ],
             'smeltingInputList'     => $smeltingInputList,
             // 'oee'                   => $oee,
-             'downtimes'            => $downtimes,
+            'downtimes'            => $downtimes,
         ]);
     }
 
@@ -746,10 +678,10 @@ class SpvProductionController extends Controller
      */
     public function edit(Production $production)
     {
-        return view('supervisor.production.edit',[
-            'production'=>$production,
-            'smeltings' =>Smelting::where('workorder_id',$production->workorder_id)->get(),
-            'title'=>'Supervisor: Edit Bundle Report'
+        return view('supervisor.production.edit', [
+            'production' => $production,
+            'smeltings' => Smelting::where('workorder_id', $production->workorder_id)->get(),
+            'title' => 'Supervisor: Edit Bundle Report'
         ]);
     }
 
@@ -760,14 +692,13 @@ class SpvProductionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductionRequest $request,Production $production)
+    public function update(ProductionRequest $request, Production $production)
     {
-        $workorder = Workorder::where('id',$request->workorder_id)->first();
-        if(!$workorder)
-        {
+        $workorder = Workorder::where('id', $request->workorder_id)->first();
+        if (!$workorder) {
             return response()->json([
                 'message' => 'Workorder Not Found'
-            ],400);
+            ], 400);
         }
 
         $production->update([
@@ -785,7 +716,7 @@ class SpvProductionController extends Controller
             'edited_by'         => Auth::user()->id,
         ]);
 
-        return redirect()->route('spvproduction.show',$production->workorder_id)->with('success','Data Updated Successfully');
+        return redirect()->route('spvproduction.show', $production->workorder_id)->with('success', 'Data Updated Successfully');
     }
 
     /**
@@ -798,24 +729,18 @@ class SpvProductionController extends Controller
     {
         //
         $production->delete();
-        return redirect()->route('spvproduction.show',$production->workorder_id)->with('success','Data Deleted Successfully');
+        return redirect()->route('spvproduction.show', $production->workorder_id)->with('success', 'Data Deleted Successfully');
     }
     public function calculatePcsPerBundle($shape)
     {
-        if($shape == "Round"){
+        if ($shape == "Round") {
             return 0.0061654;
-        }
-        elseif($shape == "Hexagon")
-        {
+        } elseif ($shape == "Hexagon") {
             return 0.006798;
-        }
-        elseif($shape == "Square")
-        {
+        } elseif ($shape == "Square") {
             return 0.00785;
-        }
-        else{
+        } else {
             return 0;
         }
     }
 }
- 

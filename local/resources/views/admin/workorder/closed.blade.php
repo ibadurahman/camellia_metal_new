@@ -45,6 +45,7 @@
                                         <th>Processed By</th>
                                         <th>Process Start</th>
                                         <th>Remarks</th>
+                                        <th>Label Remarks</th>
                                         <th>Leburan</th>
                                     </tr>
                                 </thead>
@@ -97,6 +98,7 @@
                 {data:'processed_by'},
                 {data:'process_start'},
                 {data:'remarks'},
+                {data:'label_remarks'},
                 {data:'smelting'},
         ],
         "paging": false,
