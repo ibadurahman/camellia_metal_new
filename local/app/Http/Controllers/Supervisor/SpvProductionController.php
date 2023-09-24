@@ -570,14 +570,14 @@ class SpvProductionController extends Controller
         if ($realtimeQuery->count() != 0) {
             $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
         } else {
-            $machineAvgSpeed = 5;
+            $machineAvgSpeed = 30;
         }
 
         //
         // Cycle Time Calculation
         //
         if ($machineAvgSpeed != 0) {
-            $cycleTime = (($workorder->fg_size_2 * 60 / $machineAvgSpeed)) / 1000;
+            $cycleTime = ($workorder->fg_size_2 * 60 / $machineAvgSpeed) / 1000;
         } else {
             $cycleTime = 0;
         }
@@ -593,7 +593,6 @@ class SpvProductionController extends Controller
         } else {
             $per = ($total_good_product / ((($plannedTimeMinutes - ($managementDowntime / 60) - ($offProductionTime / 60)) - ($wasteDowntime / 60)) * 60 / $cycleTime)) * 100;
         }
-
         //
         // OEE
         //

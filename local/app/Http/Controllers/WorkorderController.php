@@ -489,7 +489,6 @@ class WorkorderController extends Controller
         }else{
             $cycleTime = 0;
         }
-
         //
         // Performance Calculation
         //
@@ -501,7 +500,6 @@ class WorkorderController extends Controller
         }else{
             $per = ($total_good_product/((($plannedTimeMinutes-($managementDowntime/60)-($offProductionTime/60))-($wasteDowntime/60))*60/$cycleTime))*100;
         }
-        // dd($offProductionTime);
         //
         // OEE
         //

@@ -10,7 +10,6 @@ class BypassWorkorderController extends Controller
 {
     public function index()
     {
-
         return view('user.bypass.index', [
             'title' => 'Bypass Workorder',
         ]);

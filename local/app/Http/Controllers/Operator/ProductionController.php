@@ -63,7 +63,7 @@ class ProductionController extends Controller
         if (count($downtime) > 0) {
             Downtime::where('workorder_id', $workorder->id)->where('is_downtime_stopped', false)->delete();
 
-            $downtimeDataUncomplete = Downtime::where('workorder_id', $workorder->id)->where(function($query){
+            $downtimeDataUncomplete = Downtime::where('workorder_id', $workorder->id)->where(function ($query) {
                 $query->where('is_remark_filled', false)->orWhere('is_downtime_stopped', false);
             })->first();
             if (!is_null($downtimeDataUncomplete)) {
@@ -508,7 +508,7 @@ class ProductionController extends Controller
         if ($realtimeQuery->count() != 0) {
             $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
         } else {
-            $machineAvgSpeed = 5;
+            $machineAvgSpeed = 30;
         }
 
         //
@@ -707,6 +707,33 @@ class ProductionController extends Controller
     public function forceCloseApproved(Request $request, Workorder $workorder)
     {
         try {
+
+            $downtime = Downtime::where('workorder_id', $workorder->id)->get();
+            if (count($downtime) > 0) {
+                Downtime::where('workorder_id', $workorder->id)->where('is_downtime_stopped', false)->orWhere('is_remark_filled', false)->delete();
+            }
+
+            $productionData = Production::where('workorder_id', $workorder->id)->get();
+            $smeltingData = Smelting::where('workorder_id', $workorder->id)->get();
+            for ($i=count($productionData); $i < $workorder->bb_qty_bundle; $i++) { 
+                $production = new Production();
+                $production->workorder_id = $workorder->id;
+                $production->bundle_num = $i+1;
+                $production->coil_num = $smeltingData[0]->id;
+                $production->dies_num = 0;
+                $production->diameter_ujung = 0;
+                $production->diameter_tengah = 0;
+                $production->diameter_ekor = 0;
+                $production->kelurusan_aktual = 0;
+                $production->panjang_aktual = 0;
+                $production->berat_fg = 0;
+                $production->pcs_per_bundle = 0;
+                $production->bundle_judgement = true;
+                $production->visual = 'OK';
+                $production->created_by = BypassWorkorder::where('workorder_id', $workorder->id)->first()->initiated_by;
+                $production->save();
+            }
+
             $bypassWorkorder = BypassWorkorder::where('workorder_id', $workorder->id)->first();
             $bypassWorkorder->approved_by = Auth::user()->id;
             $bypassWorkorder->save();
