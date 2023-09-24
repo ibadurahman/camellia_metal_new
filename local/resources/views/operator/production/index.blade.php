@@ -17,9 +17,8 @@
                                     <select name="" id="machine-selector" onchange="update_sorting()"
                                         class="form-control">
                                         @foreach ($machines as $machine)
-                                            @if ($machine->ip_address == request()->ip()) 
-                                                <option value="{{ $machine->id }}"
-                                                    selected>{{ $machine->name }}
+                                            @if ($machine->ip_address == request()->ip() || auth()->user->hasRole('supervisor'))
+                                                <option value="{{ $machine->id }}" selected>{{ $machine->name }}
                                                 </option>
                                             @endif
                                         @endforeach
