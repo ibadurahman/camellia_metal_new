@@ -19,11 +19,11 @@ class Kernel extends ConsoleKernel
         if (Carbon::now()->format('G') == '7') {
             $schedule->command('downtime:close')->dailyAt('07:00');
         }
-        if (Carbon::now()->format('G') == '12') {
-            $schedule->command('downtime:close')->dailyAt('12:00');
+        if (Carbon::now()->format('G') == '11') {
+            $schedule->command('downtime:close')->dailyAt('11:30');
         }
-        if (Carbon::now()->format('G') == '13') {
-            $schedule->command('downtime:close')->dailyAt('13:00');
+        if (Carbon::now()->format('G') == '12') {
+            $schedule->command('downtime:close')->dailyAt('12:30');
         }
         if (Carbon::now()->format('G') == '16') {
             $schedule->command('downtime:close')->dailyAt('16:00');
@@ -40,7 +40,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
