@@ -131,7 +131,9 @@ class SpvProductionController extends Controller
         if (count($downtime) > 0) {
             Downtime::where('workorder_id', $workorder->id)->where('is_downtime_stopped', false)->delete();
 
-            $downtimeDataUncomplete = Downtime::where('workorder_id', $workorder->id)->where(function($query){
+            Downtime::where('workorder_id', $workorder->id)->where('is_downtime_stopped', true)->where('is_remark_filled', false)->delete();
+
+            $downtimeDataUncomplete = Downtime::where('workorder_id', $workorder->id)->where(function ($query) {
                 $query->where('is_remark_filled', false)->orWhere('is_downtime_stopped', false);
             })->first();
             if (!is_null($downtimeDataUncomplete)) {
@@ -164,36 +166,33 @@ class SpvProductionController extends Controller
         $wasteDowntime = 0;
         $managementDowntime = 0;
         $offProductionTime = 0;
-        
+
         $downtimeSummary = Downtime::where('status', 'stop')
             ->where('workorder_id', $workorder->id)
             ->get();
         foreach ($downtimeSummary as $dt) {
-            $downtimeRunId = Downtime::where('status','run')
-                                ->where('downtime_number',$dt->downtime_number)
-                                ->first();
-            $downtimeStopId = Downtime::where('status','stop')
-                                ->where('downtime_number',$dt->downtime_number)
-                                ->first();
-            $downtimeRemark = DowntimeRemark::where('downtime_id',$downtimeStopId->id)->first();
+            $downtimeRunId = Downtime::where('status', 'run')
+                ->where('downtime_number', $dt->downtime_number)
+                ->first();
+            $downtimeStopId = Downtime::where('status', 'stop')
+                ->where('downtime_number', $dt->downtime_number)
+                ->first();
+            $downtimeRemark = DowntimeRemark::where('downtime_id', $downtimeStopId->id)->first();
 
-            $duration = date_diff(new DateTime($downtimeStopId->created_at),new DateTime($downtimeRunId->created_at));
+            $duration = date_diff(new DateTime($downtimeStopId->created_at), new DateTime($downtimeRunId->created_at));
 
             $durationSec = $duration->days * 24 * 60 * 60;
             $durationSec += $duration->h * 60 * 60;
             $durationSec += $duration->i * 60;
             $durationSec += $duration->s;
-                
-            if($downtimeRemark->downtime_category == 'waste')
-            {
+
+            if ($downtimeRemark->downtime_category == 'waste') {
                 $wasteDowntime += $durationSec;
             }
-            if($downtimeRemark->downtime_category == 'management')
-            {
+            if ($downtimeRemark->downtime_category == 'management') {
                 $managementDowntime += $durationSec;
             }
-            if($downtimeRemark->downtime_category == 'off')
-            {
+            if ($downtimeRemark->downtime_category == 'off') {
                 $offProductionTime += $durationSec;
             }
             $totalDowntime += $durationSec;
@@ -205,8 +204,8 @@ class SpvProductionController extends Controller
         $waste_downtime_min = 0;
         if (($wasteDowntime / 60) >= 1) {
             $waste_downtime_min = floor($wasteDowntime / 60);
-        } 
-        
+        }
+
         //
         // Total Good Product Calculation
         //
