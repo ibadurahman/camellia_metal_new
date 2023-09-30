@@ -33,6 +33,10 @@ class CreateRealtimesTable extends Migration
      */
     public function down()
     {
+        //drop foreign key
+        Schema::table('realtimes', function (Blueprint $table) {
+            $table->dropForeign(['workorder_id']);
+        });
         Schema::dropIfExists('realtimes');
     }
 }

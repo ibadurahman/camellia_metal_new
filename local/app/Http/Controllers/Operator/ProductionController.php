@@ -240,13 +240,6 @@ class ProductionController extends Controller
             'created_by'        => Auth::user()->id,
         ]);
 
-        // $productionData = Production::select('id')->where('workorder_id',$workorder->id)->get();
-        // $productionNum = count($productionData);
-        // $oeeData        = Oee::select('id')->where('workorder_id',$workorder->id)->first();
-        // if($workorder->bb_qty_bundle == $productionNum && $oeeData != null){
-        //     Workorder::where('id',$workorder->id)->update(['status_wo'=>'closed']);
-        // }
-
         return response()->json([
             'message' => 'Submitted Successfully'
         ], 201);
@@ -433,14 +426,14 @@ class ProductionController extends Controller
 
         // Total Good Product Calculation
         $total_good_product = 0;
-        $good_products = Production::select('pcs_per_bundle')->where('workorder_id', $workorder->id)->where('bundle_judgement', 1)->get();
+        $good_products = Production::select('pcs_per_bundle')->where('workorder_id', $workorder->id)->where('bundle_judgement', 'good')->get();
         foreach ($good_products as $good_pro) {
             $total_good_product += $good_pro->pcs_per_bundle;
         }
 
         // Total Bad Product Calculation
         $total_bad_product = 0;
-        $bad_products = Production::select('pcs_per_bundle')->where('workorder_id', $workorder->id)->where('bundle_judgement', 0)->get();
+        $bad_products = Production::select('pcs_per_bundle')->where('workorder_id', $workorder->id)->where('bundle_judgement', 'notgood')->get();
         foreach ($bad_products as $bad_pro) {
             $total_bad_product += $bad_pro->pcs_per_bundle;
         }
@@ -728,7 +721,7 @@ class ProductionController extends Controller
                 $production->panjang_aktual = 0;
                 $production->berat_fg = 0;
                 $production->pcs_per_bundle = 0;
-                $production->bundle_judgement = true;
+                $production->bundle_judgement = 'good';
                 $production->visual = 'OK';
                 $production->created_by = BypassWorkorder::where('workorder_id', $workorder->id)->first()->initiated_by;
                 $production->save();

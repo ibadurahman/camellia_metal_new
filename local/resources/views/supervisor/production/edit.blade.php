@@ -103,12 +103,15 @@
                                     <select name="bundle_judgement" id="judgement-select"
                                         class="form-control @error('bundle_judgement') is-invalid @enderror">
                                         <option value="">-- Select Judgement --</option>
-                                        <option value="1" @if ($production->bundle_judgement == '1')
+                                        <option value="good" @if ($production->bundle_judgement == 'good')
                                             selected
                                         @endif>Good</option>
-                                        <option value="0" @if ($production->bundle_judgement == '0')
+                                        <option value="notgood" @if ($production->bundle_judgement == 'notgood')
                                             selected
                                         @endif>Not Good</option>
+                                        <option value="waste" @if ($production->bundle_judgement == 'waste')
+                                            selected
+                                        @endif>Waste</option>
                                     </select>
                                     @error('bundle_judgement')
                                         <span class="text-danger help-block">{{ $message }}</span>
@@ -138,7 +141,7 @@
 @push('scripts')
     <script>
         $(document).ready(function(){
-            if ($('#judgement-select').val() == '0') {
+            if ($('#judgement-select').val() == 'notgood') {
                 // console.log('bad selected');
                 $('#visual-options').html(
                     '<option disabled selected value="">-- Select Judgement --</option>'+
@@ -181,7 +184,7 @@
                 );
             }
 
-            if ($('#judgement-select').val() == '1') {
+            if ($('#judgement-select').val() == 'good') {
                 // console.log('Good selected');
                 $('#visual-options').html(
                     '<option disabled selected value="">-- Select Judgement --</option>'+
@@ -202,12 +205,18 @@
                     '@endif>OT (Besar)/OK</option>'
                 );   
             }
+            if ($('#judgement-select').val() == 'waste') {
+                // console.log('Good selected');
+                $('#visual-options').html(
+                    '<option disabled selected value="">-- Select Judgement --</option>'
+                );   
+            }
         })
             
         
         $('#judgement-select').on('change',function(event)
         {
-            if ($('#judgement-select').val() == '0') {
+            if ($('#judgement-select').val() == 'notgood') {
                 // console.log('bad selected');
                 $('#visual-options').html(
                     '<option disabled selected value="">-- Select Judgement --</option>'+
@@ -250,7 +259,7 @@
                 );
             }
 
-            if ($('#judgement-select').val() == '1') {
+            if ($('#judgement-select').val() == 'good') {
                 // console.log('Good selected');
                 $('#visual-options').html(
                     '<option disabled selected value="">-- Select Judgement --</option>'+
@@ -269,6 +278,12 @@
                     '<option value="OT (Besar)/OK" @if (old('visual') == 'OT (Besar)/OK')'+
                         'selected'+
                     '@endif>OT (Besar)/OK</option>'
+                );   
+            }
+            if ($('#judgement-select').val() == 'waste') {
+                // console.log('Good selected');
+                $('#visual-options').html(
+                    '<option disabled selected value="">-- Select Judgement --</option>'
                 );   
             }
         })

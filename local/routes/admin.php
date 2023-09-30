@@ -20,8 +20,6 @@ Route::middleware(['verified'])->group(function(){
     Route::get('smelting/data_wo',[DataController::class,'wo_smeltings'])->name('smelting.data_wo');
     Route::get('smelting/data',[DataController::class,'smeltings'])->name('smelting.data');
     Route::get('supplier/data',[DataController::class,'suppliers'])->name('supplier.data');
-    Route::get('holiday/data',[DataController::class,'holidays'])->name('holiday.data');
-    Route::get('breaktime/data',[DataController::class,'breaktimes'])->name('breaktime.data');
     Route::get('color/data',[DataController::class,'colors'])->name('color.data');
     Route::get('line/data',[DataController::class,'lines'])->name('line.data');
     Route::get('machine/data',[DataController::class,'machines'])->name('machine.data');
@@ -48,21 +46,11 @@ Route::middleware(['verified'])->group(function(){
     Route::resource('workorder','WorkorderController');
 });
 
-Route::middleware(['verified'])->resource('holiday',HolidayController::class);
-
-Route::middleware(['verified'])->resource('production',ProductionController::class);
-
-Route::middleware(['verified'])->resource('breaktime',BreaktimeController::class);
-
 Route::middleware(['verified'])->resource('color',ColorController::class);
 
 Route::middleware(['verified'])->resource('line',LineController::class);
 
 Route::middleware(['verified'])->resource('machine',MachineController::class);
-
-Route::middleware(['verified'])->resource('oee',OeeController::class);
-
-Route::middleware(['verified'])->resource('shift',ShiftController::class);
 
 Route::middleware(['verified'])->group(function(){
     Route::get('schedule/data',[ScheduleController::class,'data'])->name('schedule.data');

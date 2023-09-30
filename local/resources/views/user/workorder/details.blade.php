@@ -285,8 +285,11 @@
                                                                 bg-secondary
                                                                 @continue
                                                             @endif
-                                                            @if ($prod->bundle_judgement == '0')
+                                                            @if ($prod->bundle_judgement === 'notgood')
                                                                 bg-danger
+                                                                @continue
+                                                            @elseif($prod->bundle_judgement === 'waste' && $prod->pcs_per_bundle != 0)
+                                                                bg-warning
                                                                 @continue
                                                             @endif
                                                             bg-primary @endforeach
@@ -787,8 +790,10 @@
             },
             success: function(response) {
                 var bundle_judgement = 'Not Good';
-                if (response['bundle_judgement'] == 1) {
+                if (response['bundle_judgement'] == 'good') {
                     bundle_judgement = 'Good'
+                }else if(response['bundle_judgement'] == 'waste'){
+                    bundle_judgement = 'Waste'
                 }
                 var visual = 'Not Good';
                 Swal.fire({
@@ -831,8 +836,8 @@
                         '<div class="description-block">' +
                         '<span class="description-text float-left">Judgement: ' +
                         bundle_judgement + '</span><br>' +
-                        '<span class="description-text float-left">Visual: ' + response[
-                            'visual'] + '</span><br>' +
+                        '<span class="description-text float-left">Visual: ' + (response[
+                            'visual'] ? response['visual'] : '-') + '</span><br>' +
                         '<hr>' +
                         '<span class="description-text float-left">Created By: ' + response[
                             'created_by'] + '</span><br>' +

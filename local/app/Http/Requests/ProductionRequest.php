@@ -37,7 +37,6 @@ class ProductionRequest extends FormRequest
             'berat_fg'          =>['required'],
             'pcs_per_bundle'    =>['required'],
             'bundle_judgement'  =>['required'],
-            'visual'            =>['required'],
         ];
     }
 

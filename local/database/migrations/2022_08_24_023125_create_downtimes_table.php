@@ -25,8 +25,8 @@ class CreateDowntimesTable extends Migration
             $table->timestamps();
 
             $table->foreign('workorder_id')->references('id')->on('workorders')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
@@ -37,6 +37,10 @@ class CreateDowntimesTable extends Migration
      */
     public function down()
     {
+        //drop foreign key
+        Schema::table('downtimes', function (Blueprint $table) {
+            $table->dropForeign(['workorder_id']);
+        });
         Schema::dropIfExists('downtimes');
     }
 }

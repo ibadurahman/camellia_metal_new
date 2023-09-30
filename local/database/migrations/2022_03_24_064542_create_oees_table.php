@@ -56,6 +56,10 @@ class CreateOeesTable extends Migration
      */
     public function down()
     {
+        //drop foreign key
+        Schema::table('oees', function (Blueprint $table) {
+            $table->dropForeign(['workorder_id']);
+        });
         Schema::dropIfExists('oees');
     }
 }

@@ -16,7 +16,7 @@ class CreateDowntimeRemarksTable extends Migration
         Schema::create('downtime_remarks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('downtime_id');
-            $table->enum('downtime_category',['waste','management','off']);
+            $table->enum('downtime_category', ['waste', 'management', 'off']);
             $table->string('downtime_reason');
             $table->string('remarks')->nullable();
             $table->timestamps();
@@ -34,6 +34,10 @@ class CreateDowntimeRemarksTable extends Migration
      */
     public function down()
     {
+        //drop foreign key
+        Schema::table('downtime_remarks', function (Blueprint $table) {
+            $table->dropForeign(['downtime_id']);
+        });
         Schema::dropIfExists('downtime_remarks');
     }
 }

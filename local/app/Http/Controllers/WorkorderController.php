@@ -396,7 +396,7 @@ class WorkorderController extends Controller
 
         // Total Good Product Calculation
         $total_good_product = 0;
-        $good_products = Production::select('pcs_per_bundle')->where('workorder_id',$workorder->id)->where('bundle_judgement',1)->get();  
+        $good_products = Production::select('pcs_per_bundle')->where('workorder_id',$workorder->id)->where('bundle_judgement','good')->get();  
         foreach($good_products as $good_pro)
         {
             $total_good_product += $good_pro->pcs_per_bundle;
@@ -404,7 +404,7 @@ class WorkorderController extends Controller
 
         // Total Bad Product Calculation
         $total_bad_product = 0;
-        $bad_products = Production::select('pcs_per_bundle')->where('workorder_id',$workorder->id)->where('bundle_judgement',0)->get();  
+        $bad_products = Production::select('pcs_per_bundle')->where('workorder_id',$workorder->id)->where('bundle_judgement','notgood')->get();  
         foreach($bad_products as $bad_pro)
         {
             $total_bad_product += $bad_pro->pcs_per_bundle;

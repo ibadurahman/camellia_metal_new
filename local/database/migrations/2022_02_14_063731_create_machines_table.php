@@ -34,6 +34,10 @@ class CreateMachinesTable extends Migration
      */
     public function down()
     {
+        //drop foreign key
+        Schema::table('machines', function (Blueprint $table) {
+            $table->dropForeign(['line_id']);
+        });
         Schema::dropIfExists('machines');
     }
 }

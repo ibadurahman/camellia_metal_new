@@ -20,27 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware'=>'auth:api'],function(){
-    Route::post('/production','Api\ProductionApiController@store');
-});
-
-Route::group(['middleware'=>'auth:api'],function(){
-    Route::get('/workorder','Api\WorkorderApiController@index');
-});
-
-Route::group(['middleware'=>'auth:api'],function(){
-    Route::post('/oee','Api\OeeApiController@store');
-});
-
-Route::group(['middleware'=>'auth:api'],function(){
-    Route::post('/dailyReport','Api\DailyReportApiController@store');
-});
-
-Route::group(['middleware'=>'auth:api'],function(){
     Route::post('/realtime','Api\RealtimeApiController@store');
-});
-
-Route::group(['middleware'=>'auth:api'],function(){
-    Route::post('/schedule','Api\ScheduleApiController@index');
 });
 
 Route::group(['middleware'=>'auth:api'],function(){

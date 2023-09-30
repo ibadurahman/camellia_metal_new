@@ -104,7 +104,7 @@ class ProductionDataSheet implements ShouldAutoSize, WithTitle, WithEvents
                     $event->sheet->setCellValue('B'.$j, 'Judgement:');
                     $event->sheet->setCellValue('C'.$j, call_user_func(function() use($productions,$i)
                     {
-                        if($productions[$i]->bundle_judgement){
+                        if($productions[$i]->bundle_judgement === 'good'){
                             return 'GOOD';
                         }
                         return 'NOT GOOD';

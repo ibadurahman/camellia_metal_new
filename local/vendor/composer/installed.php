@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '1a3514b80dd0fe4cc939acebd1e7ea56da391664',
+        'reference' => '29de3212a722031f9624543824cad0e049a2fa7e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -104,9 +104,9 @@
             'dev_requirement' => false,
         ),
         'doctrine/dbal' => array(
-            'pretty_version' => '3.6.6',
-            'version' => '3.6.6.0',
-            'reference' => '63646ffd71d1676d2f747f871be31b7e921c7864',
+            'pretty_version' => '3.7.0',
+            'version' => '3.7.0.0',
+            'reference' => '00d03067f07482f025d41ab55e4ba0db5eca2cdf',
             'type' => 'library',
             'install_path' => __DIR__ . '/../doctrine/dbal',
             'aliases' => array(),
@@ -529,7 +529,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '1a3514b80dd0fe4cc939acebd1e7ea56da391664',
+            'reference' => '29de3212a722031f9624543824cad0e049a2fa7e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1012,8 +1012,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache' => array(

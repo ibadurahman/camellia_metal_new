@@ -38,6 +38,10 @@ class CreateDailyReportsTable extends Migration
      */
     public function down()
     {
+        //drop foreign key
+        Schema::table('daily_reports', function (Blueprint $table) {
+            $table->dropForeign(['workorder_id']);
+        });
         Schema::dropIfExists('daily_reports');
     }
 }

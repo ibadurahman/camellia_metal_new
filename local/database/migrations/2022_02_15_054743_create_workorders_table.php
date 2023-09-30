@@ -71,6 +71,14 @@ class CreateWorkordersTable extends Migration
      */
     public function down()
     {
+        //drop foreign key
+        Schema::table('workorders', function (Blueprint $table) {
+            $table->dropForeign(['created_by']);
+            $table->dropForeign(['edited_by']);
+            $table->dropForeign(['processed_by']);
+            $table->dropForeign(['machine_id']);
+            $table->dropForeign(['color']);
+        });
         Schema::dropIfExists('workorders');
     }
 }

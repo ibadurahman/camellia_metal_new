@@ -285,8 +285,11 @@
                                                                 bg-secondary
                                                                 @continue
                                                             @endif
-                                                            @if ($prod->bundle_judgement == '0')
+                                                            @if ($prod->bundle_judgement === 'notgood')
                                                                 bg-danger
+                                                                @continue
+                                                            @elseif($prod->bundle_judgement === 'waste' && $prod->pcs_per_bundle != 0)
+                                                                bg-warning
                                                                 @continue
                                                             @endif
                                                             bg-primary @endforeach
@@ -313,8 +316,11 @@
                                                                 bg-secondary
                                                                 @continue
                                                             @endif
-                                                            @if ($prod->bundle_judgement == '0')
+                                                            @if ($prod->bundle_judgement === 'notgood')
                                                                 bg-danger
+                                                                @continue
+                                                            @elseif($prod->bundle_judgement === 'waste' && $prod->pcs_per_bundle != 0)
+                                                                bg-warning
                                                                 @continue
                                                             @endif
                                                             bg-primary @endforeach
@@ -457,8 +463,9 @@
                                                 <select name="bundle-judgement" id="judgement-select"
                                                     class="form-control @error('bundle-judgement') is-invalid @enderror">
                                                     <option value="">-- Select Judgement --</option>
-                                                    <option value="1">Good</option>
-                                                    <option value="0">Not Good</option>
+                                                    <option value="good">Good</option>
+                                                    <option value="notgood">Not Good</option>
+                                                    <option value="waste">Waste</option>
                                                 </select>
                                                 @error('bundle-judgement')
                                                     <span class="text-danger help-block">{{ $message }}</span>
@@ -1368,8 +1375,10 @@
             },
             success: function(response) {
                 var bundle_judgement = 'Not Good';
-                if (response['bundle_judgement'] == 1) {
+                if (response['bundle_judgement'] == 'good') {
                     bundle_judgement = 'Good'
+                }else if(response['bundle_judgement'] == 'waste'){
+                    bundle_judgement = 'Waste'
                 }
                 var visual = 'Not Good';
                 Swal.fire({
@@ -1412,8 +1421,8 @@
                         '<div class="description-block">' +
                         '<span class="description-text float-left">Judgement: ' +
                         bundle_judgement + '</span><br>' +
-                        '<span class="description-text float-left">Visual: ' + response[
-                            'visual'] + '</span><br>' +
+                        '<span class="description-text float-left">Visual: ' + (response[
+                            'visual'] ? response['visual'] : '-') + '</span><br>' +
                         '<hr>' +
                         '<span class="description-text float-left">Created By: ' + response[
                             'created_by'] + '</span><br>' +
@@ -1460,7 +1469,7 @@
     });
 
     $('#judgement-select').on('change', function(event) {
-        if ($('#judgement-select').val() == '0') {
+        if ($('#judgement-select').val() == 'notgood') {
             // console.log('bad selected');
             $('#visual-options').html(
                 '<option disabled selected value="">-- Select Judgement --</option>' +
@@ -1503,7 +1512,7 @@
             );
         }
 
-        if ($('#judgement-select').val() == '1') {
+        if ($('#judgement-select').val() == 'good') {
             // console.log('Good selected');
             $('#visual-options').html(
                 '<option disabled selected value="">-- Select Judgement --</option>' +
@@ -1522,6 +1531,12 @@
                 '<option value="OT (Besar)/OK" @if (old('visual') == 'OT (Besar)/OK') '+
                     'selected'+
                 ' @endif>OT (Besar)/OK</option>'
+            );
+        }
+        if ($('#judgement-select').val() == 'waste') {
+            // console.log('Good selected');
+            $('#visual-options').html(
+                '<option disabled selected value="">-- Select Judgement --</option>'
             );
         }
     })
