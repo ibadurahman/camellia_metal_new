@@ -52,7 +52,7 @@ class ProductionController extends Controller
         return response()->json($response);
     }
 
-    public function finish(Workorder $workorder)
+    public function finish(Request $request, Workorder $workorder)
     {
         $production = Production::where('workorder_id', $workorder->id)->get();
         if ($workorder->bb_qty_bundle != count($production)) {
@@ -74,8 +74,9 @@ class ProductionController extends Controller
         $workorder->timestamps = false;
         $workorder->timestamps = false;
         $workorder->update([
-            'status_wo' => 'on check',
-            'process_end' => date('Y-m-d H:i:s'),
+            'production_remarks'    => $request->production_remarks,
+            'status_wo'             => 'on check',
+            'process_end'           => date('Y-m-d H:i:s'),
         ]);
 
         return redirect(route('production.index'));
@@ -734,8 +735,9 @@ class ProductionController extends Controller
             $workorder->timestamps = false;
             $workorder->timestamps = false;
             $workorder->update([
-                'status_wo' => 'on check',
-                'process_end' => date('Y-m-d H:i:s'),
+                'production_remarks'    => $request->production_remarks,
+                'status_wo'             => 'on check',
+                'process_end'           => date('Y-m-d H:i:s'),
             ]);
         } catch (\Throwable $th) {
             return response()->json([

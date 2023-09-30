@@ -14,23 +14,7 @@ class Production extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'workorder_id',
-        'bundle_num',
-        'dies_num',
-        'coil_num',
-        'diameter_ujung',
-        'diameter_tengah',
-        'diameter_ekor',
-        'kelurusan_aktual',
-        'panjang_aktual',
-        'berat_fg',
-        'pcs_per_bundle',
-        'bundle_judgement',
-        'visual',
-        'created_by',
-        'edited_by',
-    ];
+    protected $guarder = [];
 
     public function workorder()
     {

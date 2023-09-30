@@ -561,15 +561,26 @@
     @endif
     <?php $checkRemarkEmpty = true; ?>
 
-    <div class="row">
-        <div class="col-4">
-            <div class="card card-outline card-primary">
-                <div class="card-header" id="div_str_finish">
-                    Finish Workorder Button
+    <form action="" method="POST" id="finishForm">
+        <div class="row">
+            <div class="col-4">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        Remarks
+                    </div>
+                    <div class="card-body">
+                        <textarea name="production_remarks" id="production-remarks" cols="30" rows="10" class="form-control"
+                            placeholder="Put any notes here"></textarea>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="text-center">
-                        <form action="" method="POST" id="finishForm">
+            </div>
+            <div class="col-4">
+                <div class="card card-outline card-primary">
+                    <div class="card-header" id="div_str_finish">
+                        Finish Workorder Button
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
                             @csrf
                             <input type="submit" value="Process" style="display:none">
                             @if ($allProductionDataComplete == false || $allDowntimeDataComplete == false)
@@ -578,40 +589,41 @@
                                 <a href="{{ url('/operator/production/' . $workorder->id . '/finish') }}"
                                     class="btn btn-success finish-button">Finish Workorder</a>
                             @endif
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @if (auth()->user()->hasRole(['super-admin', 'supervisor', 'owner', 'office-admin']))
-            <div class="col-4">
-                <div class="card card-outline card-primary">
-                    <div class="card-header" id="div_str_finish">
-                        Force Close Workorder
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center">
-                            @if ($bypass_workorder && $bypass_workorder->initiatedBy->name)
-                                <p>This workorder is initiated to force close by
-                                    {{ $bypass_workorder->initiatedBy->name }}. The reason is
-                                    {{ $bypass_workorder->remarks }}.</p>
-
-                                @if (auth()->user()->hasRole(['office-admin', 'super-admin', 'owner']))
-                                    <button class="btn btn-primary" id="approve-force-close-btn">Approve
-                                        this</button>
-                                @endif
-                            @elseif(
-                                !$bypass_workorder &&
-                                    auth()->user()->hasRole(['supervisor', 'super-admin', 'owner']))
-                                <button class="btn btn-primary" id="force-close-btn">Initiate Force
-                                    Close</button>
-                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-        @endif
-    </div>
+            @if (auth()->user()->hasRole(['super-admin', 'supervisor', 'owner', 'office-admin']))
+                <div class="col-4">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header" id="div_str_finish">
+                            Force Close Workorder
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                @if ($bypass_workorder && $bypass_workorder->initiatedBy->name)
+                                    <p>This workorder is initiated to force close by
+                                        {{ $bypass_workorder->initiatedBy->name }}. The reason is
+                                        {{ $bypass_workorder->remarks }}.</p>
+
+                                    @if (auth()->user()->hasRole(['office-admin', 'super-admin', 'owner']))
+                                        <button class="btn btn-primary"
+                                            id="approve-force-close-btn">Approve
+                                            this</button>
+                                    @endif
+                                @elseif(
+                                    !$bypass_workorder &&
+                                        auth()->user()->hasRole(['supervisor', 'super-admin', 'owner']))
+                                    <button class="btn btn-primary" id="force-close-btn">Initiate Force
+                                        Close</button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </form>
 
 </div>
 
@@ -1510,7 +1522,7 @@
                         '<div class="description-block">' +
                         '<span class="description-text float-left">Judgement: ' +
                         bundle_judgement + '</span><br>' +
-                        '<span class="description-text float-left">Visual: ' +( response[
+                        '<span class="description-text float-left">Visual: ' + (response[
                             'visual'] ? response['visual'] : '-') + '</span><br>' +
                         '<hr>' +
                         '<span class="description-text float-left">Created By: ' + response[
@@ -1621,7 +1633,7 @@
             );
         }
 
-        if($('#judgement-select').val() == 'waste'){
+        if ($('#judgement-select').val() == 'waste') {
             $('#visual-options').html(`
                 <option disabled selected value="">-- Select Judgement --</option>
             `)

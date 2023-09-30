@@ -25,7 +25,7 @@ class DataController extends Controller
     //User Data Controller
     public function users()
     {
-        $users = User::where('id','!=','24')->where('id','!=','16')->get();
+        $users = User::where('id','!=','24')->where('id','!=','16')->where('is_active',true)->get();
         return datatables()->of($users)
                 ->addColumn('role',function(User $model){
                     if($model->hasRole('office-admin'))
@@ -51,6 +51,38 @@ class DataController extends Controller
                     return 'undefined';
                 })
                 ->addColumn('action','admin.user.action')
+                ->addIndexColumn()
+                ->toJson();
+    }
+
+    public function nonactiveUsers()
+    {
+        $users = User::where('id','!=','24')->where('id','!=','16')->where('is_active',false)->get();
+        return datatables()->of($users)
+                ->addColumn('role',function(User $model){
+                    if($model->hasRole('office-admin'))
+                    {
+                        return 'office-admin';
+                    }
+                    if($model->hasRole('operator'))
+                    {
+                        return 'operator';
+                    }
+                    if($model->hasRole('super-admin'))
+                    {
+                        return 'super-admin';
+                    }
+                    if($model->hasRole('supervisor'))
+                    {
+                        return 'supervisor';
+                    }
+                    if($model->hasRole('warehouse'))
+                    {
+                        return 'warehouse';
+                    }
+                    return 'undefined';
+                })
+                ->addColumn('action','admin.user.nonactiveAction')
                 ->addIndexColumn()
                 ->toJson();
     }

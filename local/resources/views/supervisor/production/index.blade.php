@@ -63,6 +63,7 @@
                                         <th>Processed By</th>
                                         <th>Process Start</th>
                                         <th>Remarks</th>
+                                        <th>Procuction Remarks</th>
                                         <th>Leburan</th>
                                     </tr>
                                 </thead>
@@ -124,6 +125,7 @@
                 {data:'processed_by'},
                 {data:'process_start'},
                 {data:'remarks'},
+                {data:'production_remarks'},
                 {data:'smelting'},
 				{data:'action'}
             ],

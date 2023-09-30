@@ -119,7 +119,7 @@ class SpvProductionController extends Controller
         return response()->json($production, 200);
     }
 
-    public function finish(Workorder $workorder)
+    public function finish(Request $request, Workorder $workorder)
     {
         $downtime = Downtime::where('workorder_id', $workorder->id)->get();
 
@@ -143,7 +143,8 @@ class SpvProductionController extends Controller
 
         $workorder->timestamps = false;
         $workorder->update([
-            'status_wo' => 'closed',
+            'production_remarks'    => $request->production_remarks,
+            'status_wo'             => 'closed',
         ]);
 
         //

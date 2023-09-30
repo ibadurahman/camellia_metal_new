@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\WorkorderController;
 
 Route::middleware(['verified'])->group(function(){
     Route::get('user/data',[DataController::class,'users'])->name('user.data');
+    Route::get('nonactiveuser/data',[DataController::class,'nonactiveUsers'])->name('nonactiveuser.data');
     Route::get('workorder/datadraft',[DataController::class,'workordersDraft'])->name('workorder.datadraft');
     Route::get('workorder/datawaiting',[DataController::class,'workordersWaiting'])->name('workorder.datawaiting');
     Route::get('workorder/dataonprocess',[DataController::class,'workordersOnProcess'])->name('workorder.dataonprocess');
@@ -28,6 +29,9 @@ Route::middleware(['verified'])->group(function(){
 
 Route::middleware(['verified'])->group(function(){
     Route::post('user/reset-password',[UserController::class,'resetPassword'])->name('user.reset.password');
+    Route::delete('user/{user}/inactive',[UserController::class,'inactive'])->name('user.inactive');
+    Route::post('user/{user}/activate',[UserController::class,'activate'])->name('user.activate');
+    Route::get('user/inactivated',[UserController::class,'inactivated'])->name('user.inactivated');
     Route::resource('user','UserController');
 });
 

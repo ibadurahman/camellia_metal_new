@@ -31,6 +31,13 @@ class UserController extends Controller
         ]);
     }
 
+    public function inactivated()
+    {
+        return view('admin.user.nonactive',[
+            'title' => 'Admin: Non Active User'
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -108,8 +115,23 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
-        $user->delete();
-        return redirect()->route('admin.user.index')->with('success','Data Deleted Successfully');
+        
+    }
+
+    public function inactive(User $user)
+    {
+        $user->is_active = false;
+        $user->save();
+
+        return redirect()->route('admin.user.index')->with('success','User Inactivated Successfully');
+    }
+
+    public function activate(User $user)
+    {
+        $user->is_active = true;
+        $user->save();
+
+        return redirect()->route('admin.user.index')->with('success','User Activated Successfully');
     }
 
     //

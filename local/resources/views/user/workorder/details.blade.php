@@ -183,9 +183,10 @@
                                         <div class="col-sm-4 col-4">
                                             <div class="description-block border-right">
                                                 <div class="row">
-                                                <div class="col-4">
+                                                    <div class="col-4">
                                                         <span class="description-text text-sm">AVERAGE SPEED</span>
-                                                        <h5 class="description-header">{{ round($reports['average_speed'],2) }} M/Min
+                                                        <h5 class="description-header">
+                                                            {{ round($reports['average_speed'], 2) }} M/Min
                                                         </h5>
                                                     </div>
                                                     <div class="col-4">
@@ -340,6 +341,18 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="card card-outline card-primary">
+                            <div class="card-header">
+                                Production Remarks
+                            </div>
+                            <div class="card-body">
+                                <p>{{ $workorder->production_remarks }}</p>
                             </div>
                         </div>
                     </div>
@@ -689,7 +702,8 @@
                     }
                     if (data[index].is_remark_filled == true) {
                         cardOpeningDiv = '<div class="card card-success collapsed-card">';
-                        dtTime = '<h3 class="card-title"> <b class="' + textColor + '">' + downtimeCategory +
+                        dtTime = '<h3 class="card-title"> <b class="' + textColor + '">' +
+                            downtimeCategory +
                             '</b> | ' + data[index].start_time + ' - ' + data[index].end_time + ' | ' +
                             data[index].duration + ' | ' + data[index].downtime_reason + ' | ' + data[index]
                             .remarks + '</h3>';
@@ -721,7 +735,7 @@
                 '<span class="description-text float-left">Created By: {{ $user_involved['created_by'] }}</span><br>' +
                 '<span class="description-text float-left">Created at: {{ $workorder->created_at }}</span><br>' +
                 '<span class="description-text float-left">Edited By: {{ $user_involved['edited_by'] }}</span><br>' +
-                '<span class="description-text float-left">Updated at: @if ($user_involved['edited_by'] == '') {{''}} @else {{ $workorder->updated_at }} @endif</span><br>' +
+                '<span class="description-text float-left">Updated at: @if ($user_involved['edited_by'] == '') {{ '' }} @else {{ $workorder->updated_at }} @endif</span><br>' +
                 '<hr>' +
                 '<span class="description-text float-left">Processed By: {{ $user_involved['processed_by'] }}</span><br>' +
                 '<span class="description-text float-left">Process Start: {{ $workorder->process_start }}</span><br>' +
@@ -792,7 +806,7 @@
                 var bundle_judgement = 'Not Good';
                 if (response['bundle_judgement'] == 'good') {
                     bundle_judgement = 'Good'
-                }else if(response['bundle_judgement'] == 'waste'){
+                } else if (response['bundle_judgement'] == 'waste') {
                     bundle_judgement = 'Waste'
                 }
                 var visual = 'Not Good';

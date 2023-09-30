@@ -31,6 +31,11 @@ Breadcrumbs::for('admin.user.index', function ($trail) {
     $trail->push('Home', route('home'));
     $trail->push('User', route('admin.user.index'));
 });
+// User Index
+Breadcrumbs::for('admin.user.inactivated', function ($trail) {
+    $trail->push('Home', route('home'));
+    $trail->push('User', route('admin.user.inactivated'));
+});
 
 // User Create
 Breadcrumbs::for('admin.user.create', function ($trail) {
