@@ -136,6 +136,19 @@ Route::prefix('supervisor/production')->controller(Supervisor\SpvProductionContr
 	Route::post('/{workorder}/finish','finish')->name('spvproduction.finish');
 });
 
+Route::prefix('/supervisor/dowmtimereason')->controller(Supervisor\DowntimeReasonController::class)->middleware(['verified'])->group(function(){
+    Route::get('/','index')->name('downtimeReason.index');
+    Route::get('/create','create')->name('downtimeReason.create');
+    Route::get('/show','show')->name('downtimeReason.show');
+    Route::post('/store','store')->name('downtimeReason.store');
+    Route::get('/{downtimeReason}/edit','edit')->name('downtimeReason.edit');
+    Route::put('/{downtimeReason}/update','update')->name('downtimeReason.update');
+    Route::delete('/{downtimeReason}/delete','destroy')->name('downtimeReason.delete');
+
+    Route::get('/loadData','loadData')->name('downtimeReason.loadData');
+    Route::get('/getReason','getReason')->name('downtimeReason.getReason');
+});
+
 
 //
 // Help Controller Route

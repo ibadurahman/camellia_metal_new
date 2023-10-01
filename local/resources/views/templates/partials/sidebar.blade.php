@@ -228,6 +228,12 @@
               </a>
             </li>
             <li class="nav-item">
+              <a href="{{route('downtimeReason.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-file-alt"></i>
+                <p>Downtimer Reason</p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="{{route('bypass.index')}}" class="nav-link">
                 <i class="nav-icon fas fa-file-alt"></i>
                 <p>Bypass Workorder</p>

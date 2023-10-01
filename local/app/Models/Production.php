@@ -14,7 +14,7 @@ class Production extends Model
      *
      * @var array<int, string>
      */
-    protected $guarder = [];
+    protected $guarded = [];
 
     public function workorder()
     {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\DowntimeReason;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 
 // Home
@@ -331,3 +332,17 @@ Breadcrumbs::for('bypass.index', function ($trail) {
     $trail->push('Home', route('home'));
     $trail->push('Bypass', route('bypass.index'));
 });
+
+// Downtime Reason
+Breadcrumbs::for('downtimeReason.index', function ($trail) {
+    $trail->push('Home', route('home'));
+    $trail->push('Downtime Reason', route('downtimeReason.index'));
+});
+Breadcrumbs::for('downtimeReason.create', function ($trail) {
+    $trail->parent('downtimeReason.index');
+    $trail->push('Create Downtime Reason', route('downtimeReason.create'));
+});
+Breadcrumbs::for('downtimeReason.edit', function ($trail, DowntimeReason $downtimeReason) {
+    $trail->parent('downtimeReason.index');
+    $trail->push('Edit Downtime Reason', route('downtimeReason.edit', $downtimeReason));
+}); 

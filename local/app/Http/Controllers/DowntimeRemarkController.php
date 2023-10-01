@@ -12,36 +12,43 @@ class DowntimeRemarkController extends Controller
 
     public function submitDowntimeRemark(Request $request)
     {
-        $downtime = Downtime::where('downtime_number',$request->downtimeNumber);
-        
-        if(count($downtime->get())==0)
-        {
+        try {
+            $downtime = Downtime::where('downtime_number', $request->downtimeNumber);
+
+            if ($downtime->count() == 0) {
+                return response()->json([
+                    'message' => 'Downtime Data Not Found'
+                ], 404);
+            }
+
+            $request->validate([
+                'downtimeNumber'    => 'required|numeric',
+                'downtimeCategory'  => 'required',
+                'downtimeReason'    => 'required',
+            ]);
+
+            DowntimeRemark::where('downtime_id', $downtime->first()->id)->delete();
+
+            $remark = DowntimeRemark::create([
+                'downtime_id'       => $downtime->first()->id,
+                'downtime_category' => $request->downtimeCategory,
+                'downtime_reason'   => $request->downtimeReason,
+                'remarks'           => $request->downtimeRemarks,
+            ]);
+
+            $downtime = Downtime::where('downtime_number', $request->downtimeNumber)->get();
+            foreach ($downtime as $dt) {
+                $dt->is_remark_filled = true;
+                $dt->save();
+            }
+
+        } catch (\Throwable $th) {
             return response()->json([
-                'message' => 'Downtime Data Not Found'
-            ],404);
+                'message' => $th->getMessage(),
+            ], 400);
         }
-
-        $validated = $request->validate([
-            'downtimeNumber'    => 'required|numeric',
-            'downtimeCategory'  => 'required',
-            'downtimeReason'    => 'required',
-        ]);
-
-        DowntimeRemark::where('downtime_id',$downtime->get()[0]->id)->delete();
-
-        DowntimeRemark::create([
-            'downtime_id'       => $downtime->get()[0]->id,
-            'downtime_category' => $request->downtimeCategory,
-            'downtime_reason'   => $request->downtimeReason,
-            'remarks'           => $request->downtimeRemarks,
-        ]);
-
-        $downtime->update([
-            'is_remark_filled' => true,
-        ]);
-        
         return response()->json([
-            'message' => 'data updated successfully',
-        ],200);
+            'message'   => 'data updated successfully',
+        ], 200);
     }
 }

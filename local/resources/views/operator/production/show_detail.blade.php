@@ -636,6 +636,7 @@
 
 @push('scripts')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- FORCE CLOSE FUNCTION --}}
 <script>
     $(document).ready(function() {
         $(document).on('click', '#force-close-btn', function(e) {
@@ -699,7 +700,6 @@
                             console.log(xhr);
                         },
                     }).done(function(response) {
-                        console.log(response)
                         Swal.fire({
                             icon: 'success',
                             title: 'Wokorder Closed Successfully',
@@ -715,7 +715,10 @@
         })
     })
 </script>
+
+{{-- PRODUCTION REPORT FUNCTION --}}
 <script>
+    // INITIAL FUNCTION
     $(document).ready(function() {
         $('#reservationtime').daterangepicker({
             timePicker: true,
@@ -737,65 +740,7 @@
         updateDowntimeChart();
     });
 
-    function updateSpeedChart() {
-        $.ajax({
-            method: "POST",
-            url: '{{ route('realtime.searchSpeedProduction') }}',
-            data: {
-                timeRange: $('#reservationtime').val(),
-                workorder: '{{ $workorder->id }}',
-                _token: '{{ csrf_token() }}'
-            },
-            dataType: 'json',
-            success: function(response) {
-                var speedHistoryCanvas = $('#speedChart').get(0).getContext('2d');
-
-                var speedHistoryData = {
-                    labels: response['created_at'],
-                    datasets: [{
-                        label: 'Production Speed',
-                        backgroundColor: 'rgba(60,141,188,0.9)',
-                        borderColor: 'rgba(60,141,188,0.8)',
-                        pointRadius: false,
-                        pointColor: '#3b8bba',
-                        pointStrokeColor: 'rgba(60,141,188,1)',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(60,141,188,1)',
-                        data: response['speed']
-                    }, ]
-                }
-
-                var speedHistoryOptions = {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        xAxes: [{
-                            gridLines: {
-                                display: false,
-                            }
-                        }],
-                        yAxes: [{
-                            gridLines: {
-                                display: false,
-                            }
-                        }]
-                    }
-                }
-
-                // This will get the first returned node in the jQuery collection.
-                new Chart(speedHistoryCanvas, {
-                    type: 'line',
-                    data: speedHistoryData,
-                    options: speedHistoryOptions
-                })
-            },
-        })
-
-    }
-
+    // EVENT LISTENER
     let aChannel = Echo.channel('channel-downtime');
     aChannel.listen('DowntimeCaptured', function(data) {
         if (data.downtime.machine != '{{ $workorder->machine->name }}') {
@@ -811,12 +756,12 @@
         }
         updateDowntimeList();
     });
-
     let productionChannel = Echo.channel('channel-production-graph');
     productionChannel.listen('productionGraph', function(data) {
         updateSpeedChart();
     });
 
+    // FINISH WORKORDER HANDLER
     $('a.finish-button').on('click', function(e) {
         e.preventDefault();
         var href = $(this).attr('href');
@@ -836,6 +781,7 @@
         })
     });
 
+    // CHARTS
     var wasteChart = new Chart($('#wasteDtChart').get(0).getContext('2d'), {});
     var managementChart = new Chart($('#managementDtChart').get(0).getContext('2d'), {});
 
@@ -1047,6 +993,66 @@
         });
     }
 
+    function updateSpeedChart() {
+        $.ajax({
+            method: "POST",
+            url: '{{ route('realtime.searchSpeedProduction') }}',
+            data: {
+                timeRange: $('#reservationtime').val(),
+                workorder: '{{ $workorder->id }}',
+                _token: '{{ csrf_token() }}'
+            },
+            dataType: 'json',
+            success: function(response) {
+                var speedHistoryCanvas = $('#speedChart').get(0).getContext('2d');
+
+                var speedHistoryData = {
+                    labels: response['created_at'],
+                    datasets: [{
+                        label: 'Production Speed',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: response['speed']
+                    }, ]
+                }
+
+                var speedHistoryOptions = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display: false,
+                            }
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display: false,
+                            }
+                        }]
+                    }
+                }
+
+                // This will get the first returned node in the jQuery collection.
+                new Chart(speedHistoryCanvas, {
+                    type: 'line',
+                    data: speedHistoryData,
+                    options: speedHistoryOptions
+                })
+            },
+        })
+
+    }
+
+    // DOWNTIME LOGS
     function updateDowntimeList() {
         $.ajax({
             url: '{{ route('downtime.updateDowntime') }}',
@@ -1078,107 +1084,101 @@
                     }
 
                     var downtimeNumber = data[index].downtime_number;
-                    var cardOpeningDiv = '<div class="card card-warning collapsed-card">';
-                    var dtTime = '<h3 class="card-title">' + data[index].start_time + ' - ' + data[index]
-                        .end_time + '</h3>';
-                    var downtimeListBody = '<div class="card-tools">' +
-                        '<button type="button" class="btn btn-tool"data-card-widget="collapse"><i class="fas fa-plus"></i></button>' +
-                        '</div>' +
-                        '</div>' +
-                        '<div class="card-body">' +
-                        '<div class="col-12">' +
-                        '<div class="form-group">' +
-                        '<label for="">Downtime Category</label>' +
-                        '<select onchange="updateReason(' + downtimeNumber + ')" name="dt-category-' +
-                        downtimeNumber + '" class="form-control">' +
-                        '<option value="" disabled>-- Select Downtime Category --</option>' +
-                        '<option value="management">Management Downtime</option>' +
-                        '<option value="waste">Waste Downtime</option>' +
-                        '<option value="off">Off Production</option>' +
-                        '</select>' +
-                        '</div>' +
-                        '<div class="form-group">' +
-                        '<label for="">Downtime Reason</label>' +
-                        '<select name="dt-reason-' + downtimeNumber + '" class="form-control">' +
-                        '<option value="" disabled>-- Select Reason --</option>' +
-                        '</select>' +
-                        '</div>' +
-                        '<div class="form-group">' +
-                        '<label for="">Remarks</label>' +
-                        '<textarea name="dt-remarks-' + downtimeNumber +
-                        '" class="form-control"></textarea>' +
-                        '</div>' +
-                        '<div class="form-group">' +
-                        '<div class="row">' +
-                        '<div class="col-1">' +
-                        '<button class="btn btn-primary" onClick="storeDowntimeReason(' + downtimeNumber +
-                        ')">Apply</button>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
+                    var logCard = `<div class="card card-warning collapsed-card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">${data[index].start_time} - ${data[index].end_time}</h3>
+                                            <div class="card-tools">
+                                                <button type="button" class="btn btn-tool"data-card-widget="collapse">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="">Downtime Category</label>
+                                                    <select onchange="updateReason(${downtimeNumber})" name="dt-category-${downtimeNumber}" class="form-control">
+                                                        <option value="" disabled>-- Select Downtime Category --</option>
+                                                        <option value="management">Management Downtime</option>
+                                                        <option value="waste">Waste Downtime</option>
+                                                        <option value="off">Off Production</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Downtime Reason</label>
+                                                    <select name="dt-reason-${downtimeNumber}" class="form-control">
+                                                        <option value="" disabled>-- Select Reason --</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Remarks</label>
+                                                    <textarea name="dt-remarks-${downtimeNumber}" class="form-control"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-1">
+                                                        <button class="btn btn-primary" onclick="storeDowntimeReason(${downtimeNumber})">Apply</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
 
                     if (data[index].end_time == null) {
-                        cardOpeningDiv = '<div class="card card-danger collapsed-card">';
-                        dtTime = '<h3 class="card-title">' + data[index].start_time + ' - Now</h3>';
-                        downtimeListBody = '';
+                        logCard = `<div class="card card-danger collapsed-card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">${data[index].start_time} - Now</h3>
+                                        </div>
+                                    </div>`;
                     }
                     if (data[index].is_remark_filled == true) {
-                        cardOpeningDiv = '<div class="card card-success collapsed-card">';
-                        dtTime = '<h3 class="card-title"> <b class="' + textColor + '">' +
-                            downtimeCategory +
-                            '</b> | ' + data[index].start_time + ' - ' + data[index].end_time + ' | ' +
-                            data[index].duration + ' | ' + data[index].downtime_reason + ' | ' + data[index]
-                            .remarks + '</h3>';
-                        downtimeListBody = '<div class="card-tools">' +
-                            '<button type="button" class="btn btn-tool"data-card-widget="collapse"><i class="fas fa-plus"></i></button>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div id="downtime-reason-' + downtimeNumber + '" reason="' + downtimeReason +
-                            '" isWasteDowntime="' + data[index].downtimeCategory + '"></div>' +
-                            '<div class="card-body">' +
-                            '<div class="col-12">' +
-                            '<div class="form-group">' +
-                            '<label for="">Downtime Category</label>' +
-                            '<select onchange="updateReason(' + downtimeNumber + ')" name="dt-category-' +
-                            downtimeNumber + '" class="form-control">' +
-                            '<option value="" disabled>-- Select Downtime Category --</option>' +
-                            '<option value="management" ' + checkWasteDowntime(data[index]
-                                .downtimeCategory) + '>Management Downtime</option>' +
-                            '<option value="waste" ' + checkWasteDowntime(data[index].downtimeCategory) +
-                            '>Waste Downtime</option>' +
-                            '<option value="off" ' + checkWasteDowntime(data[index].downtimeCategory) +
-                            '>Off Production</option>' +
-                            '</select>' +
-                            '</div>' +
-                            '<div class="form-group">' +
-                            '<label for="">Downtime Reason</label>' +
-                            '<select name="dt-reason-' + downtimeNumber + '" class="form-control">' +
-                            '<option value="" disabled selected>-- Select Reason --</option>' +
-                            '</select>' +
-                            '</div>' +
-                            '<div class="form-group">' +
-                            '<label for="">Remarks</label>' +
-                            '<textarea name="dt-remarks-' + downtimeNumber + '" class="form-control">' +
-                            data[index].remarks + '</textarea>' +
-                            '</div>' +
-                            '<div class="form-group">' +
-                            '<div class="row">' +
-                            '<div class="col-1">' +
-                            '<button class="btn btn-primary" onClick="storeDowntimeReason(' +
-                            downtimeNumber + ')">Apply</button>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
+                        logCard = `<div class="card card-success collapsed-card">
+                                        <div class="card-header">
+                                            <h3 class="card-title"> 
+                                            <b class="${textColor}">${downtimeCategory}</b> | ${data[index].start_time} - ${data[index].end_time} | ${data[index].duration} | ${data[index].downtime_reason} | ${data[index].remarks}</h3>
+                                            <div class="card-tools">
+                                                <button type="button" class="btn btn-tool"data-card-widget="collapse">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="downtime-reason-${downtimeNumber}" reason="${downtimeReason}" isWasteDowntime="${data[index].downtimeCategory}">
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="">Downtime Category</label>
+                                                    <select onchange="updateReason(${downtimeNumber})" name="dt-category-${downtimeNumber}" class="form-control">
+                                                        <option value="" disabled>-- Select Downtime Category --</option>
+                                                        <option value="management" ${data[index].downtime_category === 'management' ? 'selected' : ''}>Management Downtime</option>
+                                                        <option value="waste" ${data[index].downtime_category === 'waste' ? 'selected' : ''}>Waste Downtime</option>
+                                                        <option value="off" ${data[index].downtime_category === 'off' ? 'selected' : ''}>Off Production</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Downtime Reason</label>
+                                                    <select name="dt-reason-${downtimeNumber}" class="form-control">
+                                                        <option value="" disabled selected>-- Select Reason --</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Remarks</label>
+                                                    <textarea name="dt-remarks-${downtimeNumber}" class="form-control">${data[index].remarks}</textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-1">
+                                                            <button class="btn btn-primary" onclick="storeDowntimeReason(${downtimeNumber})">Apply</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
                     }
 
-                    downtimeList += cardOpeningDiv +
-                        '<div class="card-header">' +
-                        dtTime +
-                        downtimeListBody +
-                        '</div>' +
-                        '</div>';
+                    downtimeList += logCard;
                 }
                 $('#downtime-list').html(downtimeList);
 
@@ -1189,7 +1189,6 @@
             },
         });
     }
-
     function storeDowntimeReason(downtime_number) {
         var downtimeCategory = $('select[name="dt-category-' + downtime_number + '"]').val();
         var downtimeReason = $('select[name="dt-reason-' + downtime_number + '"]').val();
@@ -1205,18 +1204,8 @@
                 downtimeReason: downtimeReason,
                 downtimeRemarks: downtimeRemarks,
             },
-            success: function(response) {
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Data Updated Successfully',
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-                location.reload();
-            },
-            error: function(response) {
+            error: function(xhr) {
+                console.log(xhr);
                 Swal.fire({
                     icon: 'error',
                     title: 'Failed',
@@ -1225,80 +1214,38 @@
                     timer: 3000
                 });
             }
+        }).done(function(response) {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Success',
+                text: 'Data Updated Successfully',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            location.reload();
         })
     }
-
     function updateReason(downtime_number) {
         var downtimeCategory = $('[name="dt-category-' + downtime_number + '"]').val();
-        if (downtimeCategory == 'management') {
-            $("[name='dt-reason-" + downtime_number + "']").html(
-                '<option value="" disabled>-- Select Reason --</option>' +
-                '<option value="Briefing" ' + checkReason('Briefing', downtime_number) + '>Briefing</option>' +
-                '<option value="Check Shot Blast" ' + checkReason('Check Shot Blast', downtime_number) +
-                '>Cek Shot Blast</option>' +
-                '<option value="Cek Mesin" ' + checkReason('Cek Mesin', downtime_number) + '>Cek Mesin</option>' +
-                '<option value="Pointing / Roll / Bubble" ' + checkReason('Pointing / Roll / Bubble',
-                    downtime_number) + '>Pointing / Roll / Bubble</option>' +
-                '<option value="Setting Awal" ' + checkReason('Setting Awal', downtime_number) +
-                '>Setting Awal</option>' +
-                '<option value="Selesai Satu" ' + checkReason('Selesai Satu', downtime_number) +
-                '>Selesai Satu</option>' +
-                '<option value="Bersih-bersih Area" ' + checkReason('Bersih-bersih Area', downtime_number) +
-                '>Bersih-bersih Area</option>' +
-                '<option value="Preventive Maintenance" ' + checkReason('Preventive Maintenance', downtime_number) +
-                '>Preventive Maintenance</option>' +
-                '<option value="Lain-lain" ' + checkReason('Lain-lain', downtime_number) + '>Lain-lain</option>'
-            );
-        }
-
-        if (downtimeCategory == 'waste') {
-            $("[name='dt-reason-" + downtime_number + "']").html(
-                '<option value="" disabled>-- Select Reason --</option>' +
-                '<option value="Bongkar Pasang" ' + checkReason('Bongkar Pasang', downtime_number) +
-                '>Bongkar Pasang</option>' +
-                '<option value="Tunggu Bahan" ' + checkReason('Tunggu Bahan', downtime_number) +
-                '>Tunggu Bahan</option>' +
-                '<option value="Ganti Bahan" ' + checkReason('Ganti Bahan', downtime_number) +
-                '>Ganti Bahan</option>' +
-                '<option value="Tunggu Dies" ' + checkReason('Tunggu Dies', downtime_number) +
-                '>Tunggu Dies</option>' +
-                '<option value="Gosok Dies" ' + checkReason('Gosok Dies', downtime_number) +
-                '>Gosok Dies</option>' +
-                '<option value="Ganti Part Shot Blast" ' + checkReason('Ganti Part Shot Blast', downtime_number) +
-                '>Ganti Part Shot Blast</option>' +
-                '<option value="Putus Dies" ' + checkReason('Putus Dies', downtime_number) +
-                '>Putus Dies</option>' +
-                '<option value="Setting Ulang" ' + checkReason('Setting Ulang', downtime_number) +
-                '>Setting Ulang</option>' +
-                '<option value="Ganti Polishing" ' + checkReason('Ganti Polishing', downtime_number) +
-                '>Ganti Polishing</option>' +
-                '<option value="Ganti Nozzle" ' + checkReason('Ganti Nozzle', downtime_number) +
-                '>Ganti Nozzle</option>' +
-                '<option value="Ganti Roller" ' + checkReason('Ganti Roller', downtime_number) +
-                '>Ganti Roller</option>' +
-                '<option value="Dies Rusak" ' + checkReason('Dies Rusak', downtime_number) +
-                '>Dies Rusak</option>' +
-                '<option value="Trouble Mesin" ' + checkReason('Trouble Mesin', downtime_number) +
-                '>Trouble Mesin</option>' +
-                '<option value="Validasi QC" ' + checkReason('Validasi QC', downtime_number) +
-                '>Validasi QC</option>' +
-                '<option value="Mesin Trouble" ' + checkReason('Mesin Trouble', downtime_number) +
-                '>Mesin Trouble</option>' +
-                '<option value="Tambahan Waktu Setting" ' + checkReason('Tambahan Waktu Setting', downtime_number) +
-                '>Tambahan Waktu Setting</option>' +
-                '<option value="Lain-lain" ' + checkReason('Lain-lain', downtime_number) + '>Lain-lain</option>'
-            );
-        }
-
-        if (downtimeCategory == 'off') {
-            $("[name='dt-reason-" + downtime_number + "']").html(
-                '<option value="" disabled>-- Select Reason --</option>' +
-                '<option value="Off Production" ' + checkReason('Off Production', downtime_number) +
-                '>Off Production</option>'
-            );
-        }
+        let options = '';
+        $.ajax({
+            method: 'GET',
+            url: '{{ route('downtimeReason.getReason') }}',
+            data: {
+                category: downtimeCategory,
+            },
+            error: function(xhr) {
+                console.log(xhr);
+            }
+        }).done(function(response) {
+            response.data.forEach(element => {
+                options +=
+                    `<option value="${element.name}" ${checkReason(element.name, downtime_number)}>${element.name}</option>`;
+            });
+            $("[name='dt-reason-" + downtime_number + "']").html(options);
+        })
     }
-
     function checkReason(reason, downtimeNumber) {
         if (reason == $('#downtime-reason-' + downtimeNumber).attr('reason')) {
             return 'selected';
@@ -1306,13 +1253,7 @@
         return '';
     }
 
-    function checkWasteDowntime(isWasteDowntime) {
-        if (isWasteDowntime) {
-            return 'selected';
-        }
-        return '';
-    }
-
+    // PRODUCTION REPORT
     function storeData(data) {
         $.ajax({
             type: 'POST',
@@ -1357,80 +1298,6 @@
             }
         });
     };
-
-    $('#workorder-details').on('click', function() {
-        Swal.fire({
-            title: '<strong>Machine {{ $workorder->machine->name }} - {{ $workorder->wo_number }} ({{ $workorder->status_wo }})</strong>',
-            html: '<div class="row">' +
-                '<div class="col-1">' +
-                '</div>' +
-                '<div class="col-5">' +
-                '<div class="description-block border-right">' +
-                '<span class="description-text float-left">Created By: {{ $user_involved['created_by'] }}</span><br>' +
-                '<span class="description-text float-left">Created at: {{ $workorder->created_at }}</span><br>' +
-                '<span class="description-text float-left">Edited By: {{ $user_involved['edited_by'] }}</span><br>' +
-                '<span class="description-text float-left">Updated at: @if ($user_involved['edited_by'] == '') {{ '' }} @else {{ $workorder->updated_at }} @endif</span><br>' +
-                '<hr>' +
-                '<span class="description-text float-left">Processed By: {{ $user_involved['processed_by'] }}</span><br>' +
-                '<span class="description-text float-left">Start: {{ $workorder->process_start }}</span><br>' +
-                '<hr>' +
-                '<span class="description-text float-left">Supplier: {{ $workorder->bb_supplier }}</span><br>' +
-                '<span class="description-text float-left">Grade: {{ $workorder->bb_grade }}</span><br>' +
-                '<span class="description-text float-left">Diameter: {{ $workorder->bb_diameter }} mm</span><br>' +
-                '<span class="description-text float-left">Qty (Kg): {{ $workorder->bb_qty_pcs }} Kg</span><br>' +
-                '<span class="description-text float-left">Qty (Coil): {{ $workorder->bb_qty_coil }} Coil</span><br>' +
-                '<span class="description-text float-left">Qty (Bundle): {{ $workorder->bb_qty_bundle }} Bundle</span><br>' +
-                '</div>' +
-                '</div>' +
-                '<div class="col-5">' +
-                '<div class="description-block">' +
-                '<span class="description-text float-left">Customer: {{ $workorder->fg_customer }}</span><br>' +
-                '<span class="description-text float-left">Straightness Standard: {{ $workorder->straightness_standard }}</span><br>' +
-                '<span class="description-text float-left">Size: {{ $workorder->fg_size_1 }} mm x {{ $workorder->fg_size_2 }} mm</span><br>' +
-                '<span class="description-text float-left">Tolerance: +{{ $workorder->tolerance_plus }} mm, {{ $workorder->tolerance_minus }} mm</span><br>' +
-                '<span class="description-text float-left">Reduction rate: {{ $workorder->fg_reduction_rate }} %</span><br>' +
-                '<span class="description-text float-left">Shape: {{ $workorder->fg_shape }}</span><br>' +
-                '<span class="description-text float-left">QTY per Bundle (Kg): {{ $workorder->fg_qty_kg }} Kg</span><br>' +
-                '<span class="description-text float-left">QTY per Bundle (Pcs): {{ $workorder->fg_qty_pcs }} Pcs</span><br>' +
-                '<span class="description-text float-left">Chamfer: {{ $workorder->chamfer }}</span><br>' +
-                '<span class="description-text float-left">Color: {{ $color }}</span><br>' +
-                '<hr>' +
-                '<span class="description-text float-left">Remarks: {{ $workorder->remarks }}</span><br>' +
-                '</div>' +
-                '</div>' +
-                '<div class="col-1">' +
-                '</div>' +
-                '</div>',
-            width: '1200px',
-            showCloseButton: false,
-            showCancelButton: false,
-            focusConfirm: false,
-            confirmButtonText: 'Close',
-            confirmButtonAriaLabel: 'Thumbs up, great!',
-        });
-    });
-
-    $('#print-label').on('click', function() {
-        event.preventDefault();
-        window.open("{{ url('/report/' . $workorder->id . '/printToPdf') }}");
-    });
-
-    $("[name='bundle-num']").on('change', function(event) {
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: '{{ route('production.getSmeltingNum') }}',
-            data: {
-                workorder_id: '{{ $workorder->id }}',
-                bundle_num: $("[name='bundle-num']").val(),
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                $("#smelting-num").html('No. Leburan: ' + response);
-            }
-        })
-    });
-
     $('#production-report').on('submit', function(event) {
         event.preventDefault();
         var bundle_num = $("[name='bundle-num']").val();
@@ -1463,7 +1330,6 @@
         };
         storeData(data);
     });
-
     $('a.smelting-number').on('click', function(event) {
         $.ajax({
             url: '{{ route('production.getProductionInfo') }}',
@@ -1568,7 +1434,21 @@
             }
         });
     });
-
+    $("[name='bundle-num']").on('change', function(event) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '{{ route('production.getSmeltingNum') }}',
+            data: {
+                workorder_id: '{{ $workorder->id }}',
+                bundle_num: $("[name='bundle-num']").val(),
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                $("#smelting-num").html('No. Leburan: ' + response);
+            }
+        })
+    });
     $('#judgement-select').on('change', function(event) {
         if ($('#judgement-select').val() == 'notgood') {
             $('#visual-options').html(
@@ -1639,5 +1519,62 @@
             `)
         }
     })
+
+    // WORKORDER DETAILS
+    $('#workorder-details').on('click', function() {
+        Swal.fire({
+            title: '<strong>Machine {{ $workorder->machine->name }} - {{ $workorder->wo_number }} ({{ $workorder->status_wo }})</strong>',
+            html: '<div class="row">' +
+                '<div class="col-1">' +
+                '</div>' +
+                '<div class="col-5">' +
+                '<div class="description-block border-right">' +
+                '<span class="description-text float-left">Created By: {{ $user_involved['created_by'] }}</span><br>' +
+                '<span class="description-text float-left">Created at: {{ $workorder->created_at }}</span><br>' +
+                '<span class="description-text float-left">Edited By: {{ $user_involved['edited_by'] }}</span><br>' +
+                '<span class="description-text float-left">Updated at: @if ($user_involved['edited_by'] == '') {{ '' }} @else {{ $workorder->updated_at }} @endif</span><br>' +
+                '<hr>' +
+                '<span class="description-text float-left">Processed By: {{ $user_involved['processed_by'] }}</span><br>' +
+                '<span class="description-text float-left">Start: {{ $workorder->process_start }}</span><br>' +
+                '<hr>' +
+                '<span class="description-text float-left">Supplier: {{ $workorder->bb_supplier }}</span><br>' +
+                '<span class="description-text float-left">Grade: {{ $workorder->bb_grade }}</span><br>' +
+                '<span class="description-text float-left">Diameter: {{ $workorder->bb_diameter }} mm</span><br>' +
+                '<span class="description-text float-left">Qty (Kg): {{ $workorder->bb_qty_pcs }} Kg</span><br>' +
+                '<span class="description-text float-left">Qty (Coil): {{ $workorder->bb_qty_coil }} Coil</span><br>' +
+                '<span class="description-text float-left">Qty (Bundle): {{ $workorder->bb_qty_bundle }} Bundle</span><br>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-5">' +
+                '<div class="description-block">' +
+                '<span class="description-text float-left">Customer: {{ $workorder->fg_customer }}</span><br>' +
+                '<span class="description-text float-left">Straightness Standard: {{ $workorder->straightness_standard }}</span><br>' +
+                '<span class="description-text float-left">Size: {{ $workorder->fg_size_1 }} mm x {{ $workorder->fg_size_2 }} mm</span><br>' +
+                '<span class="description-text float-left">Tolerance: +{{ $workorder->tolerance_plus }} mm, {{ $workorder->tolerance_minus }} mm</span><br>' +
+                '<span class="description-text float-left">Reduction rate: {{ $workorder->fg_reduction_rate }} %</span><br>' +
+                '<span class="description-text float-left">Shape: {{ $workorder->fg_shape }}</span><br>' +
+                '<span class="description-text float-left">QTY per Bundle (Kg): {{ $workorder->fg_qty_kg }} Kg</span><br>' +
+                '<span class="description-text float-left">QTY per Bundle (Pcs): {{ $workorder->fg_qty_pcs }} Pcs</span><br>' +
+                '<span class="description-text float-left">Chamfer: {{ $workorder->chamfer }}</span><br>' +
+                '<span class="description-text float-left">Color: {{ $color }}</span><br>' +
+                '<hr>' +
+                '<span class="description-text float-left">Remarks: {{ $workorder->remarks }}</span><br>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-1">' +
+                '</div>' +
+                '</div>',
+            width: '1200px',
+            showCloseButton: false,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText: 'Close',
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+        });
+    });
+    $('#print-label').on('click', function() {
+        event.preventDefault();
+        window.open("{{ url('/report/' . $workorder->id . '/printToPdf') }}");
+    });
 </script>
 @endpush

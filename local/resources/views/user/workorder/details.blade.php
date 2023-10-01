@@ -369,6 +369,7 @@
 @push('scripts')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    // INITIALIZATION
     $(document).ready(function() {
         $('#reservationtime').daterangepicker({
             timePicker: true,
@@ -390,68 +391,9 @@
         updateDowntimeChart();
     });
 
-    function updateSpeedChart() {
-        $.ajax({
-            method: "POST",
-            url: '{{ route('realtime.searchSpeedProduction') }}',
-            data: {
-                timeRange: $('#reservationtime').val(),
-                workorder: '{{ $workorder->id }}',
-                _token: '{{ csrf_token() }}'
-            },
-            dataType: 'json',
-            success: function(response) {
-                var speedHistoryCanvas = $('#speedChart').get(0).getContext('2d');
-
-                var speedHistoryData = {
-                    labels: response['created_at'],
-                    datasets: [{
-                        label: 'Production Speed',
-                        backgroundColor: 'rgba(60,141,188,0.9)',
-                        borderColor: 'rgba(60,141,188,0.8)',
-                        pointRadius: false,
-                        pointColor: '#3b8bba',
-                        pointStrokeColor: 'rgba(60,141,188,1)',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(60,141,188,1)',
-                        data: response['speed']
-                    }, ]
-                }
-
-                var speedHistoryOptions = {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        xAxes: [{
-                            gridLines: {
-                                display: false,
-                            }
-                        }],
-                        yAxes: [{
-                            gridLines: {
-                                display: false,
-                            }
-                        }]
-                    }
-                }
-
-                // This will get the first returned node in the jQuery collection.
-                new Chart(speedHistoryCanvas, {
-                    type: 'line',
-                    data: speedHistoryData,
-                    options: speedHistoryOptions
-                })
-            },
-        })
-
-    }
-
+    // CHARTS
     var wasteChart = new Chart($('#wasteDtChart').get(0).getContext('2d'), {});
     var managementChart = new Chart($('#managementDtChart').get(0).getContext('2d'), {});
-
     function updateWasteDtMax(range) {
         $('#wasteDt-input').val(range.value);
         $('#wasteDt-slider').val(range.value);
@@ -459,7 +401,6 @@
         wasteChart.config.options.scales.yAxes[0].ticks.max = parseInt(num);
         wasteChart.update();
     }
-
     function updateManagementDtMax(range) {
         $('#managementDt-input').val(range.value);
         $('#managementDt-slider').val(range.value);
@@ -467,7 +408,6 @@
         managementChart.config.options.scales.yAxes[0].ticks.max = parseInt(num);
         managementChart.update();
     }
-
     function updateDowntimeChart() {
         //Waste Downtime
         $.ajax({
@@ -659,7 +599,66 @@
             },
         });
     }
+    function updateSpeedChart() {
+        $.ajax({
+            method: "POST",
+            url: '{{ route('realtime.searchSpeedProduction') }}',
+            data: {
+                timeRange: $('#reservationtime').val(),
+                workorder: '{{ $workorder->id }}',
+                _token: '{{ csrf_token() }}'
+            },
+            dataType: 'json',
+            success: function(response) {
+                var speedHistoryCanvas = $('#speedChart').get(0).getContext('2d');
 
+                var speedHistoryData = {
+                    labels: response['created_at'],
+                    datasets: [{
+                        label: 'Production Speed',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: response['speed']
+                    }, ]
+                }
+
+                var speedHistoryOptions = {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display: false,
+                            }
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display: false,
+                            }
+                        }]
+                    }
+                }
+
+                // This will get the first returned node in the jQuery collection.
+                new Chart(speedHistoryCanvas, {
+                    type: 'line',
+                    data: speedHistoryData,
+                    options: speedHistoryOptions
+                })
+            },
+        })
+
+    }
+
+    // DOWNTIME LOGS
     function updateDowntimeList() {
         $.ajax({
             url: '{{ route('downtime.updateDowntime') }}',
@@ -690,40 +689,36 @@
                     }
 
                     var downtimeNumber = data[index].downtime_number;
-                    var cardOpeningDiv = '<div class="card card-warning collapsed-card">';
-                    var dtTime = '<h3 class="card-title">' + data[index].start_time + ' - ' + data[index]
-                        .end_time + '</h3>';
-                    var downtimeListBody = '</div>';
+                    var logCard = `<div class="card card-warning collapsed-card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">${data[index].start_time} - ${data[index].end_time}</h3>
+                                        </div>
+                                    </div>`;
 
                     if (data[index].end_time == null) {
-                        cardOpeningDiv = '<div class="card card-danger collapsed-card">';
-                        dtTime = '<h3 class="card-title">' + data[index].start_time + ' - Now</h3>';
-                        downtimeListBody = '';
+                        logCard = `<div class="card card-danger collapsed-card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">${data[index].start_time} - Now</h3>
+                                        </div>
+                                    </div>`;
                     }
                     if (data[index].is_remark_filled == true) {
-                        cardOpeningDiv = '<div class="card card-success collapsed-card">';
-                        dtTime = '<h3 class="card-title"> <b class="' + textColor + '">' +
-                            downtimeCategory +
-                            '</b> | ' + data[index].start_time + ' - ' + data[index].end_time + ' | ' +
-                            data[index].duration + ' | ' + data[index].downtime_reason + ' | ' + data[index]
-                            .remarks + '</h3>';
-                        downtimeListBody = '</div>' +
-                            '<div id="downtime-reason-' + downtimeNumber + '" reason="' + downtimeReason +
-                            '" isWasteDowntime="' + data[index].downtimeCategory + '"></div>';
+                        logCard = `<div class="card card-success collapsed-card">
+                                        <div class="card-header">
+                                            <h3 class="card-title"><b class="${textColor}">${downtimeCategory}</b> | ${data[index].start_time} - ${data[index].end_time} | ${data[index].duration} | ${data[index].downtime_reason} | ${data[index].remarks}</h3>
+                                        </div>
+                                        <div id="downtime-reason-${downtimeNumber}" reason="${downtimeReason}" isWasteDowntime="${data[index].downtimeCategory}"></div>
+                                    </div>`;
                     }
 
-                    downtimeList += cardOpeningDiv +
-                        '<div class="card-header">' +
-                        dtTime +
-                        downtimeListBody +
-                        '</div>' +
-                        '</div>';
+                    downtimeList += logCard;
                 }
                 $('#downtime-list').html(downtimeList);
             },
         });
     }
 
+    // DOWNTIME DETAILS
     $('#workorder-details').on('click', function() {
         Swal.fire({
             title: '<strong>Machine {{ $workorder->machine->name }} - {{ $workorder->wo_number }} ({{ $workorder->status_wo }})</strong>',
@@ -786,12 +781,12 @@
             confirmButtonAriaLabel: 'Thumbs up, great!',
         });
     });
-
     $('#print-label').on('click', function() {
         event.preventDefault();
         window.open("{{ url('/report/' . $workorder->id . '/printToPdf') }}");
     });
 
+    // PRODUCTION DETAILS
     $('a.smelting-number').on('click', function(event) {
         $.ajax({
             url: '{{ route('production.getProductionInfo') }}',
