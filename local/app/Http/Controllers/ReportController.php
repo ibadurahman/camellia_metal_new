@@ -13,18 +13,19 @@ class ReportController extends Controller
     //
     public function printToPdf(Production $production)
     {
-        $smeltings = Smelting::where('workorder_id',$production->workorder_id)->get();
+        $smeltings = Smelting::where('workorder_id', $production->workorder_id)->get();
         $data = [
             'title'         => 'PT. CAMELLIA METAL INDONESIA',
             'data'          => $production->workorder,
             'smeltings'     => $smeltings,
             'production'    => $production
         ];
-           
+
         $pdf = PDF::loadView('user.pdf.index', $data);
-        $pdf->setPaper('A4','potrait');
+        $pdf->setPaper('A4', 'potrait');
         $pdf->render();
-     
-        return $pdf->stream($production->workorder->wo_number.'.pdf', array("Attachment" => false));
+
+        return $pdf->stream($production->workorder->wo_number . '.pdf', array("Attachment" => false));
     }
+
 }

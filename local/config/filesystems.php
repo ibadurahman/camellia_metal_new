@@ -35,6 +35,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'public_temp_batch_download' => [
+            'driver' => 'local',
+            'root' => public_path('temp/batch'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

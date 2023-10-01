@@ -118,6 +118,7 @@
 @endsection
 
 @push('scripts')
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(function() {
             $('#reservationdatetime1').datetimepicker({
@@ -187,6 +188,67 @@
                 $('input[name=status]').val('');
                 $('#search-form').submit();
             });
+
+            $('#report-download-button').on('click', function(e) {
+                e.preventDefault();
+
+                var report_date_1 = $('input[name=report_date_1]').val();
+                var report_date_2 = $('input[name=report_date_2]').val();
+                var machine_id = $('select[name=machine_id]').val();
+                var status = $('select[name=status]').val();
+                var wo_number = $('input[name=wo_number]').val();
+
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('workorder.batchDownload') }}',
+                    data: {
+                        report_date_1: report_date_1,
+                        report_date_2: report_date_2,
+                        machine_id: machine_id,
+                        status: status,
+                        wo_number: wo_number,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Downloading..',
+                            html: 'Please wait.',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                                //get download status
+                                // var interval = setInterval(function() {
+                                //     console.log('get download status')
+                                //     $.ajax({
+                                //         method: 'GET',
+                                //         url: '',
+                                //         success: function(response) {
+                                //             if (response.status.total_wo == response.status.total_generated) {
+                                //                 clearInterval(interval);
+                                //                 Swal.close();
+                                //             }
+                                //             console.log(response);
+                                //         },
+                                //         error: function(response) {
+                                //             console.log(response);
+                                //         },
+                                //     });
+                                // }, 1000);
+                                
+                            },
+                        })
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    },
+                }).done(function(response) {
+                    swal.fire({
+                        icon: 'success',
+                        html: '<h5>Success! your reports will download automatically.</h5>',
+                    });
+                    window.location.href = `${window.location.origin}/workorder/downloadFile/${response.filename}`
+                });
+            })
         });
     </script>
 @endpush

@@ -61,6 +61,9 @@ Route::prefix('workorder')->controller(WorkorderController::class)->middleware([
 //
 Route::middleware(['verified'])->group(function(){
     Route::get('/workorder/{workorder}/export', [WorkorderReportController::class, 'export'])->name('workorder.export');
+    Route::post('/workorder/batchDownload', [WorkorderReportController::class, 'batchDownload'])->name('workorder.batchDownload');
+    Route::get('/workorder/downloadFile/{file}', [WorkorderReportController::class, 'downloadFile'])->name('workorder.downloadFile');
+    // Route::post('/workorder/downloadStatus', [WorkorderReportController::class, 'downloadStatus'])->name('workorder.batchDownloadStatus');
 });
 
 //
