@@ -68,8 +68,8 @@ class WorkorderController extends Controller
             'title'         => 'Admin: Create Workorder',
 			'colors'        => Color::get(),
             'machines'      => Machine::orderBy('name','asc')->get(),
-            'suppliers'     => Supplier::get(),
-            'customers'     => Customer::get()
+            'suppliers'     => Supplier::where('is_active',true)->get(),
+            'customers'     => Customer::where('is_active',true)->get()
         ]);
     }
 
@@ -140,8 +140,8 @@ class WorkorderController extends Controller
             'workorder'     => $workorder,
 			'colors'        => Color::get(),
             'machines'      => Machine::orderBy('name','asc')->get(),
-            'suppliers'     => Supplier::get(),
-            'customers'     => Customer::get()
+            'suppliers'     => Supplier::where('is_active',true)->get(),
+            'customers'     => Customer::where('is_active',true)->get()
         ]);
     }
 

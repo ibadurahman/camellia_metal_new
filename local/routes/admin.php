@@ -21,10 +21,12 @@ Route::middleware(['verified'])->group(function(){
     Route::get('smelting/data_wo',[DataController::class,'wo_smeltings'])->name('smelting.data_wo');
     Route::get('smelting/data',[DataController::class,'smeltings'])->name('smelting.data');
     Route::get('supplier/data',[DataController::class,'suppliers'])->name('supplier.data');
+    Route::get('nonactivesupplier/data',[DataController::class,'nonactiveSuppliers'])->name('nonactivesupplier.data');
     Route::get('color/data',[DataController::class,'colors'])->name('color.data');
     Route::get('line/data',[DataController::class,'lines'])->name('line.data');
     Route::get('machine/data',[DataController::class,'machines'])->name('machine.data');
     Route::get('customer/data',[DataController::class,'customers'])->name('customer.data');
+    Route::get('nonactivecustomer/data',[DataController::class,'nonactiveCustomers'])->name('nonactivecustomer.data');
 });
 
 Route::middleware(['verified'])->group(function(){
@@ -38,6 +40,7 @@ Route::middleware(['verified'])->group(function(){
 Route::middleware(['verified'])->group(function(){
     Route::post('smelting/getDataWo',[SmeltingController::class,'getDataWo'])->name('smelting.getDataWo');
     Route::post('smelting/addSmelting',[SmeltingController::class,'addSmelting'])->name('smelting.addSmelting');
+    Route::put('smelting/{smelting}',[SmeltingController::class,'update'])->name('smelting.update');
     Route::resource('smelting','SmeltingController');
 });
 
@@ -63,11 +66,17 @@ Route::middleware(['verified'])->group(function(){
 
 Route::middleware(['verified'])->group(function(){
     Route::post('suppllier/getSupplierData',[SupplierController::class,'getSupplierData'])->name('supplier.getSupplierData');
+    Route::delete('supplier/{supplier}/inactive',[SupplierController::class,'inactive'])->name('supplier.inactive');
+    Route::post('supplier/{supplier}/activate',[SupplierController::class,'activate'])->name('supplier.activate');
+    Route::get('supplier/inactivated',[SupplierController::class,'inactivated'])->name('supplier.inactivated');
     Route::resource('supplier','SupplierController');
 });
 
 Route::middleware(['verified'])->group(function(){
     Route::post('customer/getCustomerData',[CustomerController::class,'getCustomerData'])->name('customer.getCustomerData');
+    Route::delete('customer/{customer}/inactive',[CustomerController::class,'inactive'])->name('customer.inactive');
+    Route::post('customer/{customer}/activate',[CustomerController::class,'activate'])->name('customer.activate');
+    Route::get('customer/inactivated',[CustomerController::class,'inactivated'])->name('customer.inactivated');
     Route::resource('customer','CustomerController');
 });
 

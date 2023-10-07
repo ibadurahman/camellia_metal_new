@@ -27,6 +27,13 @@ class SupplierController extends Controller
         ]);
     }
 
+    public function inactivated()
+    {
+        return view('admin.supplier.nonactive',[
+            'title' => 'Admin: Non Active Supplier'
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -112,20 +119,24 @@ class SupplierController extends Controller
         return redirect()->route('admin.supplier.index')->with('success','Data Updated Successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Supplier $supplier)
+    public function inactive(Supplier $supplier)
     {
         //
-        $supplier->delete();
-        return redirect()->route('admin.supplier.index')->with('success','Data Deleted Successfully');
+        $supplier->is_active = false;
+        $supplier->save();
+        
+        return redirect()->route('admin.supplier.index')->with('success','Data inactivated successfully');
     }
 
-    
+    public function activate(Supplier $supplier)
+    {
+        //
+        $supplier->is_active = true;
+        $supplier->save();
+        
+        return redirect()->route('admin.supplier.index')->with('success','Data activated successfully');
+    }
+
     public function getSupplierData(Request $request)
     {
         $supplier = Supplier::where('name',$request->name)->first();

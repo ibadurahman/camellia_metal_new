@@ -110,14 +110,17 @@ Breadcrumbs::for('admin.supplier.index', function ($trail) {
     $trail->push('Home', route('home'));
     $trail->push('Supplier', route('admin.supplier.index'));
 });
-
+// Supplier Inactivated
+Breadcrumbs::for('admin.supplier.inactivated', function ($trail) {
+    $trail->push('Home', route('home'));
+    $trail->push('Supplier', route('admin.supplier.inactivated'));
+});
 // Supplier Create
 Breadcrumbs::for('admin.supplier.create', function ($trail) {
     $trail->push('Home', route('home'));
     $trail->push('Supplier', route('admin.supplier.index'));
     $trail->push('Create Supplier', route('admin.supplier.create'));
 });
-
 // Supplier Edit
 Breadcrumbs::for('admin.supplier.edit', function ($trail, $supplier) {
     $trail->push('Home', route('home'));
@@ -171,6 +174,12 @@ Breadcrumbs::for('admin.customer.index', function ($trail) {
     $trail->push('Customer', route('admin.customer.index'));
 });
 
+// Customer Inactivated
+Breadcrumbs::for('admin.customer.inactivated', function ($trail) {
+    $trail->push('Home', route('home'));
+    $trail->push('Customer', route('admin.customer.inactivated'));
+});
+
 // Customer Create
 Breadcrumbs::for('admin.customer.create', function ($trail) {
     $trail->push('Home', route('home'));
@@ -218,8 +227,6 @@ Breadcrumbs::for('admin.schedule.index', function ($trail) {
     $trail->push('Home', route('home'));
     $trail->push('Schedule', route('admin.production.index'));
 });
-
-
 
 
 // Dayoff Index

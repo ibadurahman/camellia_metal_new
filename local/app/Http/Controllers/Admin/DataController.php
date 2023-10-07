@@ -101,7 +101,7 @@ class DataController extends Controller
                     return $combines;
                 })
                 ->addColumn('tolerance_combine',function(Workorder $model){
-                    $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
+                    $combines = '('.(substr($model->tolerance_plus,0,1)!=='-'?'+':'').$model->tolerance_plus.','.$model->tolerance_minus.')';
                     return $combines;
                 })
                 ->addColumn('color',function(Workorder $model){
@@ -180,7 +180,7 @@ class DataController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
+                $combines = '('.(substr($model->tolerance_plus,0,1)!=='-'?'+':'').$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -256,7 +256,7 @@ class DataController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
+                $combines = '('.(substr($model->tolerance_plus,0,1)!=='-'?'+':'').$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -319,7 +319,7 @@ class DataController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(+'.$model->tolerance_plus.','.$model->tolerance_minus.')';
+                $combines = '('.(substr($model->tolerance_plus,0,1)!=='-'?'+':'').$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -370,10 +370,19 @@ class DataController extends Controller
 
     public function suppliers()
     {
-        $suppliers = Supplier::query();
+        $suppliers = Supplier::where('is_active',true)->get();
         return datatables()->of($suppliers)
                 ->addIndexColumn()
                 ->addColumn('action','admin.supplier.action')
+                ->toJson();
+    }
+
+    public function nonactiveSuppliers()
+    {
+        $suppliers = Supplier::where('is_active',false)->get();
+        return datatables()->of($suppliers)
+                ->addIndexColumn()
+                ->addColumn('action','admin.supplier.nonactiveAction')
                 ->toJson();
     }
 
@@ -436,7 +445,7 @@ class DataController extends Controller
 
     public function customers()
     {
-        $customers = Customer::query();
+        $customers = Customer::where('is_active',true)->get();
         return datatables()->of($customers)
                 ->addIndexColumn()
                 ->addColumn('size',function(Customer $model){
@@ -445,6 +454,19 @@ class DataController extends Controller
                 })
                 ->addColumn('action','admin.customer.action')
                 ->toJson();
+    }
+
+    public function nonactiveCustomers()
+    {
+        $customers = Customer::where('is_active',false)->get();
+        return datatables()->of($customers)
+        ->addIndexColumn()
+        ->addColumn('size',function(Customer $model){
+            $combines = $model->size_1 . " x " . $model->size_2;
+            return $combines;
+        })
+        ->addColumn('action','admin.customer.nonactiveAction')
+        ->toJson();
     }
 
     // Leburan Data Controller

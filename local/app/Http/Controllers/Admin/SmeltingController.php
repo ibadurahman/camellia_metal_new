@@ -71,44 +71,11 @@ class SmeltingController extends Controller
 
     public function getDataWo(Request $request){
         $bundleNum = Smelting::where('workorder_id',$request->wo_id)->count();
+        $totalWeight = Smelting::where('workorder_id',$request->wo_id)->sum('weight');
         return response()->json([
-            'number_of_smelting'=>$bundleNum
+            'number_of_smelting'=>$bundleNum,
+            'total_weight'=>$totalWeight
         ],200);
-    }
-
-    
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(SmeltingRequest $request)
-    {
-        
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Smelting  $smelting
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Smelting $smelting)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Smelting  $smelting
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Smelting $smelting)
-    {
-        //
     }
 
     /**
@@ -120,7 +87,15 @@ class SmeltingController extends Controller
      */
     public function update(Request $request, Smelting $smelting)
     {
-        //
+        $smelting->update([
+            'weight'            =>$request->weight,
+            'smelting_num'      =>$request->smelting_num,
+            'area'              =>$request->area,    
+        ]);
+
+        return response()->json([
+            'message'=>'updated successfully'
+        ],200);
     }
 
     /**

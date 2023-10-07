@@ -78,7 +78,7 @@ class ScheduleController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '('.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+                $combines = '('.$model->tolerance_minus.','.(substr($model->tolerance_plus,0,1)!=='-'?'+':'').$model->tolerance_plus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){
@@ -137,7 +137,7 @@ class ScheduleController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine',function(Workorder $model){
-                $combines = '(-'.$model->tolerance_minus.',+'.$model->tolerance_plus.')';
+                $combines = '('.$model->tolerance_minus.','.(substr($model->tolerance_plus,0,1)!=='-'?'+':'').$model->tolerance_plus.')';
                 return $combines;
             })
             ->addColumn('color',function(Workorder $model){

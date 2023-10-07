@@ -1,4 +1,5 @@
 @extends('templates.default')
+
 @section('content')
     <!-- Main content -->
     <section class="content">
@@ -27,8 +28,8 @@
                                 <div class="form-group">
                                     <label for="">Supplier <span class="text-danger">*</span></label>
                                     <select id="supplier-cmbbx" name="bb_supplier"
-                                        class="form-control @error('bb_supplier') is-invalid @enderror">
-                                        <option disabled selected value> -- select supplier -- </option>
+                                        class="form-control select2 @error('bb_supplier') is-invalid @enderror">
+                                        <option disabled selected value> -- SELECT SUPPLIER -- </option>
                                         @foreach ($suppliers as $supplier)
                                             <option value="{{ $supplier->name }}"
                                                 @if (old('bb_supplier') === $supplier->name) selected @endif>{{ $supplier->name }}
@@ -99,9 +100,9 @@
                                 <div class="form-group">
                                     <label for="">Customer <span class="text-danger">*</span></label>
                                     <select id="customer-cmbbx" name="fg_customer"
-                                        class="form-control @error('fg_customer') is-invalid @enderror"
+                                        class="form-control select2 @error('fg_customer') is-invalid @enderror"
                                         value="{{ old('fg_customer') }}">
-                                        <option disabled selected value> -- select customer -- </option>
+                                        <option disabled selected value> -- SELECT CUSTOMER -- </option>
                                         @foreach ($customers as $customer)
                                             <option value="{{ $customer->name }}"
                                                 @if (old('fg_customer') === $customer->name) selected @endif>{{ $customer->name }}
@@ -230,9 +231,9 @@
                                 <div class="form-group">
                                     <label for="">Color <span class="text-danger">*</span></label>
                                     <select id="color-cmbbx" name="color"
-                                        class="form-control @error('color') is-invalid @enderror"
+                                        class="form-control select2 @error('color') is-invalid @enderror"
                                         value="{{ old('color') }}">
-                                        <option disabled selected value> -- select color -- </option>
+                                        <option disabled selected value> -- SELECT COLOR -- </option>
                                         @foreach ($colors as $color)
                                             <option value="{{ $color->id }}">{{ $color->name }}</option>
                                         @endforeach
@@ -289,8 +290,13 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
+
     <script>
         $(function() {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
             $('#reservationdatetime').datetimepicker({
                 icons: {
                     time: 'far fa-clock'
