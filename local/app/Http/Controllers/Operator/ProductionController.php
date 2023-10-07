@@ -63,6 +63,8 @@ class ProductionController extends Controller
         if (count($downtime) > 0) {
             Downtime::where('workorder_id', $workorder->id)->where('is_downtime_stopped', false)->delete();
 
+            Downtime::where('workorder_id', $workorder->id)->where('status','run')->where('is_downtime_stopped', true)->where('is_remark_filled', false)->delete();
+
             $downtimeDataUncomplete = Downtime::where('workorder_id', $workorder->id)->where(function ($query) {
                 $query->where('is_remark_filled', false)->orWhere('is_downtime_stopped', false);
             })->first();

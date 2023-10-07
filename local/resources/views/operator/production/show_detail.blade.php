@@ -738,6 +738,9 @@
         updateDowntimeList();
         updateSpeedChart();
         updateDowntimeChart();
+
+        //fill remark input on reload
+        $('#production-remarks').val(localStorage.getItem('production-remarks'));
     });
 
     // EVENT LISTENER
@@ -777,6 +780,8 @@
             if (result.isConfirmed) {
                 document.getElementById('finishForm').action = href;
                 document.getElementById('finishForm').submit();
+                // delete localStorage remark
+                localStorage.removeItem('production-remarks');
             }
         })
     });
@@ -1549,5 +1554,12 @@
         event.preventDefault();
         window.open("{{ url('/report/' . $workorder->id . '/printToPdf') }}");
     });
+
+    //PRODUCTION REMARKS
+    $('#production-remarks').on('change',function(){
+        //save to application storage
+        localStorage.setItem('production-remarks',$(this).val());
+        console.log(localStorage.getItem('production-remarks'));
+    })
 </script>
 @endpush

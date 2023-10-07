@@ -57,28 +57,47 @@ class DowtimeClosing extends Command
             }
             if($lastdowntimeStatus->status == 'run')
             {
-                $this->info('last downtime closed');
-                continue;
+                Downtime::create([
+                    'workorder_id'          => $lastWorkorderOnProcess->id,
+                    'downtime_number'       => Date($machine->id.'YmdHis'),
+                    'time'                  => 0,
+                    'status'                => 'stop',
+                    'downtime'              => 0,
+                    'is_downtime_stopped'   => false,
+                    'is_remark_filled'      => false,
+                ]);
+                $downtime = Downtime::create([
+                    'workorder_id'          => $lastWorkorderOnProcess->id,
+                    'downtime_number'       => $lastdowntimeStatus->downtime_number,
+                    'time'                  => 0,
+                    'status'                => 'run',
+                    'downtime'              => 0,
+                    'is_downtime_stopped'   => true,
+                    'is_remark_filled'      => false,
+                ]);
+                $lastdowntimeStatus->update(['is_downtime_stopped' => true]);
+            }else{
+                $downtime = Downtime::create([
+                    'workorder_id'          => $lastWorkorderOnProcess->id,
+                    'downtime_number'       => $lastdowntimeStatus->downtime_number,
+                    'time'                  => 0,
+                    'status'                => 'run',
+                    'downtime'              => 0,
+                    'is_downtime_stopped'   => true,
+                    'is_remark_filled'      => false,
+                ]);
+                $lastdowntimeStatus->update(['is_downtime_stopped' => true]);
+                Downtime::create([
+                    'workorder_id'          => $lastWorkorderOnProcess->id,
+                    'downtime_number'       => Date($machine->id.'YmdHis'),
+                    'time'                  => 0,
+                    'status'                => 'stop',
+                    'downtime'              => 0,
+                    'is_downtime_stopped'   => false,
+                    'is_remark_filled'      => false,
+                ]);
             }
-            $downtime = Downtime::create([
-                'workorder_id'          => $lastWorkorderOnProcess->id,
-                'downtime_number'       => $lastdowntimeStatus->downtime_number,
-                'time'                  => 0,
-                'status'                => 'run',
-                'downtime'              => 0,
-                'is_downtime_stopped'   => true,
-                'is_remark_filled'      => false,
-            ]);
-            $lastdowntimeStatus->update(['is_downtime_stopped' => true]);
-            Downtime::create([
-                'workorder_id'          => $lastWorkorderOnProcess->id,
-                'downtime_number'       => Date($machine->id.'YmdHis'),
-                'time'                  => 0,
-                'status'                => 'stop',
-                'downtime'              => 0,
-                'is_downtime_stopped'   => false,
-                'is_remark_filled'      => false,
-            ]);
+            
         }
     }
 }

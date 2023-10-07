@@ -121,13 +121,13 @@ class SpvProductionController extends Controller
 
     public function finish(Request $request, Workorder $workorder)
     {
-        $downtime = Downtime::where('workorder_id', $workorder->id)->get();
 
         $production = Production::where('workorder_id', $workorder->id)->get();
         if ($workorder->bb_qty_bundle != count($production)) {
             return redirect(route('spvproduction.show', $workorder));
         }
 
+        $downtime = Downtime::where('workorder_id', $workorder->id)->get();
         if (count($downtime) > 0) {
             Downtime::where('workorder_id', $workorder->id)->where('is_downtime_stopped', false)->delete();
 
