@@ -296,8 +296,9 @@ class DataController extends Controller
             ->addColumn('process_start',function(Workorder $model){
                 return Date('Y-m-d H:i:s',strtotime($model->process_start));
             })
-            ->addColumn('smelting','user.smelting.smelting')
-            ->rawColumns(['smelting'])
+            ->addColumn('smelting','admin.smelting.leburan_change')
+            ->addColumn('action','admin.workorder.change_request')
+            ->rawColumns(['smelting','action'])
             ->setRowId(function(Workorder $model){
                 return $model->id;
             })
@@ -504,6 +505,18 @@ class DataController extends Controller
                     return $model->workorder->wo_number;
                 })
                 ->addColumn('action','admin.smelting.action')
+                ->addIndexColumn()
+                ->toJson();
+    }
+    //Smeltings Data Controller
+    public function smeltingsChange(Request $request)
+    {
+        $smeltings = Smelting::where('workorder_id',$request->wo_id)->orderBy('coil_num','asc')->get();
+        return datatables()->of($smeltings)
+                ->addColumn('wo_number',function(Smelting $model){
+                    return $model->workorder->wo_number;
+                })
+                ->addColumn('action','admin.smelting.actionChange')
                 ->addIndexColumn()
                 ->toJson();
     }

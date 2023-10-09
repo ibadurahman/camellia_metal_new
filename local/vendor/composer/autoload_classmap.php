@@ -92,6 +92,7 @@ return array(
     'App\\Http\\Resources\\Workorder\\WorkorderResource' => $baseDir . '/app/Http/Resources/Workorder/WorkorderResource.php',
     'App\\Models\\Breaktime' => $baseDir . '/app/Models/Breaktime.php',
     'App\\Models\\BypassWorkorder' => $baseDir . '/app/Models/BypassWorkorder.php',
+    'App\\Models\\ChangeRequest' => $baseDir . '/app/Models/ChangeRequest.php',
     'App\\Models\\Color' => $baseDir . '/app/Models/Color.php',
     'App\\Models\\Customer' => $baseDir . '/app/Models/Customer.php',
     'App\\Models\\DailyReport' => $baseDir . '/app/Models/DailyReport.php',

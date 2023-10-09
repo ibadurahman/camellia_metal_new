@@ -764,6 +764,7 @@ class ComposerStaticInit18b07a9ccba0a0616e8c07d20a7141cf
         'App\\Http\\Resources\\Workorder\\WorkorderResource' => __DIR__ . '/../..' . '/app/Http/Resources/Workorder/WorkorderResource.php',
         'App\\Models\\Breaktime' => __DIR__ . '/../..' . '/app/Models/Breaktime.php',
         'App\\Models\\BypassWorkorder' => __DIR__ . '/../..' . '/app/Models/BypassWorkorder.php',
+        'App\\Models\\ChangeRequest' => __DIR__ . '/../..' . '/app/Models/ChangeRequest.php',
         'App\\Models\\Color' => __DIR__ . '/../..' . '/app/Models/Color.php',
         'App\\Models\\Customer' => __DIR__ . '/../..' . '/app/Models/Customer.php',
         'App\\Models\\DailyReport' => __DIR__ . '/../..' . '/app/Models/DailyReport.php',

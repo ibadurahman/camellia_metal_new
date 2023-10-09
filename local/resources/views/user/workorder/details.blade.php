@@ -146,7 +146,7 @@
                                 </div>
                                 <div class="card-footer">
                                     <div class="row">
-                                        <div class=" col-sm-4 col-4">
+                                        <div class="col-sm-4 col-4">
                                             <div class="description-block border-right">
                                                 <div class="row">
                                                     <div class="col-6">
@@ -176,8 +176,11 @@
                                                             {{ $workorder->remarks }}</span><br>
                                                     </div>
                                                 </div>
-                                                <a href="#" id="workorder-details" class="descriprion-text">See
-                                                    More</a>
+                                                <a href="#" id="workorder-details" class="descriprion-text">Detail
+                                                    Workorder Data</a> |
+                                                <a href="#" data-toggle="modal" data-target="#exampleModalCenter"
+                                                    class="descriprion-text">Workorder
+                                                    Change History</a>
                                             </div>
                                         </div>
                                         <div class="col-sm-4 col-4">
@@ -358,9 +361,47 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div><!-- /.container-fluid -->
+
+    {{-- Change History Modal --}}
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th scope="col">Change Data</th>
+                                <th scope="col">Changed By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($changeRequests as $changeReq)
+                                <tr>
+                                    <td>{{$changeReq->change_data}}</td>
+                                    <td>{{$changeReq->changedBy->name}}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
 
 <!-- /.content -->
@@ -394,6 +435,7 @@
     // CHARTS
     var wasteChart = new Chart($('#wasteDtChart').get(0).getContext('2d'), {});
     var managementChart = new Chart($('#managementDtChart').get(0).getContext('2d'), {});
+
     function updateWasteDtMax(range) {
         $('#wasteDt-input').val(range.value);
         $('#wasteDt-slider').val(range.value);
@@ -401,6 +443,7 @@
         wasteChart.config.options.scales.yAxes[0].ticks.max = parseInt(num);
         wasteChart.update();
     }
+
     function updateManagementDtMax(range) {
         $('#managementDt-input').val(range.value);
         $('#managementDt-slider').val(range.value);
@@ -408,6 +451,7 @@
         managementChart.config.options.scales.yAxes[0].ticks.max = parseInt(num);
         managementChart.update();
     }
+
     function updateDowntimeChart() {
         //Waste Downtime
         $.ajax({
@@ -599,6 +643,7 @@
             },
         });
     }
+
     function updateSpeedChart() {
         $.ajax({
             method: "POST",
@@ -749,7 +794,7 @@
                 '<span class="description-text float-left">Customer: {{ $workorder->fg_customer }}</span><br>' +
                 '<span class="description-text float-left">Straightness Standard: {{ $workorder->straightness_standard }}</span><br>' +
                 '<span class="description-text float-left">Size: {{ $workorder->fg_size_1 }} mm x {{ $workorder->fg_size_2 }} mm</span><br>' +
-                '<span class="description-text float-left">Tolerance: {{(substr($workorder->tolerance_plus,0,1)!=='-'?'+':'') . $workorder->tolerance_plus }} mm, {{ $workorder->tolerance_minus }} mm</span><br>' +
+                '<span class="description-text float-left">Tolerance: {{ (substr($workorder->tolerance_plus, 0, 1) !== '-' ? '+' : '') . $workorder->tolerance_plus }} mm, {{ $workorder->tolerance_minus }} mm</span><br>' +
                 '<span class="description-text float-left">Reduction rate: {{ $workorder->fg_reduction_rate }} %</span><br>' +
                 '<span class="description-text float-left">Shape: {{ $workorder->fg_shape }}</span><br>' +
                 '<span class="description-text float-left">QTY per Bundle (Kg): {{ $workorder->fg_qty_kg }} Kg</span><br>' +

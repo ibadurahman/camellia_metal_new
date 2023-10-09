@@ -60,4 +60,9 @@ class Workorder extends Model
     public function processedBy(){
         return $this->belongsTo(User::class,'processed_by','id');
     }
+
+    public function changeRequests()
+    {
+        return $this->hasMany(ChangeRequest::class,'workorder_id','id');
+    }
 }

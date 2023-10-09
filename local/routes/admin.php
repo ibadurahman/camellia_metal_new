@@ -20,6 +20,7 @@ Route::middleware(['verified'])->group(function(){
     Route::get('oee/data',[DataController::class,'oees'])->name('oee.data');
     Route::get('smelting/data_wo',[DataController::class,'wo_smeltings'])->name('smelting.data_wo');
     Route::get('smelting/data',[DataController::class,'smeltings'])->name('smelting.data');
+    Route::get('smelting/dataChange',[DataController::class,'smeltingsChange'])->name('smelting.dataChange');
     Route::get('supplier/data',[DataController::class,'suppliers'])->name('supplier.data');
     Route::get('nonactivesupplier/data',[DataController::class,'nonactiveSuppliers'])->name('nonactivesupplier.data');
     Route::get('color/data',[DataController::class,'colors'])->name('color.data');
@@ -38,6 +39,13 @@ Route::middleware(['verified'])->group(function(){
 });
 
 Route::middleware(['verified'])->group(function(){
+    Route::get('smelting/{workorder}/leburanChangeRequest',[SmeltingController::class,'leburanChangeRequest'])->name('smelting.leburanChangeRequest');
+    Route::put('smelting/{workorder}/leburanChangeUpdate',[SmeltingController::class,'leburanChangeUpdate'])->name('smelting.leburanChangeUpdate');
+    Route::post('smelting/getDataWoChange',[SmeltingController::class,'getDataWoChange'])->name('smelting.getDataWoChange');
+    Route::post('smelting/addSmeltingChange',[SmeltingController::class,'addSmeltingChange'])->name('smelting.addSmeltingChange');
+    Route::put('smelting/{smelting}/updateChange',[SmeltingController::class,'updateChange'])->name('smelting.updateChange');
+    Route::delete('smelting/{smelting}/deleteChange',[SmeltingController::class,'destroyChange'])->name('smelting.deleteChange');
+
     Route::post('smelting/getDataWo',[SmeltingController::class,'getDataWo'])->name('smelting.getDataWo');
     Route::post('smelting/addSmelting',[SmeltingController::class,'addSmelting'])->name('smelting.addSmelting');
     Route::put('smelting/{smelting}',[SmeltingController::class,'update'])->name('smelting.update');
@@ -48,6 +56,8 @@ Route::middleware(['verified'])->group(function(){
     Route::get('workorder/closed',[WorkorderController::class,'closedWorkorder'])->name('workorder.closed');
     Route::post('workorder/updateOrder',[WorkorderController::class,'updateOrder'])->name('workorder.updateorder');
     Route::post('workorder/setWoStatus',[WorkorderController::class,'setWoStatus'])->name('workorder.setWoStatus');
+    Route::get('workorder/{workorder}/changeRequest',[WorkorderController::class,'changeRequest'])->name('workorder.changeRequest');
+    Route::put('workorder/{workorder}/changeUpdate',[WorkorderController::class,'changeUpdate'])->name('workorder.changeUpdate');
     Route::post('workorder/calculatePcsPerBundle',[WorkorderController::class,'calculatePcsPerBundle'])->name('workorder.calculatePcsPerBundle');
     Route::post('/confirm-password',[WorkorderController::class,'confirmPassword'])->name('confirm.password');
     Route::resource('workorder','WorkorderController');

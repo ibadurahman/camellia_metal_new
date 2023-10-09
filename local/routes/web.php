@@ -93,6 +93,11 @@ Route::prefix('operator/production')->controller(Operator\ProductionController::
 	Route::get('/{workorder}/show','show')->name('operator.production.show');
     Route::get('/showOnProcess','showOnProcess')->name('operator.production.showOnProcess');
 
+    Route::get('/{workorder}/editSmelting','editSmelting')->name('operator.production.editSmelting');
+    Route::put('/{workorder}/updateSmelting','updateSmelting')->name('operator.production.updateSmelting');
+    Route::get('/{workorder}/editWo','editWo')->name('operator.production.editWo');
+    Route::put('/{workorder}/updateWo','updateWo')->name('operator.production.updateWo');
+
     Route::post('/store','store')->name('production.store');
     Route::get('/{production}/edit','edit')->name('production.edit');
     Route::put('/{production}/update','update')->name('production.update');

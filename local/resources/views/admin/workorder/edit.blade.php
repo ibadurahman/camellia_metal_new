@@ -33,7 +33,7 @@
                                         @foreach ($suppliers as $supplier)
                                             <option 
                                             value="{{$supplier->name}}"
-                                                @if ($supplier->name == $workorder->bb_suplier)
+                                                @if ($supplier->name == $workorder->bb_supplier)
                                                     selected
                                                 @endif
                                             >

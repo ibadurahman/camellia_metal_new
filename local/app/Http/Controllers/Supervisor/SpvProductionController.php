@@ -666,6 +666,7 @@ class SpvProductionController extends Controller
             'smeltingInputList'     => $smeltingInputList,
             // 'oee'                   => $oee,
             'downtimes'            => $downtimes,
+            'changeRequests'       => $workorder->changeRequests,
         ]);
     }
 

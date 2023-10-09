@@ -578,6 +578,7 @@ class WorkorderController extends Controller
             'smeltingInputList'     => $smeltingInputList,
             // 'oee'                   => $oee,
              'downtimes'            => $downtimes,
+             'changeRequests'       => $workorder->changeRequests,
         ]);
     }
 

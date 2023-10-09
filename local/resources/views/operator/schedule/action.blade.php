@@ -1,4 +1,4 @@
-<button href="{{url('/operator/schedule/'.$model->id.'/process')}}" class="btn btn-success" id="process" @if ($model->machine->ip_address != request()->ip())
+<button href="{{url('/operator/schedule/'.$model->id.'/process')}}" class="btn btn-success d-none process-{{$model->id}}" id="process-{{$model->id}}" @if ($model->machine->ip_address != request()->ip())
     disabled
 @endif>Process</button>
 @if ($model->machine->ip_address != request()->ip())
@@ -7,7 +7,7 @@
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
- $('button#process').on('click', function(e){
+ $('button#process-{{$model->id}}').on('click', function(e){
      e.preventDefault();
      var href = $(this).attr('href');
      Swal.fire({

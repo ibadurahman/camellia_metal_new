@@ -81,6 +81,11 @@ class ProductionController extends Controller
             'process_end'           => date('Y-m-d H:i:s'),
         ]);
 
+        $bypassWorkorderCheck = BypassWorkorder::where('workorder_id', $workorder->id)->where('approved_by',null)->first();
+        if ($bypassWorkorderCheck) {
+            $bypassWorkorderCheck->delete();
+        }
+
         return redirect(route('production.index'));
     }
 
@@ -601,6 +606,7 @@ class ProductionController extends Controller
             // 'oee'                   => $oee,
             'downtimes'            => $downtimes,
             'bypass_workorder'    => BypassWorkorder::where('workorder_id', $workorder->id)->first(),
+            'changeRequests'       => $workorder->changeRequests,
         ]);
     }
 
@@ -617,6 +623,53 @@ class ProductionController extends Controller
             'smeltings' => Smelting::where('workorder_id', $production->workorder_id)->get(),
             'title' => 'Operator: Edit Bundle Report'
         ]);
+    }
+
+    public function editSmelting(Workorder $workorder)
+    {
+        return view('operator.production.edit_smelting', [
+            'title' => 'Operator: Edit Bundle Report',
+            'workorder' => $workorder,
+            'smeltings' => Smelting::where('workorder_id', $workorder->id)->get()
+        ]);
+    }
+
+    public function updateSmelting(Request $request, Workorder $workorder){
+        $smeltings = Smelting::where('workorder_id', $workorder->id)->get();
+        foreach ($smeltings as $key => $smelt) {
+            $smelt->weight = $request->weight[$key];
+            $smelt->smelting_num = $request->smelting_num[$key];
+            $smelt->area = $request->area[$key];
+            $smelt->save();
+        }
+
+        return redirect()->route('operator.production.show', $workorder->id)->with('success', 'Data Updated Successfully');
+    }
+
+    public function editWo(Workorder $workorder)
+    {
+        return view('operator.production.edit_wo',[
+            'title'         => 'Admin: edit Workorder',
+            'workorder'     => $workorder,
+        ]);
+    }
+
+    public function updateWo(Request $request, Workorder $workorder)
+    {
+        $request->validate([
+            'bb_qty_pcs'    => 'required|numeric',
+            'bb_qty_coil'   => 'required|numeric',
+            'fg_qty_kg'     => 'required|numeric',
+            'fg_qty_pcs'    => 'required|numeric',
+        ]);
+
+        $workorder->bb_qty_pcs = $request->bb_qty_pcs;
+        $workorder->bb_qty_coil = $request->bb_qty_coil;
+        $workorder->fg_qty_kg = $request->fg_qty_kg;
+        $workorder->fg_qty_pcs = $request->fg_qty_pcs;
+        $workorder->save();
+
+        return redirect()->route('operator.production.show', $workorder->id)->with('success', 'Data Updated Successfully');
     }
 
     /**
