@@ -9,14 +9,10 @@
                     @include('templates.partials.alerts')
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Customer List</h3>
+                            <h3 class="card-title">Nonactive Supplier List</h3>
                         </div>
                         <div class="card-body">
-                            <div class="col-12 d-flex justify-content-between">
-                                <a href="{{ route('admin.customer.create') }}" class="btn btn-primary">Add Customer</a>
-                                <a href="{{ route('admin.customer.inactivated') }}" class="">See Inactivated
-                                    Customer</a>
-                            </div>
+                            <a href="{{ route('admin.supplier.index') }}" class="">Back to Supplier List</a>
                         </div>
                         <div class="card-body">
                             <table id="dataTable" class="table table-bordered table-hover">
@@ -24,9 +20,11 @@
                                     <tr>
                                         <th>Id</th>
                                         <th>Name</th>
-                                        <th>Size</th>
-                                        <th>Shape</th>
-                                        <th>Straightness Standard</th>
+                                        <th>Grade</th>
+                                        <th>Diameter (mm)</th>
+                                        <th>Qty (Kg)</th>
+                                        <th>Qty (Coil)</th>
+                                        <th>Qty (Bundle)</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -38,9 +36,8 @@
         </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-    <form action="" method="post" id="inactiveForm" hidden>
+    <form action="" method="post" id="activateForm" hidden>
         @csrf
-        @method('DELETE')
     </form>
 @endsection
 
@@ -50,7 +47,7 @@
             $('#dataTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('admin.customer.data') }}',
+                ajax: '{{ route('admin.nonactivesupplier.data') }}',
                 columns: [{
                         data: 'DT_RowIndex',
                         orderable: false,
@@ -60,13 +57,19 @@
                         data: 'name'
                     },
                     {
-                        data: 'size'
+                        data: 'grade'
                     },
                     {
-                        data: 'shape'
+                        data: 'diameter'
                     },
                     {
-                        data: 'straightness_standard'
+                        data: 'qty_kg'
+                    },
+                    {
+                        data: 'qty_coil'
+                    },
+                    {
+                        data: 'qty_bundle'
                     },
                     {
                         data: 'action'
@@ -74,7 +77,7 @@
                 ],
                 "paging": true,
                 "lengthChange": false,
-                "searching": true,
+                "searching": false,
                 "ordering": true,
                 "info": true,
                 "autoWidth": false,

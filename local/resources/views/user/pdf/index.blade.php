@@ -116,7 +116,7 @@
                                                 padding-left: 10px;
                                                 font-size: 12px;
                                             ">
-                                        <b>(+{{ $data->tolerance_plus }},
+                                        <b>({{(substr($data->tolerance_plus,0,1)!=='-'?'+':'') . $data->tolerance_plus }},
                                             {{ $data->tolerance_minus }})</b>
                                     </td>
                                 </tr>

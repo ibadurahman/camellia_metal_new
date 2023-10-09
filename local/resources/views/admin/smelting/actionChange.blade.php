@@ -1,4 +1,4 @@
-<button href="{{ route('admin.smelting.destroy', $model) }}" class="btn btn-danger" id="delete">Delete</button>
+<button href="{{ route('admin.smelting.deleteChange', $model) }}" class="btn btn-danger" id="delete">Delete</button>
 <button class="btn btn-warning" id="edit-{{$model->id}}" value="{{ $model }}">Edit</button>
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -63,7 +63,7 @@
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: `{{ route('admin.smelting.update', $model) }}`,
+                    url: `{{ route('admin.smelting.updateChange', $model) }}`,
                     data: {
                         _token: '{{ csrf_token() }}',
                         _method: 'PUT',

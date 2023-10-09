@@ -29,11 +29,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Supplier</label>
-                                    <select id="supplier-cmbbx" name="bb_supplier" class="form-control @error('bb_supplier') is-invalid @enderror">
+                                    <select id="supplier-cmbbx" name="bb_supplier" class="form-control select2 @error('bb_supplier') is-invalid @enderror">
                                         @foreach ($suppliers as $supplier)
                                             <option 
                                             value="{{$supplier->name}}"
-                                                @if ($supplier->name == $workorder->bb_suplier)
+                                                @if ($supplier->name == $workorder->bb_supplier)
                                                     selected
                                                 @endif
                                             >
@@ -100,7 +100,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Customer</label>
-                                    <select id="customer-cmbbx" name="fg_customer" class="form-control @error('fg_customer') is-invalid @enderror">
+                                    <select id="customer-cmbbx" name="fg_customer" class="form-control select2 @error('fg_customer') is-invalid @enderror">
                                         @foreach ($customers as $customer)
                                             <option 
                                                 value="{{$customer->name}}"
@@ -226,7 +226,7 @@
 
                                 <div class="form-group">
                                     <label for="">Color</label>
-                                    <select id="color-cmbbx" name="color" class="form-control @error('color') is-invalid @enderror" value="{{old('color')}}">
+                                    <select id="color-cmbbx" name="color" class="form-control select2 @error('color') is-invalid @enderror" value="{{old('color')}}">
                                         <option disabled selected value> -- select color -- </option>
                                         @foreach ($colors as $color)
                                             <option value="{{$color->id}}" 
@@ -287,8 +287,12 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
     <script>
         $(function(){
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
             // $('#reservationdatetime').datetimepicker({ 
             //     icons: { time: 'far fa-clock' },
             //     format: 'YYYY-MM-DD HH:mm:ss',
@@ -302,6 +306,7 @@
             $('#kg-per-bundle').on('keyup',function(){
                 recalculate();
             });
+
             // $('#supplier-cmbbx').on('change',function(){
             //     $.ajax({
             //         type:"POST",
@@ -323,6 +328,7 @@
             $('#customer-shape').on('change',function(){
                 recalculate();
             })
+
             // $('#customer-cmbbx').on('change',function(){
             //     $.ajax({
             //         type:"POST",

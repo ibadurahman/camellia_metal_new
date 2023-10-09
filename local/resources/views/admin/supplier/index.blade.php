@@ -12,7 +12,11 @@
                             <h3 class="card-title">Supplier List</h3>
                         </div>
                         <div class="card-body">
-                            <a href="{{route('admin.supplier.create')}}" class="btn btn-primary">Add Supplier</a>         
+                            <div class="col-12 d-flex justify-content-between">
+                                <a href="{{ route('admin.supplier.create') }}" class="btn btn-primary">Add Supplier</a>
+                                <a href="{{ route('admin.supplier.inactivated') }}" class="">See Inactivated
+                                    Supplier</a>
+                            </div>
                         </div>
                         <div class="card-body">
                             <table id="dataTable" class="table table-bordered table-hover">
@@ -29,45 +33,61 @@
                                     </tr>
                                 </thead>
                             </table>
-                        </div> 
-                    </div>          
+                        </div>
+                    </div>
                 </div>
             </div>
         </div><!-- /.container-fluid -->
     </section>
-    <!-- /.content -->   
-    <form action="" method="POST" id="deleteForm">
+    <!-- /.content -->
+    <form action="" method="post" id="inactiveForm" hidden>
         @csrf
-        @method("DELETE")
-        <input type="submit" value="Delete" style="display:none">
+        @method('DELETE')
     </form>
 @endsection
 
 @push('scripts')
-<script>
-    $(function () {
-      $('#dataTable').DataTable({
-        processing:true,
-        serverSide:true,
-        ajax:'{{route('admin.supplier.data')}}',
-        columns:[
-            {data:'DT_RowIndex',orderable:false, searchable:false},
-            {data:'name'},
-            {data:'grade'},
-            {data:'diameter'},
-            {data:'qty_kg'},
-            {data:'qty_coil'},
-            {data:'qty_bundle'},
-            {data:'action'}
-        ],
-        "paging": true,
-        "lengthChange": false,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
-    });
-</script>
+    <script>
+        $(function() {
+            $('#dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('admin.supplier.data') }}',
+                columns: [{
+                        data: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: 'grade'
+                    },
+                    {
+                        data: 'diameter'
+                    },
+                    {
+                        data: 'qty_kg'
+                    },
+                    {
+                        data: 'qty_coil'
+                    },
+                    {
+                        data: 'qty_bundle'
+                    },
+                    {
+                        data: 'action'
+                    }
+                ],
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
 @endpush

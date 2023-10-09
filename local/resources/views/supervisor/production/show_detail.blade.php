@@ -176,8 +176,11 @@
                                                             {{ $workorder->remarks }}</span><br>
                                                     </div>
                                                 </div>
-                                                <a href="#" id="workorder-details" class="descriprion-text">See
-                                                    More</a>
+                                                <a href="#" id="workorder-details" class="descriprion-text">Detail
+                                                    Workorder Data</a> |
+                                                <a href="#" data-toggle="modal" data-target="#exampleModalCenter"
+                                                    class="descriprion-text">Workorder
+                                                    Change History</a>
                                             </div>
                                         </div>
                                         <div class="col-sm-4 col-4">
@@ -612,6 +615,43 @@
 
 </div>
 </div><!-- /.container-fluid -->
+
+{{-- Change History Modal --}}
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <table class="table table-hover table-responsive">
+        <thead>
+            <tr>
+                <th scope="col">Change Data</th>
+                <th scope="col">Changed By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($changeRequests as $changeReq)
+                <tr>
+                    <td>{{ $changeReq->change_data }}</td>
+                    <td>{{ $changeReq->changedBy->name }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
+</div>
+</div>
+</div>
 </section>
 
 <!-- /.content -->
@@ -658,6 +698,8 @@
             if (result.isConfirmed) {
                 document.getElementById('finishForm').action = href;
                 document.getElementById('finishForm').submit();
+                // delete localStorage remark
+                localStorage.removeItem('production-remarks');
             }
         })
     });
@@ -1108,6 +1150,7 @@
             }
         })
     }
+
     function updateReason(downtime_number) {
         var downtimeCategory = $('[name="dt-category-' + downtime_number + '"]').val();
         let options = '';
@@ -1128,6 +1171,7 @@
             $("[name='dt-reason-" + downtime_number + "']").html(options);
         })
     }
+
     function checkReason(reason, downtimeNumber) {
         if (reason == $('#downtime-reason-' + downtimeNumber).attr('reason')) {
             return 'selected';
@@ -1407,7 +1451,7 @@
                 '<span class="description-text float-left">Customer: {{ $workorder->fg_customer }}</span><br>' +
                 '<span class="description-text float-left">Straightness Standard: {{ $workorder->straightness_standard }}</span><br>' +
                 '<span class="description-text float-left">Size: {{ $workorder->fg_size_1 }} mm x {{ $workorder->fg_size_2 }} mm</span><br>' +
-                '<span class="description-text float-left">Tolerance: +{{ $workorder->tolerance_plus }} mm, {{ $workorder->tolerance_minus }} mm</span><br>' +
+                '<span class="description-text float-left">Tolerance: {{ (substr($workorder->tolerance_plus, 0, 1) !== '-' ? '+' : '') . $workorder->tolerance_plus }} mm, {{ $workorder->tolerance_minus }} mm</span><br>' +
                 '<span class="description-text float-left">Reduction rate: {{ $workorder->fg_reduction_rate }} %</span><br>' +
                 '<span class="description-text float-left">Shape: {{ $workorder->fg_shape }}</span><br>' +
                 '<span class="description-text float-left">QTY per Bundle (Kg): {{ $workorder->fg_qty_kg }} Kg</span><br>' +
@@ -1443,5 +1487,12 @@
         event.preventDefault();
         window.open("{{ url('/report/' . $workorder->id . '/printToPdf') }}");
     });
+
+    //PRODUCTION REMARKS
+    $('#production-remarks').on('change', function() {
+        //save to application storage
+        localStorage.setItem('production-remarks', $(this).val());
+        console.log(localStorage.getItem('production-remarks'));
+    })
 </script>
 @endpush

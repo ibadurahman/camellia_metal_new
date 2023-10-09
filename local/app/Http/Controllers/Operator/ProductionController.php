@@ -63,6 +63,8 @@ class ProductionController extends Controller
         if (count($downtime) > 0) {
             Downtime::where('workorder_id', $workorder->id)->where('is_downtime_stopped', false)->delete();
 
+            Downtime::where('workorder_id', $workorder->id)->where('status','run')->where('is_downtime_stopped', true)->where('is_remark_filled', false)->delete();
+
             $downtimeDataUncomplete = Downtime::where('workorder_id', $workorder->id)->where(function ($query) {
                 $query->where('is_remark_filled', false)->orWhere('is_downtime_stopped', false);
             })->first();
@@ -78,6 +80,11 @@ class ProductionController extends Controller
             'status_wo'             => 'on check',
             'process_end'           => date('Y-m-d H:i:s'),
         ]);
+
+        $bypassWorkorderCheck = BypassWorkorder::where('workorder_id', $workorder->id)->where('approved_by',null)->first();
+        if ($bypassWorkorderCheck) {
+            $bypassWorkorderCheck->delete();
+        }
 
         return redirect(route('production.index'));
     }
@@ -99,7 +106,7 @@ class ProductionController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine', function (Workorder $model) {
-                $combines = '(-' . $model->tolerance_minus . ',+' . $model->tolerance_plus . ')';
+                $combines = '(' . $model->tolerance_minus . ','.(substr($model->tolerance_plus,0,1)!=='-'?'+':''). $model->tolerance_plus . ')';
                 return $combines;
             })
             ->addColumn('color', function (Workorder $model) {
@@ -498,11 +505,11 @@ class ProductionController extends Controller
         //
         // Machine Average Speed
         //
-        $realtimeQuery = Realtime::select('speed')->where('workorder_id', $workorder->id)->where('speed', '>=', '20');
+        $realtimeQuery = Realtime::select('speed')->where('workorder_id', $workorder->id);
         if ($realtimeQuery->count() != 0) {
             $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
         } else {
-            $machineAvgSpeed = 30;
+            $machineAvgSpeed = 0;
         }
 
         //
@@ -520,7 +527,7 @@ class ProductionController extends Controller
         $productionPlanned = round($workorder->bb_qty_pcs / $workorder->fg_size_1 / $workorder->fg_size_1 / $workorder->fg_size_2 / $this->calculatePcsPerBundle($workorder->fg_shape) * 1000, 0);
         $per = 0;
         // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
-        if ($productionCount == 0) {
+        if ($productionCount == 0 || $cycleTime == 0) {
             $per = 100;
         } else {
             $per = ($total_good_product / ((($plannedTimeMinutes - ($managementDowntime / 60) - ($offProductionTime / 60)) - ($wasteDowntime / 60)) * 60 / $cycleTime)) * 100;
@@ -599,6 +606,7 @@ class ProductionController extends Controller
             // 'oee'                   => $oee,
             'downtimes'            => $downtimes,
             'bypass_workorder'    => BypassWorkorder::where('workorder_id', $workorder->id)->first(),
+            'changeRequests'       => $workorder->changeRequests,
         ]);
     }
 
@@ -615,6 +623,53 @@ class ProductionController extends Controller
             'smeltings' => Smelting::where('workorder_id', $production->workorder_id)->get(),
             'title' => 'Operator: Edit Bundle Report'
         ]);
+    }
+
+    public function editSmelting(Workorder $workorder)
+    {
+        return view('operator.production.edit_smelting', [
+            'title' => 'Operator: Edit Bundle Report',
+            'workorder' => $workorder,
+            'smeltings' => Smelting::where('workorder_id', $workorder->id)->get()
+        ]);
+    }
+
+    public function updateSmelting(Request $request, Workorder $workorder){
+        $smeltings = Smelting::where('workorder_id', $workorder->id)->get();
+        foreach ($smeltings as $key => $smelt) {
+            $smelt->weight = $request->weight[$key];
+            $smelt->smelting_num = $request->smelting_num[$key];
+            $smelt->area = $request->area[$key];
+            $smelt->save();
+        }
+
+        return redirect()->route('operator.production.show', $workorder->id)->with('success', 'Data Updated Successfully');
+    }
+
+    public function editWo(Workorder $workorder)
+    {
+        return view('operator.production.edit_wo',[
+            'title'         => 'Admin: edit Workorder',
+            'workorder'     => $workorder,
+        ]);
+    }
+
+    public function updateWo(Request $request, Workorder $workorder)
+    {
+        $request->validate([
+            'bb_qty_pcs'    => 'required|numeric',
+            'bb_qty_coil'   => 'required|numeric',
+            'fg_qty_kg'     => 'required|numeric',
+            'fg_qty_pcs'    => 'required|numeric',
+        ]);
+
+        $workorder->bb_qty_pcs = $request->bb_qty_pcs;
+        $workorder->bb_qty_coil = $request->bb_qty_coil;
+        $workorder->fg_qty_kg = $request->fg_qty_kg;
+        $workorder->fg_qty_pcs = $request->fg_qty_pcs;
+        $workorder->save();
+
+        return redirect()->route('operator.production.show', $workorder->id)->with('success', 'Data Updated Successfully');
     }
 
     /**

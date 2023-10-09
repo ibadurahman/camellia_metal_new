@@ -152,6 +152,7 @@
                                     <th>Remarks</th>
                                     <th>Label Remarks</th>
                                     <th>Leburan</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -442,6 +443,9 @@
                 {
                     data: 'smelting'
                 },
+                {
+                    data: 'action'
+                }
             ],
             "paging": false,
             "lengthChange": true,

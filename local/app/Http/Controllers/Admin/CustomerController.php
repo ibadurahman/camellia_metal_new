@@ -22,8 +22,15 @@ class CustomerController extends Controller
     public function index()
     {
         //
-        return view('admin.customer.index',[
+        return view('admin.customer.index', [
             'title' => 'Admin: Customer'
+        ]);
+    }
+
+    public function inactivated()
+    {
+        return view('admin.customer.nonactive', [
+            'title' => 'Admin: Non Active Customer'
         ]);
     }
 
@@ -35,7 +42,7 @@ class CustomerController extends Controller
     public function create()
     {
         //
-        return view('admin.customer.create',[
+        return view('admin.customer.create', [
             'title' => 'Admin: Create Customer',
         ]);
     }
@@ -51,13 +58,13 @@ class CustomerController extends Controller
         //
         $customer = Customer::create([
             'name'                  => $request->name,
-            'size_1'                => $request->size_1,    
+            'size_1'                => $request->size_1,
             'size_2'                => $request->size_2,
             'shape'                 => $request->shape,
             'straightness_standard' => $request->straightness_standard
         ]);
 
-        return redirect()->route('admin.customer.index')->with('success','Data Added Successfully');
+        return redirect()->route('admin.customer.index')->with('success', 'Data Added Successfully');
     }
 
     /**
@@ -80,7 +87,7 @@ class CustomerController extends Controller
     public function edit(Customer $customer)
     {
         //
-        return view('admin.customer.edit',[
+        return view('admin.customer.edit', [
             'title'        => 'Admin: edit Customer',
             'customer'     => $customer,
         ]);
@@ -104,34 +111,38 @@ class CustomerController extends Controller
             'straightness_standard' => $request->straightness_standard
         ]);
 
-        return redirect()->route('admin.customer.index')->with('success','Data Updated Successfully');
+        return redirect()->route('admin.customer.index')->with('success', 'Data Updated Successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Customer $customer)
+    public function inactive(Customer $customer)
     {
         //
-        $customer->delete();
-        return redirect()->route('admin.customer.index')->with('success','Data Deleted Successfully');
+        $customer->is_active = false;
+        $customer->save();
+        
+        return redirect()->route('admin.customer.index')->with('success','Data inactivated successfully');
+    }
+
+    public function activate(Customer $customer)
+    {
+        //
+        $customer->is_active = true;
+        $customer->save();
+        
+        return redirect()->route('admin.customer.index')->with('success','Data activated successfully');
     }
 
     public function getCustomerData(Request $request)
     {
-        $customer = CUstomer::where('name',$request->name)->first();
-        if(!$customer)
-        {
+        $customer = CUstomer::where('name', $request->name)->first();
+        if (!$customer) {
             return response()->json([
                 'message' => 'customer data not found'
-            ],404);
+            ], 404);
         }
 
         return response()->json([
             $customer
-        ],200);
+        ], 200);
     }
 }

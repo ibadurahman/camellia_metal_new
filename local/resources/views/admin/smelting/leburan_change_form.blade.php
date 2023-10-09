@@ -103,29 +103,18 @@
             serverSide: true,
             ajax: {
                 type: 'GET',
-                url: '{{ route('admin.smelting.data') }}',
+                url: '{{ route('admin.smelting.dataChange') }}',
                 data: {
                     wo_id: $('#wo-id').val(),
                 }
             },
-            columns: [{
-                    data: 'wo_number'
-                },
-                {
-                    data: 'coil_num'
-                },
-                {
-                    data: 'weight'
-                },
-                {
-                    data: 'smelting_num'
-                },
-                {
-                    data: 'area'
-                },
-                {
-                    data: 'action'
-                },
+            columns: [
+                {data: 'wo_number'},
+                {data: 'coil_num'},
+                {data: 'weight'},
+                {data: 'smelting_num'},
+                {data: 'area'},
+                {data: 'action'},
             ],
             "paging": true,
             "lengthChange": true,
@@ -168,7 +157,7 @@
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                url: '{{ route('admin.smelting.addSmelting') }}',
+                url: '{{ route('admin.smelting.addSmeltingChange') }}',
                 data: {
                     wo_id: obj.wo_id,
                     weight: obj.weight,
@@ -202,7 +191,7 @@
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: '{{ route('admin.smelting.getDataWo') }}',
+            url: '{{ route('admin.smelting.getDataWoChange') }}',
             data: {
                 wo_id: $('#wo-id').val(),
                 _token: '{{ csrf_token() }}'
@@ -210,17 +199,6 @@
             success: function(response) {
                 var result = $('#number-of-coil').val() - response.number_of_smelting;
                 if (result != 0) {
-                    $.ajax({
-                        type: "POST",
-                        dataType: "json",
-                        url: "{{ route('admin.workorder.setWoStatus') }}",
-                        data: {
-                            wo_id: $('#wo-id').val(),
-                            state: 'draft',
-                            _token: '{{ csrf_token() }}'
-                        }
-                    });
-
                     $('#alert_coil_number').html(
                         `<i class='fas fa-exclamation'></i> Number of coil needed: ${result}, Total weight: ${response.total_weight} Kg`
                         );
@@ -230,18 +208,6 @@
                     $('#smelt-area').attr('readonly', false);
                     $('#create-smelt').prop('disabled', false);
                 } else {
-
-                    $.ajax({
-                        type: "POST",
-                        dataType: "json",
-                        url: "{{ route('admin.workorder.setWoStatus') }}",
-                        data: {
-                            wo_id: $('#wo-id').val(),
-                            state: 'waiting',
-                            _token: '{{ csrf_token() }}'
-                        }
-                    });
-
                     $('#alert_coil_number').html(
                         `<i class='fas fa-exclamation'></i> Number of coil needed: ${result}, Total weight: ${response.total_weight} Kg`
                         );

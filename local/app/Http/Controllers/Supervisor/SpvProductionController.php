@@ -52,7 +52,7 @@ class SpvProductionController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine', function (Workorder $model) {
-                $combines = '(-' . $model->tolerance_minus . ',+' . $model->tolerance_plus . ')';
+                $combines = '(' . $model->tolerance_minus . ','.(substr($model->tolerance_plus,0,1)!=='-'?'+':''). $model->tolerance_plus . ')';
                 return $combines;
             })
             ->addColumn('color', function (Workorder $model) {
@@ -121,13 +121,13 @@ class SpvProductionController extends Controller
 
     public function finish(Request $request, Workorder $workorder)
     {
-        $downtime = Downtime::where('workorder_id', $workorder->id)->get();
 
         $production = Production::where('workorder_id', $workorder->id)->get();
         if ($workorder->bb_qty_bundle != count($production)) {
             return redirect(route('spvproduction.show', $workorder));
         }
 
+        $downtime = Downtime::where('workorder_id', $workorder->id)->get();
         if (count($downtime) > 0) {
             Downtime::where('workorder_id', $workorder->id)->where('is_downtime_stopped', false)->delete();
 
@@ -566,11 +566,11 @@ class SpvProductionController extends Controller
         //
         // Machine Average Speed
         //
-        $realtimeQuery = Realtime::select('speed')->where('workorder_id', $workorder->id)->where('speed', '>=', '20');
+        $realtimeQuery = Realtime::select('speed')->where('workorder_id', $workorder->id);
         if ($realtimeQuery->count() != 0) {
             $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
         } else {
-            $machineAvgSpeed = 30;
+            $machineAvgSpeed = 0;
         }
 
         //
@@ -588,7 +588,7 @@ class SpvProductionController extends Controller
         $productionPlanned = round($workorder->bb_qty_pcs / $workorder->fg_size_1 / $workorder->fg_size_1 / $workorder->fg_size_2 / $this->calculatePcsPerBundle($workorder->fg_shape) * 1000, 0);
         $per = 0;
         // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
-        if ($productionCount == 0) {
+        if ($productionCount == 0 || $cycleTime == 0) {
             $per = 100;
         } else {
             $per = ($total_good_product / ((($plannedTimeMinutes - ($managementDowntime / 60) - ($offProductionTime / 60)) - ($wasteDowntime / 60)) * 60 / $cycleTime)) * 100;
@@ -666,6 +666,7 @@ class SpvProductionController extends Controller
             'smeltingInputList'     => $smeltingInputList,
             // 'oee'                   => $oee,
             'downtimes'            => $downtimes,
+            'changeRequests'       => $workorder->changeRequests,
         ]);
     }
 
