@@ -474,11 +474,11 @@ class WorkorderController extends Controller
         //
         // Machine Average Speed
         //
-        $realtimeQuery = Realtime::select('speed')->where('workorder_id',$workorder->id);
+        $realtimeQuery = Realtime::select('speed')->where('workorder_id',$workorder->id)->where('speed','>=','10');
         if($realtimeQuery->count() != 0){
             $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
         }else{
-            $machineAvgSpeed = 0;
+            $machineAvgSpeed = 10;
         }
 
         //
