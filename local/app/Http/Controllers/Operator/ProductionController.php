@@ -63,7 +63,7 @@ class ProductionController extends Controller
         if (count($downtime) > 0) {
             Downtime::where('workorder_id', $workorder->id)->where('is_downtime_stopped', false)->delete();
 
-            Downtime::where('workorder_id', $workorder->id)->where('status','run')->where('is_downtime_stopped', true)->where('is_remark_filled', false)->delete();
+            Downtime::where('workorder_id', $workorder->id)->where('status', 'run')->where('is_downtime_stopped', true)->where('is_remark_filled', false)->delete();
 
             $downtimeDataUncomplete = Downtime::where('workorder_id', $workorder->id)->where(function ($query) {
                 $query->where('is_remark_filled', false)->orWhere('is_downtime_stopped', false);
@@ -81,7 +81,7 @@ class ProductionController extends Controller
             'process_end'           => date('Y-m-d H:i:s'),
         ]);
 
-        $bypassWorkorderCheck = BypassWorkorder::where('workorder_id', $workorder->id)->where('approved_by',null)->first();
+        $bypassWorkorderCheck = BypassWorkorder::where('workorder_id', $workorder->id)->where('approved_by', null)->first();
         if ($bypassWorkorderCheck) {
             $bypassWorkorderCheck->delete();
         }
@@ -106,7 +106,7 @@ class ProductionController extends Controller
                 return $combines;
             })
             ->addColumn('tolerance_combine', function (Workorder $model) {
-                $combines = '(' . $model->tolerance_minus . ','.(substr($model->tolerance_plus,0,1)!=='-'?'+':''). $model->tolerance_plus . ')';
+                $combines = '(' . $model->tolerance_minus . ',' . (substr($model->tolerance_plus, 0, 1) !== '-' ? '+' : '') . $model->tolerance_plus . ')';
                 return $combines;
             })
             ->addColumn('color', function (Workorder $model) {
@@ -224,8 +224,9 @@ class ProductionController extends Controller
                 'message' => 'Workorder Not Found'
             ], 400);
         }
-        $production = Production::where('workorder_id', $request->workorder_id)->where('bundle_num', $request->bundle_num)->get();
-        if (count($production) != 0) {
+
+        $production = Production::where('workorder_id', $request->workorder_id)->where('bundle_num', $request->bundle_num)->first();
+        if (!is_null($production)) {
             return response()->json([
                 'message' => 'Data Already Input'
             ], 400);
@@ -505,7 +506,7 @@ class ProductionController extends Controller
         //
         // Machine Average Speed
         //
-        $realtimeQuery = Realtime::select('speed')->where('workorder_id', $workorder->id)->where('speed','>=','10');
+        $realtimeQuery = Realtime::select('speed')->where('workorder_id', $workorder->id)->where('speed', '>=', '10');
         if ($realtimeQuery->count() != 0) {
             $machineAvgSpeed = $realtimeQuery->sum('speed') / $realtimeQuery->count();
         } else {
@@ -634,7 +635,8 @@ class ProductionController extends Controller
         ]);
     }
 
-    public function updateSmelting(Request $request, Workorder $workorder){
+    public function updateSmelting(Request $request, Workorder $workorder)
+    {
         $smeltings = Smelting::where('workorder_id', $workorder->id)->get();
         foreach ($smeltings as $key => $smelt) {
             $smelt->weight = $request->weight[$key];
@@ -648,7 +650,7 @@ class ProductionController extends Controller
 
     public function editWo(Workorder $workorder)
     {
-        return view('operator.production.edit_wo',[
+        return view('operator.production.edit_wo', [
             'title'         => 'Admin: edit Workorder',
             'workorder'     => $workorder,
         ]);
@@ -764,10 +766,10 @@ class ProductionController extends Controller
 
             $productionData = Production::where('workorder_id', $workorder->id)->get();
             $smeltingData = Smelting::where('workorder_id', $workorder->id)->get();
-            for ($i=count($productionData); $i < $workorder->bb_qty_bundle; $i++) { 
+            for ($i = count($productionData); $i < $workorder->bb_qty_bundle; $i++) {
                 $production = new Production();
                 $production->workorder_id = $workorder->id;
-                $production->bundle_num = $i+1;
+                $production->bundle_num = $i + 1;
                 $production->coil_num = $smeltingData[0]->id;
                 $production->dies_num = 0;
                 $production->diameter_ujung = 0;
