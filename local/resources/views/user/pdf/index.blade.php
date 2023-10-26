@@ -103,9 +103,14 @@
                                                 font-size: 12px;
                                             ">
                                         <b>
+<<<<<<< HEAD
                                             {{$data->shape}}
                                             {{ strtolower($data->shape) == 'hexagon' ? 'HEX' : '' }}
                                             {{ strtolower($data->shape) == 'square' ? 'SQ' : '' }}
+=======
+                                            {{ strtolower($data->fg_shape) == 'hexagon' ? 'HEX' : '' }}
+                                            {{ strtolower($data->fg_shape) == 'square' ? 'SQ' : '' }}
+>>>>>>> f28818401f7745b9f20ad52c3e69747d8318ee4f
                                             {{ $data->fg_size_1 }}MM</b>
                                     </td>
                                 </tr>
