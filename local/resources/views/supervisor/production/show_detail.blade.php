@@ -1393,7 +1393,8 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <option value="SP">SP</option>
                 <option value="MH">MH</option>
                 <option value="RUSTY">RUSTY</option>
-                <option value="PIN HOLE">PIN HOLE</option>`
+                <option value="PIN HOLE">PIN HOLE</option>
+                <option value="LS Material">LS Material</option>`
             );
         }
 
@@ -1409,7 +1410,8 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <option value="IL/OK">IL/OK</option>
                 <option value="TS/OK">TS/OK</option>
                 <option value="LS/OK">LS/OK</option>
-                <option value="OVAL/OK">OVAL/OK</option>`
+                <option value="OVAL/OK">OVAL/OK</option>
+                <option value="LS Material/OK">LS Material/OK</option>`
             );
         }
         if ($('#judgement-select').val() == 'waste') {

@@ -182,7 +182,8 @@
                 <option value="SP" @if($production->visual === 'SP') selected @endif>SP</option>
                 <option value="MH" @if($production->visual === 'MH') selected @endif>MH</option>
                 <option value="RUSTY" @if($production->visual === 'RUSTY') selected @endif>RUSTY</option>
-                <option value="PIN HOLE" @if($production->visual === 'PIN HOLE') selected @endif>PIN HOLE</option>`
+                <option value="PIN HOLE" @if($production->visual === 'PIN HOLE') selected @endif>PIN HOLE</option>
+                <option value="LS Material" @if($production->visual === 'LS Material') selected @endif>LS Material</option>`
                 );
             }
             if ($('#judgement-select').val() == 'good') {
@@ -197,7 +198,8 @@
                     <option value="IL/OK" @if($production->visual === 'IL/OK') selected @endif>IL/OK</option>
                     <option value="TS/OK" @if($production->visual === 'TS/OK') selected @endif>TS/OK</option>
                     <option value="LS/OK" @if($production->visual === 'LS/OK') selected @endif>LS/OK</option>
-                    <option value="OVAL/OK" @if($production->visual === 'OVAL/OK') selected @endif>OVAL/OK</option>`
+                    <option value="OVAL/OK" @if($production->visual === 'OVAL/OK') selected @endif>OVAL/OK</option>
+                    <option value="LS Material/OK" @if($production->visual === 'LS Material/OK') selected @endif>LS Material/OK</option>`
                 );
             }
             if ($('#judgement-select').val() == 'waste') {
@@ -225,7 +227,8 @@
                     <option value="SP">SP</option>
                     <option value="MH">MH</option>
                     <option value="RUSTY">RUSTY</option>
-                    <option value="PIN HOLE">PIN HOLE</option>`
+                    <option value="PIN HOLE">PIN HOLE</option>
+                    <option value="LS Material">LS Material</option>`
                 );
             }
             if ($('#judgement-select').val() == 'good') {
@@ -240,7 +243,9 @@
                 <option value="IL/OK">IL/OK</option>
                 <option value="TS/OK">TS/OK</option>
                 <option value="LS/OK">LS/OK</option>
-                <option value="OVAL/OK">OVAL/OK</option>`
+                <option value="OVAL/OK">OVAL/OK</option>
+                <option value="LS Material/OK">LS Material/OK</option>
+                `
                 );
             }
             if ($('#judgement-select').val() == 'waste') {

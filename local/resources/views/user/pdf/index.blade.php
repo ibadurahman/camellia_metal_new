@@ -93,7 +93,7 @@
                                 </tr>
                                 <tr>
                                     <td style="font-size: 10px">
-                                        <b>Size (mm)</b>
+                                        <b>Size</b>
                                     </td>
                                     <td>:</td>
                                     <td
@@ -102,7 +102,17 @@
                                                 padding-left: 10px;
                                                 font-size: 12px;
                                             ">
-                                        <b>{{ $data->fg_size_1 }}</b>
+                                        <b>
+                                            @switch(strtolower($data->shape))
+                                                @case('square')
+                                                    SQ
+                                                    @break
+                                                @case('hexagon')
+                                                    HEX
+                                                    @break
+                                                @default                                                    
+                                            @endswitch
+                                            {{ $data->fg_size_1 }}MM</b>
                                     </td>
                                 </tr>
                                 <tr>
