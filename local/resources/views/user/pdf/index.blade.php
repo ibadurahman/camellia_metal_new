@@ -103,6 +103,7 @@
                                                 font-size: 12px;
                                             ">
                                         <b>
+                                            {{$data->shape}}
                                             {{ strtolower($data->shape) == 'hexagon' ? 'HEX' : '' }}
                                             {{ strtolower($data->shape) == 'square' ? 'SQ' : '' }}
                                             {{ $data->fg_size_1 }}MM</b>
