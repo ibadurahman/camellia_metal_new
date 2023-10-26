@@ -103,15 +103,8 @@
                                                 font-size: 12px;
                                             ">
                                         <b>
-                                            @switch(strtolower($data->shape))
-                                                @case('square')
-                                                    SQ
-                                                    @break
-                                                @case('hexagon')
-                                                    HEX
-                                                    @break
-                                                @default                                                    
-                                            @endswitch
+                                            {{ strtolower($data->shape) == 'hexagon' ? 'HEX' : '' }}
+                                            {{ strtolower($data->shape) == 'square' ? 'SQ' : '' }}
                                             {{ $data->fg_size_1 }}MM</b>
                                     </td>
                                 </tr>
@@ -126,7 +119,7 @@
                                                 padding-left: 10px;
                                                 font-size: 12px;
                                             ">
-                                        <b>({{(substr($data->tolerance_plus,0,1)!=='-'?'+':'') . $data->tolerance_plus }},
+                                        <b>({{ (substr($data->tolerance_plus, 0, 1) !== '-' ? '+' : '') . $data->tolerance_plus }},
                                             {{ $data->tolerance_minus }})</b>
                                     </td>
                                 </tr>
