@@ -1,4 +1,4 @@
-z@extends('templates.default')
+@extends('templates.default')
 
 @section('content')
     <!-- Main content -->
