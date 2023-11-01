@@ -93,7 +93,7 @@
                                 </tr>
                                 <tr>
                                     <td style="font-size: 10px">
-                                        <b>Size</b>
+                                        <b>Size (mm)</b>
                                     </td>
                                     <td>:</td>
                                     <td
@@ -105,7 +105,7 @@
                                         <b>
                                             {{ strtolower($data->fg_shape) == 'hexagon' ? 'HEX' : '' }}
                                             {{ strtolower($data->fg_shape) == 'square' ? 'SQ' : '' }}
-                                            {{ $data->fg_size_1 }}MM</b>
+                                            {{ $data->fg_size_1 }}</b>
                                     </td>
                                 </tr>
                                 <tr>

@@ -232,6 +232,18 @@ class ProductionController extends Controller
             ], 400);
         }
 
+        //check duplicate bundle_num
+        if (Production::where('workorder_id', $request->workorder_id)->where('bundle_num', $request->bundle_num - 1)->first()) {
+            $bundleNums = Production::where('workorder_id', $request->workorder_id)->where('bundle_num', $request->bundle_num - 1)->get();
+            if (count($bundleNums) > 1) {
+                $bundleNumCount = count($bundleNums);
+                for ($i = 0; $i < $bundleNumCount - 1; $i++) {
+                    $bundleNums[$i]->delete();
+                }
+            }
+        }
+
+
         Production::create([
             'workorder_id'      => $request->workorder_id,
             'bundle_num'        => $request->bundle_num,
