@@ -366,10 +366,29 @@
             //     });
             // });
 
+            // $('#customer-tolerance-plus').on('keyup', function() {
+            //     //add lock value for the input from localStorage
+            //     localStorage.setItem('customer-tolerance-plus', $('#customer-tolerance-plus').val());
+            // });
+
+            // $('#customer-tolerance').on('keyup', function() {
+            //     //add lock value for the input from localStorage
+            //     localStorage.setItem('customer-tolerance', $('#customer-tolerance').val());
+            // });
+
             function recalculate()
             {
-                $('#customer-tolerance').val("-" + addTolerance($('#customer-size-1').val()));
-				$('#customer-tolerance-plus').val("+" + addTolerancePlus($('#customer-size-1').val()));
+                // if (localStorage.getItem('customer-tolerance-plus') != null) {
+                //     $('#customer-tolerance-plus').val(localStorage.getItem('customer-tolerance-plus'));
+                // } else {
+                //     $('#customer-tolerance-plus').val("+" + addTolerancePlus($('#customer-size-1').val()));
+                // }
+                // if (localStorage.getItem('customer-tolerance') != null) {
+                //     $('#customer-tolerance').val(localStorage.getItem('customer-tolerance'));
+                // } else {
+                //     $('#customer-tolerance').val("-" + addTolerance($('#customer-size-1').val()));
+                // }
+                
                 $('#customer-reduc-rate').val(calculateReducRate($('#supplier-diameter').val(),$('#customer-size-1').val()));
                 $('#pcs-per-bundle').val(calculatePcsPerBundle($('#kg-per-bundle').val(),$('#customer-shape').val()));
             }
@@ -487,6 +506,10 @@
                 }
             }
         });
-
+        // $(document).ready(function() {
+        //     //reset to null
+        //     localStorage.removeItem('customer-tolerance-plus');
+        //     localStorage.removeItem('customer-tolerance');
+        // })
     </script>
 @endpush
