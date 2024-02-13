@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\api;
 
+use DateTime;
 use App\Models\Machine;
 use App\Models\Downtime;
 use App\Models\Workorder;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Events\DowntimeCaptured;
+use App\Http\Controllers\Controller;
 
 class DowntimeApiController extends Controller
 {
@@ -56,6 +57,8 @@ class DowntimeApiController extends Controller
                     'message' => 'Downtime is already stopped'
                 ],400);
             }
+
+            
         }
 
         if($aRequest['status']=='run')
@@ -66,6 +69,24 @@ class DowntimeApiController extends Controller
                 return response()->json([
                     'message' => 'Downtime is already running'
                 ],400);
+            }
+
+            $downtimeRunId = Downtime::where('workorder_id',$workorder[0]->id)->where('status', 'stop')->where('downtime_number', $lastDowntimeRun->downtime_number)->first();
+            if(!is_null($downtimeRunId)){
+                $duration = date_diff(new DateTime($lastDowntimeRun->created_at), new DateTime($downtimeRunId->created_at));
+
+                $durationSec = $duration->days * 24 * 60 * 60;
+                $durationSec += $duration->h * 60 * 60;
+                $durationSec += $duration->i * 60;
+                $durationSec += $duration->s;
+    
+                if($durationSec < 60)
+                {
+                    $lastDowntimeRun->delete();
+                    return response()->json([
+                        'message' => 'Downtime is less than 1 minute'
+                    ],400);
+                }
             }
         }
 

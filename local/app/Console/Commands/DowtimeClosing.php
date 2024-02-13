@@ -55,6 +55,7 @@ class DowtimeClosing extends Command
                 $this->info('no last downtime');
                 continue;
             }
+
             if($lastdowntimeStatus->status == 'run')
             {
                 Downtime::create([

@@ -263,6 +263,14 @@ class WorkorderController extends Controller
             $durationSec += $duration->h * 60 * 60;
             $durationSec += $duration->i * 60;
             $durationSec += $duration->s;
+
+            //if duration is less than 1 minute, then it is not counted as downtime and delete that record
+            // if($durationSec < 60)
+            // {
+            //     $downtimeRunId->delete();
+            //     $downtimeStopId->delete();
+            //     continue;
+            // }
                 
             if($downtimeRemark->downtime_category == 'waste')
             {
