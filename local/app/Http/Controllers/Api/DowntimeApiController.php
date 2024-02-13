@@ -71,23 +71,23 @@ class DowntimeApiController extends Controller
                 ],400);
             }
 
-            $downtimeRunId = Downtime::where('workorder_id',$workorder[0]->id)->where('status', 'stop')->where('downtime_number', $lastDowntimeRun->downtime_number)->first();
-            if(!is_null($downtimeRunId)){
-                $duration = date_diff(new DateTime($lastDowntimeRun->created_at), new DateTime($downtimeRunId->created_at));
+            // $downtimeRunId = Downtime::where('workorder_id',$workorder[0]->id)->where('status', 'stop')->where('downtime_number', $lastDowntimeRun->downtime_number)->first();
+            // if(!is_null($downtimeRunId)){
+            //     $duration = date_diff(new DateTime($lastDowntimeRun->created_at), new DateTime($downtimeRunId->created_at));
 
-                $durationSec = $duration->days * 24 * 60 * 60;
-                $durationSec += $duration->h * 60 * 60;
-                $durationSec += $duration->i * 60;
-                $durationSec += $duration->s;
+            //     $durationSec = $duration->days * 24 * 60 * 60;
+            //     $durationSec += $duration->h * 60 * 60;
+            //     $durationSec += $duration->i * 60;
+            //     $durationSec += $duration->s;
     
-                if($durationSec < 60)
-                {
-                    $lastDowntimeRun->delete();
-                    return response()->json([
-                        'message' => 'Downtime is less than 1 minute'
-                    ],400);
-                }
-            }
+            //     if($durationSec < 60)
+            //     {
+            //         $lastDowntimeRun->delete();
+            //         return response()->json([
+            //             'message' => 'Downtime is less than 1 minute'
+            //         ],400);
+            //     }
+            // }
         }
 
         $downtime = Downtime::create([
