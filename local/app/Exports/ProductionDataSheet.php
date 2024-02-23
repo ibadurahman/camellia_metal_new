@@ -106,8 +106,11 @@ class ProductionDataSheet implements ShouldAutoSize, WithTitle, WithEvents
                     {
                         if($productions[$i]->bundle_judgement === 'good'){
                             return 'GOOD';
+                        }else if($productions[$i]->bundle_judgement === 'notgood')
+                        {
+                            return 'NOT GOOD';
                         }
-                        return 'NOT GOOD';
+                        return 'WASTE';
                     }));
                     $j++;
                     $event->sheet->setCellValue('B'.$j, 'Visual:');
@@ -219,10 +222,13 @@ class ProductionDataSheet implements ShouldAutoSize, WithTitle, WithEvents
                     $event->sheet->setCellValue('E'.$l, 'Judgement:');
                     $event->sheet->setCellValue('F'.$l, call_user_func(function() use($productions,$i)
                     {
-                        if($productions[$i]->bundle_judgement){
+                        if($productions[$i]->bundle_judgement === 'good' ){
                             return 'GOOD';
+                        }else if($productions[$i]->bundle_judgement === 'notgood')
+                        {
+                            return 'NOT GOOD';
                         }
-                        return 'NOT GOOD';
+                        return 'WASTE';
                     }));
                     $l++;
                     $event->sheet->setCellValue('E'.$l, 'Visual:');
