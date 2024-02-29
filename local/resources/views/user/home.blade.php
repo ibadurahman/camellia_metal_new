@@ -9,7 +9,7 @@
                     <div class="card">
                         <div class="card-header border-0">
                             <h3 class="card-title">Realtime Monitor</h3>
-                            <!-- <h3>{{exec('getmac')}}</h3> -->
+                            <!-- <h3>{{ exec('getmac') }}</h3> -->
                         </div>
                         <div class="card-body table-responsive p-0">
                             <table class="table table-striped table-valign-middle">
@@ -29,20 +29,28 @@
                                 <tbody>
                                     @foreach ($machines as $mc)
                                         <tr>
-                                            <td>{{$mc->name}}</td>
-                                            <td><a href="{{url('workorder/'.$data[$mc->name]['workorder_id'].'/show')}}">{{ $data[$mc->name]['wo_number'] }}</a></td>
+                                            <td>{{ $mc->name }}</td>
+                                            <td><a
+                                                    href="{{ url('workorder/' . $data[$mc->name]['workorder_id'] . '/show') }}">{{ $data[$mc->name]['wo_number'] }}</a>
+                                            </td>
                                             <td>{{ $data[$mc->name]['size'] }}</td>
                                             <td>{{ $data[$mc->name]['customer'] }}</td>
                                             <td>{{ $data[$mc->name]['processedBy'] }}</td>
                                             <td>{{ $data[$mc->name]['start_time'] }}</td>
-                                            <td class="@if ($data[$mc->name]['status'] == 'on process') text-success @else text-danger @endif">
-                                                @if ($data[$mc->name]['status'] == 'on process') Running @else No Process @endif</td>
-                                            <td id="{{$mc->id}}-current-speed">0 MPM</td>
-                                            <td id="{{$mc->id}}-current-counter">0 PCS</td>
+                                            <td
+                                                class="@if ($data[$mc->name]['status'] == 'on process') text-success @else text-danger @endif">
+                                                @if ($data[$mc->name]['status'] == 'on process')
+                                                    Running
+                                                @else
+                                                    No Process
+                                                @endif
+                                            </td>
+                                            <td id="{{ $mc->id }}-current-speed">0 MPM</td>
+                                            <td id="{{ $mc->id }}-current-counter">0 PCS</td>
                                         </tr>
                                         <tr>
                                             <td colspan="9">
-                                                <div class="card card-primary" id="{{$mc->id}}-card">
+                                                <div class="card card-primary" id="{{ $mc->id }}-card">
                                                     <div class="card-header">
                                                         <h3 class="card-title">{{ $mc->name }} Speed Chart</h3>
                                                         <div class="card-tools">
@@ -97,9 +105,9 @@
                             method: 'GET',
                             url: '{{ route('realtime.speedChart') }}',
                             data: {
-                                data : {
-                                    workorder_id : mc.wo_onprocess,
-                                    machine : mc
+                                data: {
+                                    workorder_id: mc.wo_onprocess,
+                                    machine: mc
                                 }
                             },
                             dataType: 'json',
@@ -131,7 +139,11 @@
                                         xAxes: [{
                                             gridLines: {
                                                 display: false,
-                                            }
+                                            },
+                                            ticks: {
+                                                beginAtZero: true,
+                                                padding: 20,
+                                            },
                                         }],
                                         yAxes: [{
                                             gridLines: {
@@ -146,13 +158,16 @@
                                     data: areaChartData,
                                     options: areaChartOptions
                                 })
-                                
-                                if(response.created_at == null){
-                                    $('#'+response.machine.id+'-card').addClass('collapsed-card')
+
+                                if (response.created_at == null) {
+                                    $('#' + response.machine.id + '-card').addClass(
+                                        'collapsed-card')
                                 }
 
-                                $('#'+response.machine.id+'-current-speed').html(response.speed[0] + ' MPM')
-                                $('#'+response.machine.id+'-current-counter').html(response.counter[0] + ' PCS')
+                                $('#' + response.machine.id + '-current-speed').html(
+                                    response.speed[0] + ' MPM')
+                                $('#' + response.machine.id + '-current-counter').html(
+                                    response.counter[0] + ' PCS')
 
                                 $('.' + response.machine.id + '-speed-chart-load').hide()
                             }
@@ -161,7 +176,7 @@
                 }
             });
 
-            
+
         }
 
         let productionChannel = Echo.channel('channel-production-graph');
