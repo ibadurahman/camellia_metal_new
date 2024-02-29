@@ -108,6 +108,13 @@ class WorkorderReportController extends Controller
             $zip->close();
         }
 
+        //delete all files in temp/batch except the zip file
+        $files = glob(public_path('temp/batch/*'));
+        foreach($files as $file){
+            if(is_file($file) && $file != public_path('temp/batch/'.$filename))
+            unlink($file);
+        }
+
         return response()->json([
             'success' => true,
             'filename' => $filename
