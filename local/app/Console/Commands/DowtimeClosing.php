@@ -48,7 +48,7 @@ class DowtimeClosing extends Command
                 $this->info('no on process');
                 continue;
             }
-            $lastdowntimeStatus = Downtime::where('workorder_id',$lastWorkorderOnProcess->id)->orderBy('downtime_number','DESC')->first();
+            $lastdowntimeStatus = Downtime::where('workorder_id',$lastWorkorderOnProcess->id)->orderBy('id','DESC')->first();
             $this->info($lastdowntimeStatus);
             if(!$lastdowntimeStatus)
             {
@@ -98,7 +98,6 @@ class DowtimeClosing extends Command
                     'is_remark_filled'      => false,
                 ]);
             }
-            
         }
     }
 }
