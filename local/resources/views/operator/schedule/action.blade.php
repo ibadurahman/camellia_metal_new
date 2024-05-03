@@ -5,7 +5,6 @@
     <span class="text-danger">you have no rights to process this workorder</span>
 @endif
 
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
  $('button#process-{{$model->id}}').on('click', function(e){
      e.preventDefault();

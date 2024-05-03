@@ -1,7 +1,6 @@
 <a href="{{route('admin.workorder.edit',$model)}}" class="btn btn-warning">Edit</a>
 <button href="{{route('admin.workorder.destroy',$model)}}" class="btn btn-danger" id="delete">Delete</button>
 
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
  $('button#delete').on('click', function(e){
      e.preventDefault();
