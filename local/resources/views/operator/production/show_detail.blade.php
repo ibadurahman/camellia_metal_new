@@ -256,6 +256,354 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card card-primary card-outline">
+                                <div class="card-header">
+                                    <h5 class="card-title">TPM Form</h5>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <p class="mb-1">Mesin: {{ $workorder->machine->name }}</p>
+                                            <p class="mb-1">Job order: {{ $workorder->wo_number }}</p>
+                                            <p class="mb-1">Diameter: {{ $workorder->fg_size_1 }} MM</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="mb-1">Grade: {{ $workorder->bb_grade }}</p>
+                                            <p class="mb-1">Panjang: {{ $workorder->fg_size_2 }} MM</p>
+                                            <p class="mb-1">Tanggal: {{ $workorder->process_start }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row table-responsive">
+                                        <table class="table table-hover table-sm table-bordered table-sm">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th rowspan="2" class="text-center align-middle">Proses</th>
+                                                    <th rowspan="2" class="text-center align-middle">Kode dies</th>
+                                                    <th rowspan="2" class="text-center align-middle">Diameter dies</th>
+                                                    <th rowspan="2" class="text-center align-middle">Toleransi</th>
+                                                    <th colspan="2" class="text-center">Diameter Aktual</th>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-center">Setelah Dies</th>
+                                                    <th class="text-center">Setelah Polishing</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-center align-middle">Awal</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="dies_code">
+                                                    </td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="dies_diameter">
+                                                    </td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="dies_tolerance">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control"
+                                                            name="diameter_actual_beginning">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control"
+                                                            name="diameter_actial_after_polish">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Akhir</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="dies_code">
+                                                    </td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="dies_diameter">
+                                                    </td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="dies_tolerance">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control"
+                                                            name="diameter_actual_beginning">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control"
+                                                            name="diameter_actial_after_polish">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row table-responsive">
+                                        <div class="col-6">
+                                            <table class="table table-hover table-sm table-bordered table-sm">
+                                                <thead class="thead-dark">
+                                                    <tr>
+                                                        <th rowspan="2" class="text-center align-middle">Proses</th>
+                                                        <th rowspan="2" class="text-center align-middle">Visual barang</th>
+                                                        <th rowspan="2" class="text-center align-middle">Kelurusan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Awal</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="visual_barang_awal">
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="kelurusan_awal">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Akhir</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="visual_barang_akhir">
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="kelurusan_akhir">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row table-responsive">
+                                        <table class="table table-hover table-sm table-bordered table-sm">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th rowspan="2" class="text-center align-middle">Unit</th>
+                                                    <th rowspan="2" class="text-center align-middle">Parameter</th>
+                                                    <th rowspan="2" colspan="2" class="text-center align-middle">Standar</th>
+                                                    <th rowspan="2" class="text-center align-middle">Aktual</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-center align-middle" rowspan="2">Pre Straightening</td>
+                                                    <td class="text-center align-middle">Putaran Roller</td>
+                                                    <td class="text-center align-middle" colspan="2">Berputar</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="pre_putaran_roller_berputar">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Kondisi Produk</td>
+                                                    <td class="text-center align-middle" colspan="2">Tidak Keluar Jalur</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="pre_kondisi_produk_tidak_keluar_jalur">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" rowspan="4">Shot Blasting</td>
+                                                    <td class="text-center align-middle">Ampere Impeller 1</td>
+                                                    <td class="text-center align-middle" colspan="2">30 - 40 A</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ampere_impeller_1">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Ampere Impeller 2</td>
+                                                    <td class="text-center align-middle" colspan="2">30 - 40 A</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ampere_impeller_2">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Ampere Impeller 3</td>
+                                                    <td class="text-center align-middle" colspan="2">30 - 40 A</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ampere_impeller_3">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Ampere Impeller 4</td>
+                                                    <td class="text-center align-middle" colspan="2">30 - 40 A</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ampere_impeller_4">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" rowspan="3">Drawing</td>
+                                                    <td class="text-center align-middle">Speed Motor</td>
+                                                    <td class="text-center align-middle" colspan="2">{{ $workorder->machine->name }} : 20-80 mpm</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="speed_motor">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Ukuran Slide</td>
+                                                    <td class="text-center align-middle" colspan="2">{{ $workorder->machine->name }} : <u>></u> 2mm dari diameter F/G</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ukuran_slide">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Kondisi Pelumas</td>
+                                                    <td class="text-center align-middle" colspan="2">Lancar</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="kondisi_pelumas_lancar">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" rowspan="2">Straightening</td>
+                                                    <td class="text-center align-middle">Putaran Roller</td>
+                                                    <td class="text-center align-middle" colspan="2">Berputar</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="putaran_roller_berputar">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Kondisi Produk</td>
+                                                    <td class="text-center align-middle" colspan="2">Tidak Keluar Jalur</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="kondisi_produk_tidak_keluar_jalur">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" rowspan="8">Cutting</td>
+                                                    <td class="text-center align-middle">Panjang</td>
+                                                    <td class="text-center align-middle" colspan="2">-0, +30mm</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="panjang_cutting">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Ukuran Dies Cutting IN (OB, IB5, S2B, IB8)</td>
+                                                    <td class="text-center align-middle" colspan="2">Diameter lubang dies > 0.2mm - 1mm dari FG</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ukuran_dies_cutting_in">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Ukuran Dies Cutting OUT (OB, IB5, S2B)</td>
+                                                    <td class="text-center align-middle" colspan="2">Diameter lubang dies > 1mm - 2mm dari FG</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ukuran_dies_cutting_out">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" rowspan="5">Ukuran Dies Cutting OUT IB8</td>
+                                                    <td class="text-center align-middle">Size</td>
+                                                    <td class="text-center align-middle">NO Cutter</td>
+                                                    <td class="text-center align-middle"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Dia. 10mm - Dia. 11mm</td>
+                                                    <td class="text-center align-middle">5</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_5">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Dia. 11,1mm - Dia. 12mm</td>
+                                                    <td class="text-center align-middle">6</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_6">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Dia. 12,1mm - Dia. 14mm</td>
+                                                    <td class="text-center align-middle">7</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_7">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Dia. 14,1mm - Dia. 17mm</td>
+                                                    <td class="text-center align-middle">9</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_9">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" rowspan="6">Polishing</td>
+                                                    <td class="text-center align-middle">Ring pelurus, Plakat cetakan, Roll penekan</td>
+                                                    <td class="text-center align-middle" colspan="2">Tidak Cacat/Kotor</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="polishing_tidak_cacat">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle">Plat Kuningan/Nylon</td>
+                                                    <td class="text-center align-middle" colspan="2">Lebih kecil 2 - 4 mm dari Diamter Produk</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ukuran_plat_kuningan">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" rowspan="2">Ampere Motor</td>
+                                                    <td class="text-center align-middle" colspan="2">OB/ IB5/ IB8 <u><</u> 50A</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ampere_motor">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" colspan="2">S2B <u><</u> 20A</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ampere_motor_s2b">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" rowspan="2">Kondisi Pelumas</td>
+                                                    <td class="text-center align-middle" colspan="2">Lancar</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="ampere_motor_s2b">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" colspan="2">Penutup oli tertutup</td>
+                                                    <td class="text-center align-middle">
+                                                        <input type="text" class="form-control" name="penutup_oli_tertutup">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-1">
+                                            <p class="mb-1">Hasil Setting:</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="hasil_setting" id="hasilSettingOK">
+                                                <label class="form-check-label" for="hasilSettingOK">
+                                                    OK
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="hasil_setting" id="hasilSettingNG">
+                                                <label class="form-check-label" for="hasilSettingNG">
+                                                    NG
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <p class="mb-1">Catatan:</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-4">
+                                            <textarea name="catatan" id="" cols="50" rows="5" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-8"></div>
+                                        <div class="col-4">
+                                            <button class="form-control btn btn-primary" id="tpm-form-button">Submit Form</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Production Report Column --}}
                     <div class="row">
                         <div class="col-12">
@@ -615,8 +963,7 @@
                                         <a href="{{ route('operator.production.editWo', $workorder) }}"
                                             class="btn btn-primary">Edit WO Planning</a>
                                         <button class="btn btn-success"
-                                            id="approve-force-close-btn">Approve
-                                            this</button>
+                                            id="approve-force-close-btn">Approve this</button>
                                     @endif
                                 @elseif(
                                     !$bypass_workorder &&

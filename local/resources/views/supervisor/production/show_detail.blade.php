@@ -670,7 +670,6 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             }
         })
         $('#reservationtime').val('')
-
         $('#search-form').on('submit', function(e) {
             e.preventDefault();
             updateSpeedChart();
