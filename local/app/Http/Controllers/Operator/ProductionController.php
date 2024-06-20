@@ -467,18 +467,6 @@ class ProductionController extends Controller
             $total_bad_product += $bad_pro->pcs_per_bundle;
         }
 
-        // //
-        // // Performance Calculation
-        // //
-        // $productionPlanned = round($workorder->bb_qty_pcs / $workorder->fg_size_1 / $workorder->fg_size_1 / $workorder->fg_size_2 / $this->calculatePcsPerBundle($workorder->fg_shape) *1000,0);
-        // $per = 0;
-        // // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
-        // if ($productionCount == 0) {
-        //     $per = 100;
-        // }else{
-        //     $per = ($productionCount / $productionPlanned)*100;
-        // }
-
         //
         // Availability Calculation
         //
