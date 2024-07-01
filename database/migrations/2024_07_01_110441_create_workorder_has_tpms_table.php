@@ -31,7 +31,6 @@ class CreateWorkorderHasTpmsTable extends Migration
             $table->decimal('diameter_aktual_setelah_dies_akhir');
             $table->decimal('diameter_aktual_setelah_polishing_awal');
             $table->decimal('diameter_aktual_setelah_polishing_akhir');
-            $table->decimal('diameter_aktual_setelah_polishing_akhir');
             $table->enum('visual_barang_awal', ['ok', 'ng']);
             $table->enum('visual_barang_akhir', ['ok', 'ng']);
             $table->enum('kelurusan_awal', ['ok', 'ng']);
@@ -77,6 +76,12 @@ class CreateWorkorderHasTpmsTable extends Migration
      */
     public function down()
     {
+        Schema::table('workorder_has_tpms', function (Blueprint $table) {
+            $table->dropForeign(['workorder_id']);
+            $table->dropForeign(['machine_id']);
+            $table->dropForeign(['created_by']);
+            $table->dropForeign(['approved_by']);
+        });
         Schema::dropIfExists('workorder_has_tpms');
     }
 }
