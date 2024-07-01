@@ -12,5 +12,7 @@ class WorkorderHasTpmController extends Controller
         if($request->method() != 'POST'){
             return redirect()->back()->with('error','Method not allowed')->withInput();
         }
+
+        return redirect()->back()->with('success','Data has been saved');
     }
 }
