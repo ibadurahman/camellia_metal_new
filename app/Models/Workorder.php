@@ -65,4 +65,8 @@ class Workorder extends Model
     {
         return $this->hasMany(ChangeRequest::class,'workorder_id','id');
     }
+
+    public function workorderHasTpm(){
+        return $this->hasOne(WorkorderHasTpm::class);
+    }
 }

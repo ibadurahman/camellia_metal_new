@@ -1,11 +1,11 @@
-@extends('templates.default')
-@section('content')
+
+<?php $__env->startSection('content'); ?>
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 col-md-12 col-lg-12 order-2 order-md-1">
-                    {{-- Production Report Dashboard --}}
+                    
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card card-primary card-outline">
@@ -54,36 +54,37 @@
                                             <div class="progress-group">
                                                 Performance
                                                 <span class="float-right"
-                                                    id="performance_id">{{ $indicator['performance'] }} %</span>
+                                                    id="performance_id"><?php echo e($indicator['performance']); ?> %</span>
                                                 <div class="progress progress-sm" id="performance_bar">
                                                     <div class="progress-bar bg-primary"
-                                                        style="width: {{ $indicator['performance'] }}%"></div>
+                                                        style="width: <?php echo e($indicator['performance']); ?>%"></div>
                                                 </div>
                                             </div>
                                             <div class="progress-group">
                                                 Availability
                                                 <span class="float-right"
-                                                    id="availability_id">{{ $indicator['availability'] }} %</span>
+                                                    id="availability_id"><?php echo e($indicator['availability']); ?> %</span>
                                                 <div class="progress progress-sm" id="availability_bar">
                                                     <div class="progress-bar bg-danger"
-                                                        style="width: {{ $indicator['availability'] }}%"></div>
+                                                        style="width: <?php echo e($indicator['availability']); ?>%"></div>
                                                 </div>
                                             </div>
                                             <div class="progress-group">
                                                 Quality
-                                                <span class="float-right" id="quality_id">{{ $indicator['quality'] }}
+                                                <span class="float-right" id="quality_id"><?php echo e($indicator['quality']); ?>
+
                                                     %</span>
                                                 <div class="progress progress-sm" id="quality_bar">
                                                     <div class="progress-bar bg-success"
-                                                        style="width: {{ $indicator['quality'] }}%"></div>
+                                                        style="width: <?php echo e($indicator['quality']); ?>%"></div>
                                                 </div>
                                             </div>
                                             <div class="progress-group">
                                                 Overall Equipment Effectiveness
-                                                <span class="float-right" id="oee_id">{{ $indicator['oee'] }} %</span>
+                                                <span class="float-right" id="oee_id"><?php echo e($indicator['oee']); ?> %</span>
                                                 <div class="progress progress-sm" id="oee_bar">
                                                     <div class="progress-bar bg-warning"
-                                                        style="width: {{ $indicator['oee'] }}%"></div>
+                                                        style="width: <?php echo e($indicator['oee']); ?>%"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -121,7 +122,7 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
-                                                        <input onchange="updateWasteDtMax(this)" type="text"
+                                                        <input onchange="updateWasteDtMax(this)" type="number"
                                                             id="wasteDt-input" class="form-control" value="5000">
                                                     </div>
                                                 </div>
@@ -137,7 +138,7 @@
                                                     <label for="">scale</label>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input onchange="updateManagementDtMax(this)" type="text"
+                                                    <input onchange="updateManagementDtMax(this)" type="number"
                                                         id="managementDt-input" class="form-control" value="5000">
                                                 </div>
                                             </div>
@@ -151,27 +152,27 @@
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <span class="description-text float-left">Workorder:
-                                                            {{ $workorder->wo_number }}</span><br>
+                                                            <?php echo e($workorder->wo_number); ?></span><br>
                                                         <span class="description-text float-left">Machine:
-                                                            {{ $workorder->machine->name }}</span><br>
+                                                            <?php echo e($workorder->machine->name); ?></span><br>
                                                         <span class="description-text float-left">Processed By:
-                                                            {{ $user_involved['processed_by'] }}</span><br>
+                                                            <?php echo e($user_involved['processed_by']); ?></span><br>
                                                         <span class="description-text float-left">Start:
-                                                            {{ $workorder->process_start }}</span><br>
+                                                            <?php echo e($workorder->process_start); ?></span><br>
                                                     </div>
                                                     <div class="col-6">
                                                         <span class="description-text float-left">Status:
-                                                            {{ $workorder->status_wo }}</span><br>
+                                                            <?php echo e($workorder->status_wo); ?></span><br>
                                                         <span class="description-text float-left">Chamfer:
-                                                            {{ $workorder->chamfer }}</span><br>
+                                                            <?php echo e($workorder->chamfer); ?></span><br>
                                                         <span class="description-text float-left">Color:
-                                                            {{ $color }}</span><br>
+                                                            <?php echo e($color); ?></span><br>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <span class="description-text float-left">Remarks:
-                                                            {{ $workorder->remarks }}</span><br>
+                                                            <?php echo e($workorder->remarks); ?></span><br>
                                                     </div>
                                                 </div>
                                                 <a href="#" id="workorder-details" class="descriprion-text">Detail
@@ -187,17 +188,19 @@
                                                     <div class="col-4">
                                                         <span class="description-text text-sm">AVERAGE SPEED</span>
                                                         <h5 class="description-header">
-                                                            {{ round($reports['average_speed'], 2) }} M/Min
+                                                            <?php echo e(round($reports['average_speed'], 2)); ?> M/Min
                                                         </h5>
                                                     </div>
                                                     <div class="col-4">
                                                         <span class="description-text">TOTAL PRODUCTION</span>
-                                                        <h5 class="description-header">{{ $reports['production_count'] }}
+                                                        <h5 class="description-header"><?php echo e($reports['production_count']); ?>
+
                                                         </h5>
                                                     </div>
                                                     <div class="col-4">
                                                         <span class="description-text">PLANNED PRODUCTION</span>
-                                                        <h5 class="description-header">{{ $reports['production_plan'] }}
+                                                        <h5 class="description-header"><?php echo e($reports['production_plan']); ?>
+
                                                             Pcs</h5>
                                                     </div>
                                                 </div>
@@ -206,11 +209,12 @@
                                                     <div class="col-6">
                                                         <span class="description-text text-success">GOOD PRODUCT</span>
                                                         <h5 class="description-header">
-                                                            {{ $reports['total_good_product'] }}</h5>
+                                                            <?php echo e($reports['total_good_product']); ?></h5>
                                                     </div>
                                                     <div class="col-6">
                                                         <span class="description-text text-danger">BAD PRODUCT</span>
-                                                        <h5 class="description-header">{{ $reports['total_bad_product'] }}
+                                                        <h5 class="description-header"><?php echo e($reports['total_bad_product']); ?>
+
                                                         </h5>
                                                     </div>
                                                 </div>
@@ -221,11 +225,12 @@
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <span class="description-text">PROCESS DURATION</span>
-                                                        <h5 class="description-header">{{ $reports['planned_time'] }}</h5>
+                                                        <h5 class="description-header"><?php echo e($reports['planned_time']); ?></h5>
                                                     </div>
                                                     <div class="col-6">
                                                         <span class="description-text">TOTAL DOWNTIME</span>
-                                                        <h5 class="description-header">{{ $reports['total_downtime'] }}
+                                                        <h5 class="description-header"><?php echo e($reports['total_downtime']); ?>
+
                                                         </h5>
                                                     </div>
                                                 </div>
@@ -234,17 +239,19 @@
                                                     <div class="col-md-4">
                                                         <span class="description-text text-success">MANAGEMENT</span>
                                                         <h5 class="description-header">
-                                                            {{ $reports['management_downtime'] }}</h5>
+                                                            <?php echo e($reports['management_downtime']); ?></h5>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <span class="description-text text-danger">WASTE</span>
-                                                        <h5 class="description-header">{{ $reports['waste_downtime'] }}
+                                                        <h5 class="description-header"><?php echo e($reports['waste_downtime']); ?>
+
                                                         </h5>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <span class="description-text text-black">OFF</span>
                                                         <h5 class="description-header">
-                                                            {{ $reports['off_production_time'] }}
+                                                            <?php echo e($reports['off_production_time']); ?>
+
                                                         </h5>
                                                     </div>
                                                 </div>
@@ -256,463 +263,15 @@
                         </div>
                     </div>
 
-                    {{-- TPM REPORT --}}
-                    <form class="row" action="{{route('workorderHasTpm.store', $workorder)}}" method="post" id="tpmForm">
-                        @csrf
-                        {{-- show error form --}}
-                        @if ($errors->any())
-                            <div class="col-12">
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        @endif
-                        <div class="col-12">
-                            <div class="card card-primary card-outline {{$workorder->workorderHasTpm ? 'collapsed-card' : ''}}">
-                                <div class="card-header">
-                                    <h5 class="card-title">
-                                        <span class="mr-2">TPM Form</span>
-                                        @if ($workorder->workorderHasTpm)
-                                            <span class="badge badge-success">Done</span>
-                                            <a href="{{route('workorderHasTpm.printToPdf', $workorder)}}" style="text-decoration: none; margin-left: 1rem;">
-                                                <i class="fas fa-download"></i> Download
-                                            </a>
-                                        @endif
-                                    </h5>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                            <i class="fas fa-{{$workorder->workorderHasTpm ? 'plus' : 'minus'}}"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row mb-2">
-                                        <div class="col-6">
-                                            <p class="mb-1">Mesin: {{ $workorder->machine->name }}</p>
-                                            <p class="mb-1">Job order: {{ $workorder->wo_number }}</p>
-                                            <p class="mb-1">Diameter: {{ $workorder->fg_size_1 }} MM</p>
-                                        </div>
-                                        <div class="col-6">
-                                            <p class="mb-1">Grade: {{ $workorder->bb_grade }}</p>
-                                            <p class="mb-1">Panjang: {{ $workorder->fg_size_2 }} MM</p>
-                                            <p class="mb-1">Tanggal: {{ $workorder->process_start }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-6">
-                                            <span><strong>Note:</strong> Use "." as a comma character</span>
-                                        </div>
-                                    </div>
-                                    <div class="row table-responsive">
-                                        <div class="col-12">
-                                            <table class="table table-hover table-sm table-bordered table-sm">
-                                                <thead class="thead-dark">
-                                                    <tr>
-                                                        <th rowspan="2" class="text-center align-middle">Proses</th>
-                                                        <th rowspan="2" class="text-center align-middle">Kode dies</th>
-                                                        <th rowspan="2" class="text-center align-middle">Diameter dies</th>
-                                                        <th rowspan="2" class="text-center align-middle">Toleransi</th>
-                                                        <th colspan="2" class="text-center">Diameter Aktual</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th class="text-center">Setelah Dies</th>
-                                                        <th class="text-center">Setelah Polishing</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Awal</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="kode_dies_awal" value="{{old('kode_dies_awal') ?? $workorder->workorderHasTpm?->kode_dies_awal}}">
-                                                        </td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="diameter_dies_awal" value="{{old('diameter_dies_awal') ?? $workorder->workorderHasTpm?->diameter_dies_awal}}">
-                                                        </td>
-                                                        <td class="text-center align-middle">
-                                                            <span>Lihat tabel No:</span><br>
-                                                            <span>STD.PP.25-MTD-001</span>
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control"
-                                                                name="diameter_aktual_setelah_dies_awal" value="{{old('diameter_aktual_setelah_dies_awal')??$workorder->workorderHasTpm?->diameter_aktual_setelah_dies_awal}}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control"
-                                                                name="diameter_aktual_setelah_polishing_awal" value="{{old('diameter_aktual_setelah_polishing_awal')??$workorder->workorderHasTpm?->diameter_aktual_setelah_polishing_awal}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Akhir</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="kode_dies_akhir" value="{{old('kode_dies_akhir')??$workorder->workorderHasTpm?->kode_dies_akhir}}">
-                                                        </td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="diameter_dies_akhir" value="{{old('diameter_dies_akhir')??$workorder->workorderHasTpm?->diameter_dies_akhir}}">
-                                                        </td>
-                                                        <td class="text-center align-middle">
-                                                            <span>Lihat tabel No:</span><br>
-                                                            <span>STD.PP.25-MTD-001</span>
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control"
-                                                                name="diameter_aktual_setelah_dies_akhir" value="{{old('diameter_aktual_setelah_dies_akhir')??$workorder->workorderHasTpm?->diameter_aktual_setelah_dies_akhir}}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control"
-                                                                name="diameter_aktual_setelah_polishing_akhir" value="{{old('diameter_aktual_setelah_polishing_akhir')??$workorder->workorderHasTpm?->diameter_aktual_setelah_polishing_akhir}}">
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row table-responsive">
-                                        <div class="col-6">
-                                            <table class="table table-hover table-sm table-bordered table-sm">
-                                                <thead class="thead-dark">
-                                                    <tr>
-                                                        <th rowspan="2" class="text-center align-middle">Proses</th>
-                                                        <th rowspan="2" class="text-center align-middle">Visual barang</th>
-                                                        <th rowspan="2" class="text-center align-middle">Kelurusan</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Awal</td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="visual_barang_awal" class="form-control" id="">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('visual_barang_awal') == 'ok' || $workorder->workorderHasTpm?->visual_barang_awal == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('visual_barang_awal') == 'ng' || $workorder->workorderHasTpm?->visual_barang_awal == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="kelurusan_awal" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('kelurusan_awal') == 'ok' || $workorder->workorderHasTpm?->kelurusan_awal == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('kelurusan_awal') == 'ng' || $workorder->workorderHasTpm?->kelurusan_awal == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Akhir</td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="visual_barang_akhir" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('visual_barang_akhir') == 'ok' || $workorder->workorderHasTpm?->visual_barang_akhir == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('visual_barang_akhir') == 'ng' || $workorder->workorderHasTpm?->visual_barang_akhir == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="kelurusan_akhir" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('kelurusan_akhir') == 'ok' || $workorder->workorderHasTpm?->kelurusan_akhir == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('kelurusan_akhir') == 'ng' || $workorder->workorderHasTpm?->kelurusan_akhir == 'ng') selected @endif>NG</option>
-                                                                >NG</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row table-responsive">
-                                        <div class="col-12">
-                                            <table class="table table-hover table-sm table-bordered table-sm">
-                                                <thead class="thead-dark">
-                                                    <tr>
-                                                        <th rowspan="2" class="text-center align-middle">Unit</th>
-                                                        <th rowspan="2" class="text-center align-middle">Parameter</th>
-                                                        <th rowspan="2" colspan="2" class="text-center align-middle">Standar</th>
-                                                        <th rowspan="2" class="text-center align-middle">Aktual</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="text-center align-middle" rowspan="2">Pre Straightening</td>
-                                                        <td class="text-center align-middle">Putaran Roller</td>
-                                                        <td class="text-center align-middle" colspan="2">Berputar</td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="pre_straightening_putaran_roller_berputar" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('pre_straightening_putaran_roller_berputar') == 'ok' || $workorder->workorderHasTpm?->pre_straightening_putaran_roller_berputar == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('pre_straightening_putaran_roller_berputar') == 'ng' || $workorder->workorderHasTpm?->pre_straightening_putaran_roller_berputar == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Kondisi Produk</td>
-                                                        <td class="text-center align-middle" colspan="2">Tidak Keluar Jalur</td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="pre_straightening_kondisi_produk_tidak_keluar_jalur" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('pre_straightening_kondisi_produk_tidak_keluar_jalur') == 'ok' || $workorder->workorderHasTpm?->pre_straightening_kondisi_produk_tidak_keluar_jalur == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('pre_straightening_kondisi_produk_tidak_keluar_jalur') == 'ng' || $workorder->workorderHasTpm?->pre_straightening_kondisi_produk_tidak_keluar_jalur == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle" rowspan="4">Shot Blasting</td>
-                                                        <td class="text-center align-middle">Ampere Impeller 1</td>
-                                                        <td class="text-center align-middle" colspan="2">30 - 40 A</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="ampere_impeller_1" value="{{old('ampere_impeller_1') ?? $workorder->workorderHasTpm?->ampere_impeller_1}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Ampere Impeller 2</td>
-                                                        <td class="text-center align-middle" colspan="2">30 - 40 A</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="ampere_impeller_2"  value="{{old('ampere_impeller_2')??$workorder->workorderHasTpm?->ampere_impeller_2}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Ampere Impeller 3</td>
-                                                        <td class="text-center align-middle" colspan="2">30 - 40 A</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="ampere_impeller_3"  value="{{old('ampere_impeller_3') ?? $workorder->workorderHasTpm?->ampere_impeller_3}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Ampere Impeller 4</td>
-                                                        <td class="text-center align-middle" colspan="2">30 - 40 A</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="ampere_impeller_4"  value="{{old('ampere_impeller_4') ?? $workorder->workorderHasTpm?->ampere_impeller_4}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle" rowspan="3">Drawing</td>
-                                                        <td class="text-center align-middle">Speed Motor</td>
-                                                        <td class="text-center align-middle" colspan="2">{{ $workorder->machine->name }} : 
-                                                            @if ($workorder->machine->name == 'OB')
-                                                                20-80 mpm
-                                                            @elseif($workorder->machine->name == 'IB5')
-                                                                20-80 mpm
-                                                            @elseif($workorder->machine->name == 'S2B')
-                                                                20-50 mpm
-                                                            @elseif($workorder->machine->name == 'IB8')
-                                                                20-50 mpm
-                                                            @else
-                                                                20-80 mpm
-                                                            @endif</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="speed_motor" value="{{old('speed_motor') ?? $workorder->workorderHasTpm?->speed_motor}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Ukuran Slide</td>
-                                                        <td class="text-center align-middle" colspan="2">{{ $workorder->machine->name }} : <u>></u> 2mm dari diameter F/G</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="ukuran_slide" value="{{old('ukuran_slide') ?? $workorder->workorderHasTpm?->ukuran_slide}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Kondisi Pelumas</td>
-                                                        <td class="text-center align-middle" colspan="2">Lancar</td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="kondisi_pelumas" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('kondisi_pelumas') == 'ok' || $workorder->workorderHasTpm?->kondisi_pelumas == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('kondisi_pelumas') == 'ng' || $workorder->workorderHasTpm?->kondisi_pelumas == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle" rowspan="2">Straightening</td>
-                                                        <td class="text-center align-middle">Putaran Roller</td>
-                                                        <td class="text-center align-middle" colspan="2">Berputar</td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="straightening_putaran_roller_berputar" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('straightening_putaran_roller_berputar') == 'ok' || $workorder->workorderHasTpm?->straightening_putaran_roller_berputar == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('straightening_putaran_roller_berputar') == 'ng' || $workorder->workorderHasTpm?->straightening_putaran_roller_berputar == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Kondisi Produk</td>
-                                                        <td class="text-center align-middle" colspan="2">Tidak Keluar Jalur</td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="straightening_kondisi_produk_tidak_keluar_jalur" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('straightening_kondisi_produk_tidak_keluar_jalur') == 'ok' || $workorder->workorderHasTpm?->straightening_kondisi_produk_tidak_keluar_jalur == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('straightening_kondisi_produk_tidak_keluar_jalur') == 'ng' || $workorder->workorderHasTpm?->straightening_kondisi_produk_tidak_keluar_jalur == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle" rowspan="{{$workorder->machine->name == 'IB8' ? '7' : '3'}}">Cutting</td>
-                                                        <td class="text-center align-middle">Panjang</td>
-                                                        <td class="text-center align-middle" colspan="2">-0, +30mm</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="cutting_panjang" value="{{old('cutting_panjang') ?? $workorder->workorderHasTpm?->cutting_panjang}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Ukuran Dies Cutting IN (OB, IB5, S2B, IB8)</td>
-                                                        <td class="text-center align-middle" colspan="2">Diameter lubang dies > 0.2mm - 1mm dari FG</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_in" value="{{old('ukuran_dies_cutting_in') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_in}}">
-                                                        </td>
-                                                    </tr>
-                                                    @if ($workorder->machine->name != 'IB8')
-                                                        <tr>
-                                                            <td class="text-center align-middle">Ukuran Dies Cutting OUT (OB, IB5, S2B)</td>
-                                                            <td class="text-center align-middle" colspan="2">Diameter lubang dies > 1mm - 2mm dari FG</td>
-                                                            <td class="text-center align-middle">
-                                                                <input type="text" class="form-control" name="ukuran_dies_cutting_out" value="{{old('ukuran_dies_cutting_out') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out}}">
-                                                            </td>
-                                                        </tr>
-                                                    @else
-                                                        <tr>
-                                                            <td class="text-center align-middle" rowspan="5">Ukuran Dies Cutting OUT IB8</td>
-                                                            <td class="text-center align-middle">Size</td>
-                                                            <td class="text-center align-middle">NO Cutter</td>
-                                                            <td class="text-center align-middle"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-center align-middle">Dia. 10mm - Dia. 11mm</td>
-                                                            <td class="text-center align-middle">5</td>
-                                                            <td class="text-center align-middle">
-                                                                <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_5" value="{{old('ukuran_dies_cutting_out_cutter_5') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_5}}">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-center align-middle">Dia. 11,1mm - Dia. 12mm</td>
-                                                            <td class="text-center align-middle">6</td>
-                                                            <td class="text-center align-middle">
-                                                                <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_6" value="{{old('ukuran_dies_cutting_out_cutter_6') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_6}}">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-center align-middle">Dia. 12,1mm - Dia. 14mm</td>
-                                                            <td class="text-center align-middle">7</td>
-                                                            <td class="text-center align-middle">
-                                                                <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_7" value="{{old('ukuran_dies_cutting_out_cutter_7') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_7}}">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-center align-middle">Dia. 14,1mm - Dia. 17mm</td>
-                                                            <td class="text-center align-middle">9</td>
-                                                            <td class="text-center align-middle">
-                                                                <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_9" value="{{old('ukuran_dies_cutting_out_cutter_9') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_9}}">
-                                                            </td>
-                                                        </tr>
-                                                    @endif
-                                                    <tr>
-                                                        <td class="text-center align-middle" rowspan="6">Polishing</td>
-                                                        <td class="text-center align-middle">Ring pelurus, Plakat cetakan, Roll penekan</td>
-                                                        <td class="text-center align-middle" colspan="2">Tidak Cacat/Kotor</td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="polishing_tidak_cacat" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('polishing_tidak_cacat') == 'ok' || $workorder->workorderHasTpm?->polishing_tidak_cacat == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('polishing_tidak_cacat') == 'ng' || $workorder->workorderHasTpm?->polishing_tidak_cacat == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Plat Kuningan/Nylon</td>
-                                                        <td class="text-center align-middle" colspan="2">Lebih kecil 2 - 4 mm dari Diameter Produk</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="polishing_ukuran_plat_kuningan" value="{{old('polishing_ukuran_plat_kuningan') ?? $workorder->workorderHasTpm?->polishing_ukuran_plat_kuningan}}">
-                                                        </td>
-                                                    </tr>
-                                                    @if ($workorder->machine->name != 'S2B')
-                                                        <tr>
-                                                            <td class="text-center align-middle" rowspan="1">Ampere Motor</td>
-                                                            <td class="text-center align-middle" colspan="2">OB/ IB5/ IB8 <u><</u> 50A</td>
-                                                            <td class="text-center align-middle">
-                                                                <input type="text" class="form-control" name="polishing_ampere_motor" value="{{old('polishing_ampere_motor') ?? $workorder->workorderHasTpm?->polishing_ampere_motor}}">
-                                                            </td>
-                                                        </tr>
-                                                    @else
-                                                        <tr>
-                                                            <td class="text-center align-middle" rowspan="1">Ampere Motor</td>
-                                                            <td class="text-center align-middle" colspan="2">S2B <u><</u> 20A</td>
-                                                            <td class="text-center align-middle">
-                                                                <input type="text" class="form-control" name="polishing_ampere_motor_s2b" value="{{old('polishing_ampere_motor_s2b') ?? $workorder->workorderHasTpm?->polishing_ampere_motor_s2b}}">
-                                                            </td>
-                                                        </tr>
-                                                    @endif
-                                                    <tr>
-                                                        <td class="text-center align-middle" rowspan="2">Kondisi Pelumas</td>
-                                                        <td class="text-center align-middle" colspan="2">Lancar</td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="polishing_kondisi_pelumas_lancar" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('polishing_kondisi_pelumas_lancar') == 'ok' || $workorder->workorderHasTpm?->polishing_kondisi_pelumas_lancar == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('polishing_kondisi_pelumas_lancar') == 'ng' || $workorder->workorderHasTpm?->polishing_kondisi_pelumas_lancar == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle" colspan="2">Penutup oli tertutup</td>
-                                                        <td class="text-center align-middle">
-                                                            <select name="polishing_penutup_oli_tertutup" id="" class="form-control">
-                                                                <option value="">-- Select one --</option>
-                                                                <option value="ok" @if (old('polishing_penutup_oli_tertutup') == 'ok' || $workorder->workorderHasTpm?->polishing_penutup_oli_tertutup == 'ok') selected @endif>OK</option>
-                                                                <option value="ng" @if (old('polishing_penutup_oli_tertutup') == 'ng' || $workorder->workorderHasTpm?->polishing_penutup_oli_tertutup == 'ng') selected @endif>NG</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-1">
-                                            <p class="mb-1">Hasil Setting:</p>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="form-check">
-                                                <input class="form-check-input" value="ok" type="radio" name="hasil_setting" id="hasilSettingOK" @if (old('hasil_setting') == 'ok' || $workorder->workorderHasTpm?->hasil_setting == 'ok') checked @endif>
-                                                <label class="form-check-label" for="hasilSettingOK">
-                                                    OK
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" value="ng" type="radio" name="hasil_setting" id="hasilSettingNG" @if (old('hasil_setting') == 'ng' || $workorder->workorderHasTpm?->hasil_setting == 'ng') checked @endif>
-                                                <label class="form-check-label" for="hasilSettingNG">
-                                                    NG
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <p class="mb-1">Catatan:</p>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-4">
-                                            <textarea name="catatan" id="" cols="50" rows="5" class="form-control">{{old('catatan') ?? $workorder->workorderHasTpm?->catatan}}</textarea>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-8"></div>
-                                        <div class="col-4">
-                                            <button class="form-control btn btn-primary" id="tpm-form-button">Submit Form</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    {{-- Production Report Column --}}
+                    
                     <div class="row">
                         <div class="col-12">
                             <div class="card card-primary card-outline">
                                 <div class="card-header">
                                     <h5 class="card-title">Production Report
-                                        @if ($workorder->bb_qty_bundle - count($productions) == 0)
+                                        <?php if($workorder->bb_qty_bundle - count($productions) == 0): ?>
                                             (<i class="fas fa-check text-success"></i>)
-                                        @endif
+                                        <?php endif; ?>
                                     </h5>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -720,216 +279,381 @@
                                         </button>
                                     </div>
                                 </div>
-                                @if ($workorder->bb_qty_bundle - count($productions) == 0)
+                                <?php if($workorder->bb_qty_bundle - count($productions) == 0): ?>
                                     <div class="card-body box-profile">
                                         <label for="">Report per Bundle</label>
                                         <ul class="nav nav-pills">
-                                            @for ($i = 1; $i < $workorder->bb_qty_bundle + 1; $i++)
+                                            <?php for($i = 1; $i < $workorder->bb_qty_bundle + 1; $i++): ?>
                                                 <li class="nav-item">
                                                     <a class="btn btn-transparent smelting-number 
-                                                        @foreach ($productions as $prod)
-                                                            @if ($i != $prod->bundle_num)
-                                                                @continue
-                                                            @endif
-                                                            @if ($prod->pcs_per_bundle == 0)
+                                                        <?php $__currentLoopData = $productions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $prod): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <?php if($i != $prod->bundle_num): ?>
+                                                                <?php continue; ?>
+                                                            <?php endif; ?>
+                                                            <?php if($prod->pcs_per_bundle == 0): ?>
                                                                 bg-secondary
-                                                                @continue
-                                                            @endif
-                                                            @if ($prod->bundle_judgement === 'notgood')
+                                                                <?php continue; ?>
+                                                            <?php endif; ?>
+                                                            <?php if($prod->bundle_judgement === 'notgood'): ?>
                                                                 bg-danger
-                                                                @continue
-                                                            @elseif($prod->bundle_judgement === 'waste' && $prod->pcs_per_bundle != 0)
+                                                                <?php continue; ?>
+                                                            <?php elseif($prod->bundle_judgement === 'waste' && $prod->pcs_per_bundle != 0): ?>
                                                                 bg-warning
-                                                                @continue
-                                                            @endif
-                                                            bg-primary @endforeach
+                                                                <?php continue; ?>
+                                                            <?php endif; ?>
+                                                            bg-primary <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         "
-                                                        href="#" style="margin:1px;" id="{{ $i }}"
-                                                        data-toggle="tab">{{ $i }}
+                                                        href="#" style="margin:1px;" id="<?php echo e($i); ?>"
+                                                        data-toggle="tab"><?php echo e($i); ?>
+
                                                     </a>
                                                 </li>
-                                            @endfor
+                                            <?php endfor; ?>
                                         </ul>
                                     </div>
-                                @else
+                                <?php else: ?>
                                     <div class="card-body box-profile">
                                         <label for="">Report per Bundle</label>
                                         <ul class="nav nav-pills">
-                                            @for ($i = 1; $i < $workorder->bb_qty_bundle + 1; $i++)
+                                            <?php for($i = 1; $i < $workorder->bb_qty_bundle + 1; $i++): ?>
                                                 <li class="nav-item">
                                                     <a class="btn btn-transparent smelting-number 
-                                                        @foreach ($productions as $prod)
-                                                            @if ($i != $prod->bundle_num)
-                                                                @continue
-                                                            @endif
-                                                            @if ($prod->pcs_per_bundle == 0)
+                                                        <?php $__currentLoopData = $productions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $prod): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <?php if($i != $prod->bundle_num): ?>
+                                                                <?php continue; ?>
+                                                            <?php endif; ?>
+                                                            <?php if($prod->pcs_per_bundle == 0): ?>
                                                                 bg-secondary
-                                                                @continue
-                                                            @endif
-                                                            @if ($prod->bundle_judgement == 'notgood')
+                                                                <?php continue; ?>
+                                                            <?php endif; ?>
+                                                            <?php if($prod->bundle_judgement == 'notgood'): ?>
                                                                 bg-danger
-                                                                @continue
-                                                            @elseif($prod->bundle_judgement == 'waste')
+                                                                <?php continue; ?>
+                                                            <?php elseif($prod->bundle_judgement == 'waste'): ?>
                                                                 bg-warning
-                                                                @continue
-                                                            @endif
-                                                            bg-primary @endforeach
+                                                                <?php continue; ?>
+                                                            <?php endif; ?>
+                                                            bg-primary <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         "
-                                                        href="#" style="margin:1px;" id="{{ $i }}"
-                                                        data-toggle="tab">{{ $i }}
+                                                        href="#" style="margin:1px;" id="<?php echo e($i); ?>"
+                                                        data-toggle="tab"><?php echo e($i); ?>
+
                                                     </a>
                                                 </li>
-                                            @endfor
+                                            <?php endfor; ?>
                                         </ul>
                                         <div class="dropdown-divider"></div>
                                         <form id="production-report" action="" method="post">
-                                            @csrf
+                                            <?php echo csrf_field(); ?>
                                             <div class="form-group">
                                                 <label for="">Coil Number</label>
                                                 <select name="coil-num"
-                                                    class="form-control @error('coil-num') is-invalid @enderror">
+                                                    class="form-control <?php $__errorArgs = ['coil-num'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
                                                     <option value="">-- Select Coil Number --</option>
-                                                    @foreach ($smeltings as $smelt)
-                                                        <option value="{{ $smelt->id }}">Coil Num :
-                                                            {{ $smelt->coil_num }} - No. Leburan :
-                                                            {{ $smelt->smelting_num }} - Berat : {{ $smelt->weight }} Kg
+                                                    <?php $__currentLoopData = $smeltings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $smelt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($smelt->id); ?>">Coil Num :
+                                                            <?php echo e($smelt->coil_num); ?> - No. Leburan :
+                                                            <?php echo e($smelt->smelting_num); ?> - Berat : <?php echo e($smelt->weight); ?> Kg
                                                         </option>
-                                                    @endforeach
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Bundle Number</label>
                                                 <?php $skip = false; ?>
                                                 <select name="bundle-num"
-                                                    class="form-control @error('bundle-num') is-invalid @enderror">
-                                                    @for ($i = 1; $i < $workorder->bb_qty_bundle + 1; $i++)
-                                                        @foreach ($productions as $prod)
-                                                            @if ($prod->bundle_num == $i)
+                                                    class="form-control <?php $__errorArgs = ['bundle-num'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
+                                                    <?php for($i = 1; $i < $workorder->bb_qty_bundle + 1; $i++): ?>
+                                                        <?php $__currentLoopData = $productions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $prod): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <?php if($prod->bundle_num == $i): ?>
                                                                 <?php $skip = true; ?>
-                                                                {{ $prod->bundle_num }}
-                                                            @break
-                                                        @endif
-                                                    @endforeach
-                                                    @if ($skip == false)
-                                                        <option value="{{ $i }}">{{ $i }}
+                                                                <?php echo e($prod->bundle_num); ?>
+
+                                                            <?php break; ?>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php if($skip == false): ?>
+                                                        <option value="<?php echo e($i); ?>"><?php echo e($i); ?>
+
                                                         </option>
-                                                    @break
-                                                @endif
+                                                    <?php break; ?>
+                                                <?php endif; ?>
                                                 <?php $skip = false; ?>
-                                            @endfor
+                                            <?php endfor; ?>
                                         </select>
                                     </div>
                                     <div class="dropdown-divider"></div>
                                     <div class="row">
                                         <input hidden name="workorder_id" type="text"
-                                            class="form-control @error('workorder_id') is-invalid @enderror"
+                                            class="form-control <?php $__errorArgs = ['workorder_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                             placeholder="No. Leburan"
-                                            value="{{ $workorder->id ?? old('workorder_id') }}">
+                                            value="<?php echo e($workorder->id ?? old('workorder_id')); ?>">
                                         <div class="col-6">
 
                                             <div class="form-group">
                                                 <label for="">Dies Number</label>
                                                 <input type="text" name="dies-number"
-                                                    class="form-control @error('dies-number') is-invalid @enderror"
-                                                    placeholder="Dies Number" value="{{ old('dies-number') }}">
-                                                @error('dies-number')
-                                                    <span class="text-danger help-block">{{ $message }}</span>
-                                                @enderror
+                                                    class="form-control <?php $__errorArgs = ['dies-number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                                    placeholder="Dies Number" value="<?php echo e(old('dies-number')); ?>">
+                                                <?php $__errorArgs = ['dies-number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-danger help-block"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Diameter Ujung (mm)</label>
                                                 <input type="text" name="diameter-ujung"
-                                                    class="form-control @error('diameter-ujung') is-invalid @enderror"
+                                                    class="form-control <?php $__errorArgs = ['diameter-ujung'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                     placeholder="Diameter Ujung"
-                                                    value="{{ old('diameter-ujung') }}">
-                                                @error('diameter-ujung')
-                                                    <span class="text-danger help-block">{{ $message }}</span>
-                                                @enderror
+                                                    value="<?php echo e(old('diameter-ujung')); ?>">
+                                                <?php $__errorArgs = ['diameter-ujung'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-danger help-block"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Diameter Tengah (mm)</label>
                                                 <input type="text" name="diameter-tengah"
-                                                    class="form-control @error('diameter-tengah') is-invalid @enderror"
+                                                    class="form-control <?php $__errorArgs = ['diameter-tengah'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                     placeholder="Diameter Tengah"
-                                                    value="{{ old('diameter-tengah') }}">
-                                                @error('diameter-tengah')
-                                                    <span class="text-danger help-block">{{ $message }}</span>
-                                                @enderror
+                                                    value="<?php echo e(old('diameter-tengah')); ?>">
+                                                <?php $__errorArgs = ['diameter-tengah'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-danger help-block"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Diameter Ekor (mm)</label>
                                                 <input type="text" name="diameter-ekor"
-                                                    class="form-control @error('diameter-ekor') is-invalid @enderror"
+                                                    class="form-control <?php $__errorArgs = ['diameter-ekor'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                     placeholder="Diameter Ekor"
-                                                    value="{{ old('diameter-ekor') }}">
-                                                @error('diameter-ekor')
-                                                    <span class="text-danger help-block">{{ $message }}</span>
-                                                @enderror
+                                                    value="<?php echo e(old('diameter-ekor')); ?>">
+                                                <?php $__errorArgs = ['diameter-ekor'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-danger help-block"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Kelurusan Aktual</label>
                                                 <input type="text" name="kelurusan-aktual"
-                                                    class="form-control @error('kelurusan-aktual') is-invalid @enderror"
+                                                    class="form-control <?php $__errorArgs = ['kelurusan-aktual'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                     placeholder="Kelurusan Aktual"
-                                                    value="{{ old('kelurusan-aktual') }}">
-                                                @error('kelurusan-aktual')
-                                                    <span class="text-danger help-block">{{ $message }}</span>
-                                                @enderror
+                                                    value="<?php echo e(old('kelurusan-aktual')); ?>">
+                                                <?php $__errorArgs = ['kelurusan-aktual'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-danger help-block"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <label for="">Panjang Aktual (mm)</label>
                                                 <input type="text" name="panjang-aktual"
-                                                    class="form-control @error('panjang-aktual') is-invalid @enderror"
+                                                    class="form-control <?php $__errorArgs = ['panjang-aktual'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                     placeholder="Panjang Aktual"
-                                                    value="{{ old('panjang-aktual') }}">
-                                                @error('panjang-aktual')
-                                                    <span class="text-danger help-block">{{ $message }}</span>
-                                                @enderror
+                                                    value="<?php echo e(old('panjang-aktual')); ?>">
+                                                <?php $__errorArgs = ['panjang-aktual'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-danger help-block"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Berat Finish Good (Kg)</label>
                                                 <input type="text" name="berat-fg"
-                                                    class="form-control @error('berat-fg') is-invalid @enderror"
+                                                    class="form-control <?php $__errorArgs = ['berat-fg'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                     placeholder="Berat Finish Good"
-                                                    value="{{ old('berat-fg') }}">
-                                                @error('berat-fg')
-                                                    <span class="text-danger help-block">{{ $message }}</span>
-                                                @enderror
+                                                    value="<?php echo e(old('berat-fg')); ?>">
+                                                <?php $__errorArgs = ['berat-fg'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-danger help-block"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Pcs per Bundle (Pcs)</label>
                                                 <input type="text" name="pcs-per-bundle"
-                                                    class="form-control @error('pcs-per-bundle') is-invalid @enderror"
+                                                    class="form-control <?php $__errorArgs = ['pcs-per-bundle'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                     placeholder="Pcs Per Bundle"
-                                                    value="{{ old('pcs-per-bundle') }}">
-                                                @error('pcs-per-bundle')
-                                                    <span class="text-danger help-block">{{ $message }}</span>
-                                                @enderror
+                                                    value="<?php echo e(old('pcs-per-bundle')); ?>">
+                                                <?php $__errorArgs = ['pcs-per-bundle'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-danger help-block"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Bundle Judgement</label>
                                                 <select name="bundle-judgement" id="judgement-select"
-                                                    class="form-control @error('bundle-judgement') is-invalid @enderror">
+                                                    class="form-control <?php $__errorArgs = ['bundle-judgement'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
                                                     <option value="">-- Select Judgement --</option>
                                                     <option value="good">Good</option>
                                                     <option value="notgood">Not Good</option>
                                                     <option value="waste">Waste</option>
                                                 </select>
-                                                @error('bundle-judgement')
-                                                    <span class="text-danger help-block">{{ $message }}</span>
-                                                @enderror
+                                                <?php $__errorArgs = ['bundle-judgement'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-danger help-block"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Visual</label>
                                                 <select name="visual" id="visual-options"
-                                                    class="form-control @error('visual') is-invalid @enderror">
+                                                    class="form-control <?php $__errorArgs = ['visual'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
                                                     <option value="">-- Select Judgement --</option>
                                                 </select>
-                                                @error('visual')
-                                                    <span class="text-danger help-block">{{ $message }}</span>
-                                                @enderror
+                                                <?php $__errorArgs = ['visual'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-danger help-block"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </div>
                                             <br>
                                             <div class="form-group">
@@ -942,31 +666,31 @@
                                     </div>
                                 </form>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
 
-            {{-- Downtime Report --}}
+            
             <div class="row">
                 <div class="col-12">
                     <div class="card direct-chat card-primary card-outline direct-chat-primary">
                         <div class="card-header">
                             <h3 class="card-title">Downtime Report
                                 <?php $remarkEmpty = true; ?>
-                                @foreach ($downtimes as $downtime)
-                                    @if ($downtime->is_remark_filled == false)
+                                <?php $__currentLoopData = $downtimes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $downtime): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php if($downtime->is_remark_filled == false): ?>
                                         <?php $remarkEmpty = true; ?>
-                                    @break;
-                                @endif
+                                    <?php break; ?>;
+                                <?php endif; ?>
                                 <?php $remarkEmpty = false; ?>
-                            @endforeach
-                            @if (count($downtimes) == 0)
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php if(count($downtimes) == 0): ?>
                                 <?php $remarkEmpty = false; ?>
-                            @endif
-                            @if ($remarkEmpty == false)
+                            <?php endif; ?>
+                            <?php if($remarkEmpty == false): ?>
                                 (<i class="fas fa-check text-success"></i>)
-                            @endif
+                            <?php endif; ?>
                             <?php $remarkEmpty = true; ?>
 
                         </h3>
@@ -990,26 +714,26 @@
             </div>
         </div>
 
-        {{-- Approval Button --}}
+        
         <?php $allProductionDataComplete = false; ?>
         <?php $allDowntimeDataComplete = false; ?>
-        @if ($workorder->bb_qty_bundle - count($productions) == 0)
+        <?php if($workorder->bb_qty_bundle - count($productions) == 0): ?>
             <?php $allProductionDataComplete = true; ?>
-        @endif
+        <?php endif; ?>
         <?php $checkRemarkEmpty = true; ?>
-        @foreach ($downtimes as $downtime)
-            @if ($downtime->is_remark_filled == false && $downtime->is_downtime_stopped == true)
+        <?php $__currentLoopData = $downtimes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $downtime): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php if($downtime->is_remark_filled == false && $downtime->is_downtime_stopped == true): ?>
                 <?php $checkRemarkEmpty = true; ?>
-            @break;
-        @endif
+            <?php break; ?>;
+        <?php endif; ?>
         <?php $checkRemarkEmpty = false; ?>
-    @endforeach
-    @if (count($downtimes) == 0)
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    <?php if(count($downtimes) == 0): ?>
         <?php $allDowntimeDataComplete = true; ?>
-    @endif
-    @if ($checkRemarkEmpty == false)
+    <?php endif; ?>
+    <?php if($checkRemarkEmpty == false): ?>
         <?php $allDowntimeDataComplete = true; ?>
-    @endif
+    <?php endif; ?>
     <?php $checkRemarkEmpty = true; ?>
 
     <form action="" method="POST" id="finishForm">
@@ -1032,19 +756,19 @@
                     </div>
                     <div class="card-body">
                         <div class="text-center">
-                            @csrf
+                            <?php echo csrf_field(); ?>
                             <input type="submit" value="Process" style="display:none">
-                            @if ($allProductionDataComplete == false || $allDowntimeDataComplete == false)
+                            <?php if($allProductionDataComplete == false || $allDowntimeDataComplete == false): ?>
                                 <p class="text-danger">Please Finish All Report First</p>
-                            @else
-                                <a href="{{ url('/operator/production/' . $workorder->id . '/finish') }}"
+                            <?php else: ?>
+                                <a href="<?php echo e(url('/operator/production/' . $workorder->id . '/finish')); ?>"
                                     class="btn btn-success finish-button">Finish Workorder</a>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
-            @if (auth()->user()->hasRole(['super-admin', 'supervisor', 'owner', 'office-admin']))
+            <?php if(auth()->user()->hasRole(['super-admin', 'supervisor', 'owner', 'office-admin'])): ?>
                 <div class="col-4">
                     <div class="card card-outline card-primary">
                         <div class="card-header" id="div_str_finish">
@@ -1052,30 +776,31 @@
                         </div>
                         <div class="card-body">
                             <div class="text-center">
-                                @if ($bypass_workorder && $bypass_workorder->initiatedBy->name)
+                                <?php if($bypass_workorder && $bypass_workorder->initiatedBy->name): ?>
                                     <p>This workorder is initiated to force close by
-                                        {{ $bypass_workorder->initiatedBy->name }}. The reason is
-                                        {{ $bypass_workorder->remarks }}.</p>
+                                        <?php echo e($bypass_workorder->initiatedBy->name); ?>. The reason is
+                                        <?php echo e($bypass_workorder->remarks); ?>.</p>
 
-                                    @if (auth()->user()->hasRole(['office-admin', 'super-admin', 'owner']))
-                                        <a href="{{ route('operator.production.editSmelting', $workorder) }}"
+                                    <?php if(auth()->user()->hasRole(['office-admin', 'super-admin', 'owner'])): ?>
+                                        <a href="<?php echo e(route('operator.production.editSmelting', $workorder)); ?>"
                                             class="btn btn-primary">Edit Leburan</a>
-                                        <a href="{{ route('operator.production.editWo', $workorder) }}"
+                                        <a href="<?php echo e(route('operator.production.editWo', $workorder)); ?>"
                                             class="btn btn-primary">Edit WO Planning</a>
                                         <button class="btn btn-success"
-                                            id="approve-force-close-btn">Approve this</button>
-                                    @endif
-                                @elseif(
+                                            id="approve-force-close-btn">Approve
+                                            this</button>
+                                    <?php endif; ?>
+                                <?php elseif(
                                     !$bypass_workorder &&
-                                        auth()->user()->hasRole(['supervisor', 'super-admin', 'owner']))
+                                        auth()->user()->hasRole(['supervisor', 'super-admin', 'owner'])): ?>
                                     <button class="btn btn-primary" id="force-close-btn">Initiate Force
                                         Close</button>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
     </form>
 
@@ -1084,7 +809,7 @@
 </div>
 </div><!-- /.container-fluid -->
 
-{{-- Change History Modal --}}
+
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1104,12 +829,12 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 </tr>
             </thead>
             <tbody>
-                @foreach ($changeRequests as $changeReq)
+                <?php $__currentLoopData = $changeRequests; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $changeReq): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
-                        <td>{{ $changeReq->change_data }}</td>
-                        <td>{{ $changeReq->changedBy->name }}</td>
+                        <td><?php echo e($changeReq->change_data); ?></td>
+                        <td><?php echo e($changeReq->changedBy->name); ?></td>
                     </tr>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </tbody>
         </table>
 
@@ -1123,10 +848,10 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 </section>
 
 <!-- /.content -->
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
-{{-- FORCE CLOSE FUNCTION --}}
+<?php $__env->startPush('scripts'); ?>
+
 <script>
     $(document).ready(function() {
         $(document).on('click', '#force-close-btn', function(e) {
@@ -1146,10 +871,10 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "POST",
-                        url: '{{ route('operator.production.forceCloseInitiation', $workorder->id) }}',
+                        url: '<?php echo e(route('operator.production.forceCloseInitiation', $workorder->id)); ?>',
                         data: {
                             reason: result.value,
-                            _token: '{{ csrf_token() }}'
+                            _token: '<?php echo e(csrf_token()); ?>'
                         },
                         dataType: 'json',
                         error: function(xhr) {
@@ -1181,9 +906,9 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 if (result.isConfirmed) {
                     $.ajax({
                         method: "POST",
-                        url: '{{ route('operator.production.forceCloseApproved', $workorder->id) }}',
+                        url: '<?php echo e(route('operator.production.forceCloseApproved', $workorder->id)); ?>',
                         data: {
-                            _token: '{{ csrf_token() }}'
+                            _token: '<?php echo e(csrf_token()); ?>'
                         },
                         dataType: 'json',
                         error: function(xhr) {
@@ -1197,7 +922,7 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             timer: 3000
                         }).then((result) => {
                             window.location.href =
-                                '{{ route('bypass.index') }}'
+                                '<?php echo e(route('bypass.index')); ?>'
                         });
                     })
                 }
@@ -1206,7 +931,7 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     })
 </script>
 
-{{-- PRODUCTION REPORT FUNCTION --}}
+
 <script>
     // INITIAL FUNCTION
     $(document).ready(function() {
@@ -1236,7 +961,7 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     // EVENT LISTENER
     let aChannel = Echo.channel('channel-downtime');
     aChannel.listen('DowntimeCaptured', function(data) {
-        if (data.downtime.machine != '{{ $workorder->machine->name }}') {
+        if (data.downtime.machine != '<?php echo e($workorder->machine->name); ?>') {
             return
         }
         if (data.downtime.status == 'stop') {
@@ -1299,13 +1024,13 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     function updateDowntimeChart() {
         //Waste Downtime
         $.ajax({
-            url: '{{ route('downtime.getDowntimeWasteChart') }}',
+            url: '<?php echo e(route('downtime.getDowntimeWasteChart')); ?>',
             type: 'POST',
             dataType: 'json',
             data: {
-                workorder_id: '{{ $workorder->id }}',
+                workorder_id: '<?php echo e($workorder->id); ?>',
                 downtime_category: 'waste',
-                _token: '{{ csrf_token() }}',
+                _token: '<?php echo e(csrf_token()); ?>',
             },
             success: function(response) {
                 var labelList = [];
@@ -1395,13 +1120,13 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 
         //Management Downtime
         $.ajax({
-            url: '{{ route('downtime.getDowntimeManagementChart') }}',
+            url: '<?php echo e(route('downtime.getDowntimeManagementChart')); ?>',
             type: 'POST',
             dataType: 'json',
             data: {
-                workorder_id: '{{ $workorder->id }}',
+                workorder_id: '<?php echo e($workorder->id); ?>',
                 downtime_category: 'management',
-                _token: '{{ csrf_token() }}',
+                _token: '<?php echo e(csrf_token()); ?>',
             },
             success: function(response) {
                 var labelList = [];
@@ -1491,11 +1216,11 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     function updateSpeedChart() {
         $.ajax({
             method: "POST",
-            url: '{{ route('realtime.searchSpeedProduction') }}',
+            url: '<?php echo e(route('realtime.searchSpeedProduction')); ?>',
             data: {
                 timeRange: $('#reservationtime').val(),
-                workorder: '{{ $workorder->id }}',
-                _token: '{{ csrf_token() }}'
+                workorder: '<?php echo e($workorder->id); ?>',
+                _token: '<?php echo e(csrf_token()); ?>'
             },
             dataType: 'json',
             success: function(response) {
@@ -1550,12 +1275,12 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     // DOWNTIME LOGS
     function updateDowntimeList() {
         $.ajax({
-            url: '{{ route('downtime.updateDowntime') }}',
+            url: '<?php echo e(route('downtime.updateDowntime')); ?>',
             type: 'POST',
             dataType: 'json',
             data: {
-                workorder_id: '{{ $workorder->id }}',
-                _token: '{{ csrf_token() }}',
+                workorder_id: '<?php echo e($workorder->id); ?>',
+                _token: '<?php echo e(csrf_token()); ?>',
             },
             success: function(response) {
                 $('#downtime-list-count').html(response.data.length);
@@ -1690,11 +1415,11 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         var downtimeReason = $('select[name="dt-reason-' + downtime_number + '"]').val();
         var downtimeRemarks = $('textarea[name="dt-remarks-' + downtime_number + '"]').val();
         $.ajax({
-            url: '{{ route('downtimeRemark.submit') }}',
+            url: '<?php echo e(route('downtimeRemark.submit')); ?>',
             type: 'POST',
             dataType: 'json',
             data: {
-                _token: '{{ csrf_token() }}',
+                _token: '<?php echo e(csrf_token()); ?>',
                 downtimeNumber: downtime_number,
                 downtimeCategory: downtimeCategory,
                 downtimeReason: downtimeReason,
@@ -1728,7 +1453,7 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         let options = '';
         $.ajax({
             method: 'GET',
-            url: '{{ route('downtimeReason.getReason') }}',
+            url: '<?php echo e(route('downtimeReason.getReason')); ?>',
             data: {
                 category: downtimeCategory,
             },
@@ -1756,7 +1481,7 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         $.ajax({
             type: 'POST',
             dataType: 'json',
-            url: '{{ route('production.store') }}',
+            url: '<?php echo e(route('production.store')); ?>',
             data: {
                 workorder_id: data.workorder_id,
                 coil_num: data.coil_num,
@@ -1771,7 +1496,7 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 pcs_per_bundle: data.pcs_per_bundle,
                 bundle_judgement: data.bundle_judgement,
                 visual: data.visual,
-                _token: '{{ csrf_token() }}'
+                _token: '<?php echo e(csrf_token()); ?>'
             },
             success: function(response) {
                 Swal.fire({
@@ -1830,13 +1555,13 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     });
     $('a.smelting-number').on('click', function(event) {
         $.ajax({
-            url: '{{ route('production.getProductionInfo') }}',
+            url: '<?php echo e(route('production.getProductionInfo')); ?>',
             type: 'POST',
             dataType: 'json',
             data: {
                 bundle_num: event.currentTarget.id,
-                workorder_id: '{{ $workorder->id }}',
-                _token: '{{ csrf_token() }}'
+                workorder_id: '<?php echo e($workorder->id); ?>',
+                _token: '<?php echo e(csrf_token()); ?>'
             },
             success: function(response) {
                 var bundle_judgement = 'Not Good';
@@ -1912,7 +1637,7 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         '<div class="col-sm-1">' +
                         '<form action="' + window.location.origin +
                         '/operator/production/' + response['id'] +
-                        '/delete"  method="POST"> @csrf @method('DELETE') <input type="submit" class="btn btn-danger" value="Delete"></form>' +
+                        '/delete"  method="POST"> <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?> <input type="submit" class="btn btn-danger" value="Delete"></form>' +
                         '</div>' +
                         '<div class="col-sm-3">' +
                         '<a href="' + window.location.origin + '/report/' + response['id'] +
@@ -1936,11 +1661,11 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         $.ajax({
             type: 'POST',
             dataType: 'json',
-            url: '{{ route('production.getSmeltingNum') }}',
+            url: '<?php echo e(route('production.getSmeltingNum')); ?>',
             data: {
-                workorder_id: '{{ $workorder->id }}',
+                workorder_id: '<?php echo e($workorder->id); ?>',
                 bundle_num: $("[name='bundle-num']").val(),
-                _token: '{{ csrf_token() }}'
+                _token: '<?php echo e(csrf_token()); ?>'
             },
             success: function(response) {
                 $("#smelting-num").html('No. Leburan: ' + response);
@@ -1996,42 +1721,42 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     // WORKORDER DETAILS
     $('#workorder-details').on('click', function() {
         Swal.fire({
-            title: '<strong>Machine {{ $workorder->machine->name }} - {{ $workorder->wo_number }} ({{ $workorder->status_wo }})</strong>',
+            title: '<strong>Machine <?php echo e($workorder->machine->name); ?> - <?php echo e($workorder->wo_number); ?> (<?php echo e($workorder->status_wo); ?>)</strong>',
             html: '<div class="row">' +
                 '<div class="col-1">' +
                 '</div>' +
                 '<div class="col-5">' +
                 '<div class="description-block border-right">' +
-                '<span class="description-text float-left">Created By: {{ $user_involved['created_by'] }}</span><br>' +
-                '<span class="description-text float-left">Created at: {{ $workorder->created_at }}</span><br>' +
-                '<span class="description-text float-left">Edited By: {{ $user_involved['edited_by'] }}</span><br>' +
-                '<span class="description-text float-left">Updated at: @if ($user_involved['edited_by'] == '') {{ '' }} @else {{ $workorder->updated_at }} @endif</span><br>' +
+                '<span class="description-text float-left">Created By: <?php echo e($user_involved['created_by']); ?></span><br>' +
+                '<span class="description-text float-left">Created at: <?php echo e($workorder->created_at); ?></span><br>' +
+                '<span class="description-text float-left">Edited By: <?php echo e($user_involved['edited_by']); ?></span><br>' +
+                '<span class="description-text float-left">Updated at: <?php if($user_involved['edited_by'] == ''): ?> <?php echo e(''); ?> <?php else: ?> <?php echo e($workorder->updated_at); ?> <?php endif; ?></span><br>' +
                 '<hr>' +
-                '<span class="description-text float-left">Processed By: {{ $user_involved['processed_by'] }}</span><br>' +
-                '<span class="description-text float-left">Start: {{ $workorder->process_start }}</span><br>' +
+                '<span class="description-text float-left">Processed By: <?php echo e($user_involved['processed_by']); ?></span><br>' +
+                '<span class="description-text float-left">Start: <?php echo e($workorder->process_start); ?></span><br>' +
                 '<hr>' +
-                '<span class="description-text float-left">Supplier: {{ $workorder->bb_supplier }}</span><br>' +
-                '<span class="description-text float-left">Grade: {{ $workorder->bb_grade }}</span><br>' +
-                '<span class="description-text float-left">Diameter: {{ $workorder->bb_diameter }} mm</span><br>' +
-                '<span class="description-text float-left">Qty (Kg): {{ $workorder->bb_qty_pcs }} Kg</span><br>' +
-                '<span class="description-text float-left">Qty (Coil): {{ $workorder->bb_qty_coil }} Coil</span><br>' +
-                '<span class="description-text float-left">Qty (Bundle): {{ $workorder->bb_qty_bundle }} Bundle</span><br>' +
+                '<span class="description-text float-left">Supplier: <?php echo e($workorder->bb_supplier); ?></span><br>' +
+                '<span class="description-text float-left">Grade: <?php echo e($workorder->bb_grade); ?></span><br>' +
+                '<span class="description-text float-left">Diameter: <?php echo e($workorder->bb_diameter); ?> mm</span><br>' +
+                '<span class="description-text float-left">Qty (Kg): <?php echo e($workorder->bb_qty_pcs); ?> Kg</span><br>' +
+                '<span class="description-text float-left">Qty (Coil): <?php echo e($workorder->bb_qty_coil); ?> Coil</span><br>' +
+                '<span class="description-text float-left">Qty (Bundle): <?php echo e($workorder->bb_qty_bundle); ?> Bundle</span><br>' +
                 '</div>' +
                 '</div>' +
                 '<div class="col-5">' +
                 '<div class="description-block">' +
-                '<span class="description-text float-left">Customer: {{ $workorder->fg_customer }}</span><br>' +
-                '<span class="description-text float-left">Straightness Standard: {{ $workorder->straightness_standard }}</span><br>' +
-                '<span class="description-text float-left">Size: {{ $workorder->fg_size_1 }} mm x {{ $workorder->fg_size_2 }} mm</span><br>' +
-                '<span class="description-text float-left">Tolerance: {{ (substr($workorder->tolerance_plus, 0, 1) !== '-' ? '+' : '') . $workorder->tolerance_plus }} mm, {{ $workorder->tolerance_minus }} mm</span><br>' +
-                '<span class="description-text float-left">Reduction rate: {{ $workorder->fg_reduction_rate }} %</span><br>' +
-                '<span class="description-text float-left">Shape: {{ $workorder->fg_shape }}</span><br>' +
-                '<span class="description-text float-left">QTY per Bundle (Kg): {{ $workorder->fg_qty_kg }} Kg</span><br>' +
-                '<span class="description-text float-left">QTY per Bundle (Pcs): {{ $workorder->fg_qty_pcs }} Pcs</span><br>' +
-                '<span class="description-text float-left">Chamfer: {{ $workorder->chamfer }}</span><br>' +
-                '<span class="description-text float-left">Color: {{ $color }}</span><br>' +
+                '<span class="description-text float-left">Customer: <?php echo e($workorder->fg_customer); ?></span><br>' +
+                '<span class="description-text float-left">Straightness Standard: <?php echo e($workorder->straightness_standard); ?></span><br>' +
+                '<span class="description-text float-left">Size: <?php echo e($workorder->fg_size_1); ?> mm x <?php echo e($workorder->fg_size_2); ?> mm</span><br>' +
+                '<span class="description-text float-left">Tolerance: <?php echo e((substr($workorder->tolerance_plus, 0, 1) !== '-' ? '+' : '') . $workorder->tolerance_plus); ?> mm, <?php echo e($workorder->tolerance_minus); ?> mm</span><br>' +
+                '<span class="description-text float-left">Reduction rate: <?php echo e($workorder->fg_reduction_rate); ?> %</span><br>' +
+                '<span class="description-text float-left">Shape: <?php echo e($workorder->fg_shape); ?></span><br>' +
+                '<span class="description-text float-left">QTY per Bundle (Kg): <?php echo e($workorder->fg_qty_kg); ?> Kg</span><br>' +
+                '<span class="description-text float-left">QTY per Bundle (Pcs): <?php echo e($workorder->fg_qty_pcs); ?> Pcs</span><br>' +
+                '<span class="description-text float-left">Chamfer: <?php echo e($workorder->chamfer); ?></span><br>' +
+                '<span class="description-text float-left">Color: <?php echo e($color); ?></span><br>' +
                 '<hr>' +
-                '<span class="description-text float-left">Remarks: {{ $workorder->remarks }}</span><br>' +
+                '<span class="description-text float-left">Remarks: <?php echo e($workorder->remarks); ?></span><br>' +
                 '</div>' +
                 '</div>' +
                 '<div class="col-1">' +
@@ -2047,7 +1772,7 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     });
     $('#print-label').on('click', function() {
         event.preventDefault();
-        window.open("{{ url('/report/' . $workorder->id . '/printToPdf') }}");
+        window.open("<?php echo e(url('/report/' . $workorder->id . '/printToPdf')); ?>");
     });
 
     //PRODUCTION REMARKS
@@ -2057,4 +1782,6 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         console.log(localStorage.getItem('production-remarks'));
     })
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('templates.default', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\2. Dokumen Ibad\11. Personal Business\Projects\2. Running\Camellia Maintenance\test_env\local\resources\views/operator/production/show_detail.blade.php ENDPATH**/ ?>

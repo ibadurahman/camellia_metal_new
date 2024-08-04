@@ -55,8 +55,8 @@ class CreateWorkorderHasTpmsTable extends Migration
             $table->decimal('ukuran_dies_cutting_out_cutter_9');
             $table->enum('polishing_tidak_cacat', ['ok', 'ng']);
             $table->decimal('polishing_ukuran_plat_kuningan');
-            $table->decimal('polishing_ampere_motor');
-            $table->decimal('polishing_ampere_motor_s2b');
+            $table->decimal('polishing_ampere_motor')->nullable();
+            $table->decimal('polishing_ampere_motor_s2b')->nullable();
             $table->enum('polishing_kondisi_pelumas_lancar', ['ok', 'ng']);
             $table->enum('polishing_penutup_oli_tertutup', ['ok', 'ng']);
             $table->enum('hasil_setting', ['ok', 'ng']);

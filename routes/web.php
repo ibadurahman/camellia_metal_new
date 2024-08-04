@@ -61,6 +61,8 @@ Route::prefix('workorder')->controller(WorkorderController::class)->middleware([
 //
 Route::prefix('workorderHasTpm')->controller(Operator\WorkorderHasTpmController::class)->middleware(['verified'])->group(function(){
     Route::any('/store/{workorder}','store')->name('workorderHasTpm.store');
+    Route::any('/approve/{workorder}','approve')->name('workorderHasTpm.approve');
+    Route::get('/downloadFile/{workorder}', 'printToPdf')->name('workorderHasTpm.printToPdf');
 });
 
 //
