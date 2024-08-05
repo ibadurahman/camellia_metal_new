@@ -270,9 +270,11 @@
                                     @if ($workorder->workorderHasTpm?->approved_by)
                                         <span class="badge badge-success">Approved</span>
                                     @endif
-                                    <a href="{{route('workorderHasTpm.printToPdf', $workorder)}}" style="text-decoration: none; margin-left: 1rem;">
-                                        <i class="fas fa-download"></i> Download
-                                    </a>
+                                    @if ($workorder->workorderHasTpm)
+                                        <a href="{{route('workorderHasTpm.printToPdf', $workorder)}}" style="text-decoration: none; margin-left: 1rem;">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                    @endif
                                 </h5>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
