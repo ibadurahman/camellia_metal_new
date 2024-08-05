@@ -60,7 +60,7 @@ class CreateWorkorderHasTpmsTable extends Migration
             $table->enum('polishing_kondisi_pelumas_lancar', ['ok', 'ng']);
             $table->enum('polishing_penutup_oli_tertutup', ['ok', 'ng']);
             $table->enum('hasil_setting', ['ok', 'ng']);
-            $table->longText('catatan');
+            $table->longText('catatan')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('approved_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onUpdate('cascade');
