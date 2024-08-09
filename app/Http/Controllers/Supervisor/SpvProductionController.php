@@ -141,6 +141,10 @@ class SpvProductionController extends Controller
             }
         }
 
+        if(!$workorder->workorderHasTpm || !$workorder->workorderHasTpm->approved_by){
+            return redirect(route('spvproduction.show', $workorder));
+        }
+
         $workorder->timestamps = false;
         $workorder->update([
             'production_remarks'    => $request->production_remarks,

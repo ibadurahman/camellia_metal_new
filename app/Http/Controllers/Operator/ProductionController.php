@@ -73,6 +73,10 @@ class ProductionController extends Controller
             }
         }
 
+        if(!$workorder->workorderHasTpm){
+            return redirect(route('operator.production.show', $workorder));
+        }
+
         $workorder->timestamps = false;
         $workorder->timestamps = false;
         $workorder->update([

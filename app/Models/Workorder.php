@@ -47,9 +47,9 @@ class Workorder extends Model
         return $this->hasMany(Realtime::class);
     }
 
-    public function color()
+    public function colorData()
     {
-        return $this->belongsTo(Color::class);
+        return $this->belongsTo(Color::class, 'color', 'id');
     }
 
     public function dailyReport()
@@ -59,6 +59,14 @@ class Workorder extends Model
 
     public function processedBy(){
         return $this->belongsTo(User::class,'processed_by','id');
+    }
+
+    public function createdBy(){
+        return $this->belongsTo(User::class,'created_by','id');
+    }
+    
+    public function editedBy(){
+        return $this->belongsTo(User::class,'edited_by','id');
     }
 
     public function changeRequests()
