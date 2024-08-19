@@ -278,9 +278,9 @@ class ProductionController extends Controller
      */
     public function show(Request $request, Workorder $workorder)
     {
-        if ($workorder->machine->ip_address != $request->ip() && !auth()->user()->hasRole(['supervisor', 'super-admin', 'owner'])) {
-            return redirect(url('operator/production'));
-        }
+        // if ($workorder->machine->ip_address != $request->ip() && !auth()->user()->hasRole(['supervisor', 'super-admin', 'owner'])) {
+        //     return redirect(url('operator/production'));
+        // }
         //
         // Check Workorder is on process
         //

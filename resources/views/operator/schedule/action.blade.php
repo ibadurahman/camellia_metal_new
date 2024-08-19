@@ -1,9 +1,10 @@
-<button href="{{url('/operator/schedule/'.$model->id.'/process')}}" class="btn btn-success d-none process-{{$model->id}}" id="process-{{$model->id}}" @if ($model->machine->ip_address != request()->ip())
+{{-- <button href="{{url('/operator/schedule/'.$model->id.'/process')}}" class="btn btn-success d-none process-{{$model->id}}" id="process-{{$model->id}}" @if ($model->machine->ip_address != request()->ip())
     disabled
-@endif>Process</button>
-@if ($model->machine->ip_address != request()->ip())
+@endif>Process</button> --}}
+<button href="{{url('/operator/schedule/'.$model->id.'/process')}}" class="btn btn-success d-none process-{{$model->id}}" id="process-{{$model->id}}">Process</button>
+{{-- @if ($model->machine->ip_address != request()->ip())
     <span class="text-danger">you have no rights to process this workorder</span>
-@endif
+@endif --}}
 
 <script>
  $('button#process-{{$model->id}}').on('click', function(e){

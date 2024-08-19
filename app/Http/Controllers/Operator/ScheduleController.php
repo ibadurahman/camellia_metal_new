@@ -145,9 +145,9 @@ class ScheduleController extends Controller
 
     public function process(Request $request, Workorder $id)
     {
-        if ($id->machine->ip_address != $request->ip()) {
-            return redirect(url('operator/schedule'));
-        }
+        // if ($id->machine->ip_address != $request->ip()) {
+        //     return redirect(url('operator/schedule'));
+        // }
 
         $workorder = Workorder::where('machine_id', $id->machine_id)->where('status_wo', 'on process')->first();
         if ($workorder != null) {
