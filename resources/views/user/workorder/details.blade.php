@@ -264,13 +264,8 @@
                             <div class="card-header">
                                 <h5 class="card-title">
                                     <span class="mr-2">TPM Report</span>
-                                    @if ($workorder->workorderHasTpm)
-                                        <span class="badge badge-success mr-2">Done</span>
-                                    @endif
-                                    @if ($workorder->workorderHasTpm?->approved_by)
-                                        <span class="badge badge-success">Approved</span>
-                                    @endif
-                                    @if ($workorder->workorderHasTpm)
+                                    @if ($isTPMCompleted)
+                                        <span class="badge badge-success">Done</span>
                                         <a href="{{route('workorderHasTpm.printToPdf', $workorder)}}" style="text-decoration: none; margin-left: 1rem;">
                                             <i class="fas fa-download"></i> Download
                                         </a>
@@ -283,7 +278,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                @if ($workorder->workorderHasTpm)
+                                @if ($isTPMCompleted)
                                     <div class="row mb-2">
                                         <div class="col-6">
                                             <p class="mb-1">Mesin: {{ $workorder->machine->name }}</p>
@@ -369,35 +364,19 @@
                                                     <tr>
                                                         <td class="text-center align-middle">Awal</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->visual_barang_awal == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{$workorder->workorderHasTpm?->visual_barang_awal}}
                                                         </td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->kelurusan_awal == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{$workorder->workorderHasTpm?->kelurusan_awal}}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-center align-middle">Akhir</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->visual_barang_akhir == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{$workorder->workorderHasTpm?->visual_barang_akhir}}
                                                         </td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->kelurusan_akhir == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{$workorder->workorderHasTpm?->kelurusan_akhir}}
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -421,22 +400,14 @@
                                                         <td class="text-center align-middle">Putaran Roller</td>
                                                         <td class="text-center align-middle" colspan="2">Berputar</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->pre_straightening_putaran_roller_berputar == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{strtoupper($workorder->workorderHasTpm?->pre_straightening_putaran_roller_berputar)}}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-center align-middle">Kondisi Produk</td>
                                                         <td class="text-center align-middle" colspan="2">Tidak Keluar Jalur</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->pre_straightening_kondisi_produk_tidak_keluar_jalur == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{strtoupper($workorder->workorderHasTpm?->pre_straightening_kondisi_produk_tidak_keluar_jalur)}}
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -498,11 +469,7 @@
                                                         <td class="text-center align-middle">Kondisi Pelumas</td>
                                                         <td class="text-center align-middle" colspan="2">Lancar</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->kondisi_pelumas == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{strtoupper($workorder->workorderHasTpm?->kondisi_pelumas)}}
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -510,26 +477,18 @@
                                                         <td class="text-center align-middle">Putaran Roller</td>
                                                         <td class="text-center align-middle" colspan="2">Berputar</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->straightening_putaran_roller_berputar == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{strtoupper($workorder->workorderHasTpm?->straightening_putaran_roller_berputar)}}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-center align-middle">Kondisi Produk</td>
                                                         <td class="text-center align-middle" colspan="2">Tidak Keluar Jalur</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->straightening_kondisi_produk_tidak_keluar_jalur == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{strtoupper($workorder->workorderHasTpm?->straightening_kondisi_produk_tidak_keluar_jalur)}}
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="text-center align-middle" rowspan="{{$workorder->machine->name == 'IB8' ? '7' : '3'}}">Cutting</td>
+                                                        <td class="text-center align-middle" rowspan="8">Cutting</td>
                                                         <td class="text-center align-middle">Panjang</td>
                                                         <td class="text-center align-middle" colspan="2">-0, +30mm</td>
                                                         <td class="text-center align-middle">
@@ -543,60 +502,53 @@
                                                             {{$workorder->workorderHasTpm?->ukuran_dies_cutting_in}}
                                                         </td>
                                                     </tr>
-                                                    @if ($workorder->machine->name != 'IB8')
-                                                        <tr>
-                                                            <td class="text-center align-middle">Ukuran Dies Cutting OUT (OB, IB5, S2B)</td>
-                                                            <td class="text-center align-middle" colspan="2">Diameter lubang dies > 1mm - 2mm dari FG</td>
-                                                            <td class="text-center align-middle">
-                                                                {{$workorder->workorderHasTpm?->ukuran_dies_cutting_out}}
-                                                            </td>
-                                                        </tr>
-                                                    @else
-                                                        <tr>
-                                                            <td class="text-center align-middle" rowspan="5">Ukuran Dies Cutting OUT IB8</td>
-                                                            <td class="text-center align-middle">Size</td>
-                                                            <td class="text-center align-middle">NO Cutter</td>
-                                                            <td class="text-center align-middle"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-center align-middle">Dia. 10mm - Dia. 11mm</td>
-                                                            <td class="text-center align-middle">5</td>
-                                                            <td class="text-center align-middle">
-                                                                {{$workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_5}}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-center align-middle">Dia. 11,1mm - Dia. 12mm</td>
-                                                            <td class="text-center align-middle">6</td>
-                                                            <td class="text-center align-middle">
-                                                                {{$workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_6}}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-center align-middle">Dia. 12,1mm - Dia. 14mm</td>
-                                                            <td class="text-center align-middle">7</td>
-                                                            <td class="text-center align-middle">
-                                                                {{$workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_7}}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="text-center align-middle">Dia. 14,1mm - Dia. 17mm</td>
-                                                            <td class="text-center align-middle">9</td>
-                                                            <td class="text-center align-middle">
-                                                                {{$workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_9}}
-                                                            </td>
-                                                        </tr>
-                                                    @endif
+                                                    <tr>
+                                                        <td class="text-center align-middle">Ukuran Dies Cutting OUT (OB, IB5, S2B)</td>
+                                                        <td class="text-center align-middle" colspan="2">Diameter lubang dies > 1mm - 2mm dari FG</td>
+                                                        <td class="text-center align-middle">
+                                                            {{$workorder->workorderHasTpm?->ukuran_dies_cutting_out}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="5">Ukuran Dies Cutting OUT IB8</td>
+                                                        <td class="text-center align-middle">Size</td>
+                                                        <td class="text-center align-middle">NO Cutter</td>
+                                                        <td class="text-center align-middle"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Dia. 10mm - Dia. 11mm</td>
+                                                        <td class="text-center align-middle">5</td>
+                                                        <td class="text-center align-middle">
+                                                            {{$workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_5}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Dia. 11,1mm - Dia. 12mm</td>
+                                                        <td class="text-center align-middle">6</td>
+                                                        <td class="text-center align-middle">
+                                                            {{$workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_6}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Dia. 12,1mm - Dia. 14mm</td>
+                                                        <td class="text-center align-middle">7</td>
+                                                        <td class="text-center align-middle">
+                                                            {{$workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_7}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Dia. 14,1mm - Dia. 17mm</td>
+                                                        <td class="text-center align-middle">9</td>
+                                                        <td class="text-center align-middle">
+                                                            {{$workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_9}}
+                                                        </td>
+                                                    </tr>
                                                     <tr>
                                                         <td class="text-center align-middle" rowspan="6">Polishing</td>
                                                         <td class="text-center align-middle">Ring pelurus, Plakat cetakan, Roll penekan</td>
                                                         <td class="text-center align-middle" colspan="2">Tidak Cacat/Kotor</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->polishing_tidak_cacat == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{strtoupper($workorder->workorderHasTpm?->polishing_tidak_cacat)}}
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -606,42 +558,31 @@
                                                             {{$workorder->workorderHasTpm?->polishing_ukuran_plat_kuningan}}
                                                         </td>
                                                     </tr>
-                                                    @if ($workorder->machine->name != 'S2B')
-                                                        <tr>
-                                                            <td class="text-center align-middle" rowspan="1">Ampere Motor</td>
-                                                            <td class="text-center align-middle" colspan="2">OB/ IB5/ IB8 <u><</u> 50A</td>
-                                                            <td class="text-center align-middle">
-                                                                {{$workorder->workorderHasTpm?->polishing_ampere_motor}}
-                                                            </td>
-                                                        </tr>
-                                                    @else
-                                                        <tr>
-                                                            <td class="text-center align-middle" rowspan="1">Ampere Motor</td>
-                                                            <td class="text-center align-middle" colspan="2">S2B <u><</u> 20A</td>
-                                                            <td class="text-center align-middle">
-                                                                {{$workorder->workorderHasTpm?->polishing_ampere_motor_s2b}}
-                                                            </td>
-                                                        </tr>
-                                                    @endif
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="1">Ampere Motor</td>
+                                                        <td class="text-center align-middle" colspan="2">OB/ IB5/ IB8 <u><</u> 50A</td>
+                                                        <td class="text-center align-middle">
+                                                            {{$workorder->workorderHasTpm?->polishing_ampere_motor}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="1">Ampere Motor</td>
+                                                        <td class="text-center align-middle" colspan="2">S2B <u><</u> 20A</td>
+                                                        <td class="text-center align-middle">
+                                                            {{$workorder->workorderHasTpm?->polishing_ampere_motor_s2b}}
+                                                        </td>
+                                                    </tr>
                                                     <tr>
                                                         <td class="text-center align-middle" rowspan="2">Kondisi Pelumas</td>
                                                         <td class="text-center align-middle" colspan="2">Lancar</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->polishing_kondisi_pelumas_lancar == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{strtoupper($workorder->workorderHasTpm?->polishing_kondisi_pelumas_lancar)}}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-center align-middle" colspan="2">Penutup oli tertutup</td>
                                                         <td class="text-center align-middle">
-                                                            @if ($workorder->workorderHasTpm?->polishing_penutup_oli_tertutup == 'ok')
-                                                                <span class="badge badge-success">OK</span>
-                                                            @else
-                                                                <span class="badge badge-danger">NG</span>
-                                                            @endif
+                                                            {{strtoupper($workorder->workorderHasTpm?->polishing_penutup_oli_tertutup)}}
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -653,11 +594,13 @@
                                             <p class="mb-1">Hasil Setting:</p>
                                         </div>
                                         <div class="col-6">
-                                            @if ($workorder->workorderHasTpm?->hasil_setting == 'ok')
-                                                <span class="badge badge-success">OK</span>
-                                            @else
-                                                <span class="badge badge-danger">NG</span>
-                                            @endif
+                                            {{strtoupper($workorder->workorderHasTpm?->hasil_setting)}}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <p class="ml-2 mb-1 my-auto">Quality Control PIC:</p>
+                                        <div class="col-3">
+                                            {{$workorder->workorderHasTpm?->quality_control}}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -670,10 +613,18 @@
                                             {{$workorder->workorderHasTpm?->catatan}}
                                         </div>
                                     </div>
-                                    <div class="row mb-2">
-                                        <div class="col-8"></div>
-                                        <div class="col-4">
-                                            {{-- <button class="form-control btn btn-primary" id="tpm-form-button">{{$workorder->workorderHasTpm ? 'Update' : 'Submit'}}</button> --}}
+                                    <div class="row mb-5">
+                                        <div class="col-6"></div>
+                                        <div class="col-6 row">
+                                            <div class="col-3"></div>
+                                            <div class="col-6 justify-center">
+                                                <p class="ml-2 mb-1 my-auto">Checked by:</p>
+                                                <p class="ml-2 mb-1 my-auto">{{ $workorder->workorderHasTpm?->checked_by }}</p>
+                                            </div>
+                                            <div class="col-3">
+                                                <p class="ml-2 mb-1 my-auto">Created by:</p>
+                                                <p class="ml-2 mb-1 my-auto">{{ $workorder->workorderHasTpm?->createdBy->name }}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 @else

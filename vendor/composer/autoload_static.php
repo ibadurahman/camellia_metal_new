@@ -42,6 +42,7 @@ class ComposerStaticInit18b07a9ccba0a0616e8c07d20a7141cf
         'a1af1fc0cffb5f61cbaf64dbe030fdb9' => __DIR__ . '/..' . '/laravel/legacy-factories/helpers.php',
         '377b22b161c09ed6e5152de788ca020a' => __DIR__ . '/..' . '/spatie/laravel-permission/src/helpers.php',
         '0b47d6d4a00ca9112ba3953b49e7c9a4' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/helper.php',
+        '4187e3c9718c3a79d5ec9b80e8029c29' => __DIR__ . '/../..' . '/app/Helpers/CustomHelpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -698,6 +699,7 @@ class ComposerStaticInit18b07a9ccba0a0616e8c07d20a7141cf
         'App\\Exports\\ProductionDataSheet' => __DIR__ . '/../..' . '/app/Exports/ProductionDataSheet.php',
         'App\\Exports\\WorkorderDataSheet' => __DIR__ . '/../..' . '/app/Exports/WorkorderDataSheet.php',
         'App\\Exports\\WorkorderExport' => __DIR__ . '/../..' . '/app/Exports/WorkorderExport.php',
+        'App\\Helpers\\CustomHelpers' => __DIR__ . '/../..' . '/app/Helpers/CustomHelpers.php',
         'App\\Http\\Controllers\\Admin\\ColorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ColorController.php',
         'App\\Http\\Controllers\\Admin\\CustomerController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CustomerController.php',
         'App\\Http\\Controllers\\Admin\\DataController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/DataController.php',
@@ -710,6 +712,7 @@ class ComposerStaticInit18b07a9ccba0a0616e8c07d20a7141cf
         'App\\Http\\Controllers\\Admin\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/UserController.php',
         'App\\Http\\Controllers\\Admin\\WorkorderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/WorkorderController.php',
         'App\\Http\\Controllers\\Api\\RealtimeApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/RealtimeApiController.php',
+        'App\\Http\\Controllers\\Api\\WorkorderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/WorkorderController.php',
         'App\\Http\\Controllers\\BypassWorkorderController' => __DIR__ . '/../..' . '/app/Http/Controllers/BypassWorkorderController.php',
         'App\\Http\\Controllers\\ChangePasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/ChangePasswordController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
@@ -718,6 +721,7 @@ class ComposerStaticInit18b07a9ccba0a0616e8c07d20a7141cf
         'App\\Http\\Controllers\\DowntimeRemarkController' => __DIR__ . '/../..' . '/app/Http/Controllers/DowntimeRemarkController.php',
         'App\\Http\\Controllers\\HelpController' => __DIR__ . '/../..' . '/app/Http/Controllers/HelpController.php',
         'App\\Http\\Controllers\\Operator\\ScheduleController' => __DIR__ . '/../..' . '/app/Http/Controllers/Operator/ScheduleController.php',
+        'App\\Http\\Controllers\\Operator\\WorkorderHasTpmController' => __DIR__ . '/../..' . '/app/Http/Controllers/Operator/WorkorderHasTpmController.php',
         'App\\Http\\Controllers\\RealtimeController' => __DIR__ . '/../..' . '/app/Http/Controllers/RealtimeController.php',
         'App\\Http\\Controllers\\ReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/ReportController.php',
         'App\\Http\\Controllers\\Supervisor\\DowntimeReasonController' => __DIR__ . '/../..' . '/app/Http/Controllers/Supervisor/DowntimeReasonController.php',
@@ -753,6 +757,8 @@ class ComposerStaticInit18b07a9ccba0a0616e8c07d20a7141cf
         'App\\Http\\Requests\\SupplierRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SupplierRequest.php',
         'App\\Http\\Requests\\UserRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UserRequest.php',
         'App\\Http\\Requests\\WorkorderRequest' => __DIR__ . '/../..' . '/app/Http/Requests/WorkorderRequest.php',
+        'App\\Http\\Resources\\ApiWorkorder\\WorkorderCollection' => __DIR__ . '/../..' . '/app/Http/Resources/ApiWorkorder/WorkorderCollection.php',
+        'App\\Http\\Resources\\ApiWorkorder\\WorkorderResource' => __DIR__ . '/../..' . '/app/Http/Resources/ApiWorkorder/WorkorderResource.php',
         'App\\Http\\Resources\\DowntimeManagementChart\\DowntimeManagementChartCollection' => __DIR__ . '/../..' . '/app/Http/Resources/DowntimeManagementChart/DowntimeManagementChartCollection.php',
         'App\\Http\\Resources\\DowntimeManagementChart\\DowntimeManagementChartResource' => __DIR__ . '/../..' . '/app/Http/Resources/DowntimeManagementChart/DowntimeManagementChartResource.php',
         'App\\Http\\Resources\\DowntimeWasteChart\\DowntimeWasteChartCollection' => __DIR__ . '/../..' . '/app/Http/Resources/DowntimeWasteChart/DowntimeWasteChartCollection.php',

@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Date;
 use App\Http\Requests\ProductionRequest;
 use App\Http\Resources\Downtime\DowntimeCollection;
 use App\Models\BypassWorkorder;
+use App\Models\WorkorderHasTpm;
 
 class ProductionController extends Controller
 {
@@ -73,7 +74,7 @@ class ProductionController extends Controller
             }
         }
 
-        if(!$workorder->workorderHasTpm){
+        if(!WorkorderHasTpm::isTPMCompleted($workorder)){
             return redirect(route('operator.production.show', $workorder));
         }
 
@@ -340,14 +341,6 @@ class ProductionController extends Controller
             $durationSec += $duration->i * 60;
             $durationSec += $duration->s;
 
-            //if duration is less than 1 minute, then it is not counted as downtime and delete that record
-            // if($durationSec < 60)
-            // {
-            //     $downtimeRunId->delete();
-            //     $downtimeStopId->delete();
-            //     continue;
-            // }
-
             if ($downtimeRemark->downtime_category == 'waste') {
                 $wasteDowntime += $durationSec;
             }
@@ -470,18 +463,6 @@ class ProductionController extends Controller
         foreach ($bad_products as $bad_pro) {
             $total_bad_product += $bad_pro->pcs_per_bundle;
         }
-
-        // //
-        // // Performance Calculation
-        // //
-        // $productionPlanned = round($workorder->bb_qty_pcs / $workorder->fg_size_1 / $workorder->fg_size_1 / $workorder->fg_size_2 / $this->calculatePcsPerBundle($workorder->fg_shape) *1000,0);
-        // $per = 0;
-        // // $productionPlanned = ($workorder->fg_qty_pcs * $workorder->bb_qty_bundle);
-        // if ($productionCount == 0) {
-        //     $per = 100;
-        // }else{
-        //     $per = ($productionCount / $productionPlanned)*100;
-        // }
 
         //
         // Availability Calculation
@@ -632,8 +613,11 @@ class ProductionController extends Controller
             'downtimes'            => $downtimes,
             'bypass_workorder'    => BypassWorkorder::where('workorder_id', $workorder->id)->first(),
             'changeRequests'       => $workorder->changeRequests,
+            'isTPMCompleted'       => WorkorderHasTpm::isTPMCompleted($workorder),
         ]);
     }
+
+    
 
     /**
      * Show the form for editing the specified resource.

@@ -15,6 +15,7 @@ use App\Models\Production;
 use App\Models\DailyReport;
 use Illuminate\Http\Request;
 use App\Models\DowntimeRemark;
+use App\Models\WorkorderHasTpm;
 use App\Http\Requests\OeeRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -141,7 +142,7 @@ class SpvProductionController extends Controller
             }
         }
 
-        if(!$workorder->workorderHasTpm || !$workorder->workorderHasTpm->approved_by){
+        if(!WorkorderHasTpm::isTPMCompleted($workorder)){
             return redirect(route('spvproduction.show', $workorder));
         }
 
@@ -679,6 +680,7 @@ class SpvProductionController extends Controller
             // 'oee'                   => $oee,
             'downtimes'            => $downtimes,
             'changeRequests'       => $workorder->changeRequests,
+            'isTPMCompleted'       => WorkorderHasTpm::isTPMCompleted($workorder),
         ]);
     }
 

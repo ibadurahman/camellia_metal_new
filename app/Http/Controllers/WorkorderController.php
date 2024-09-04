@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\WorkorderExport;
 use DateTime;
 use Svg\Tag\Rect;
 use App\Models\Oee;
 use App\Models\User;
 use App\Models\Color;
-use App\Models\Downtime;
 use App\Models\Machine;
+use App\Models\Downtime;
 use App\Models\Realtime;
 use App\Models\Smelting;
 use App\Models\Workorder;
 use App\Models\Production;
 use Illuminate\Http\Request;
 use App\Models\DowntimeRemark;
+use App\Models\WorkorderHasTpm;
+use App\Exports\WorkorderExport;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Round;
 
@@ -585,8 +586,9 @@ class WorkorderController extends Controller
             ],
             'smeltingInputList'     => $smeltingInputList,
             // 'oee'                   => $oee,
-             'downtimes'            => $downtimes,
-             'changeRequests'       => $workorder->changeRequests,
+            'downtimes'            => $downtimes,
+            'changeRequests'       => $workorder->changeRequests,
+            'isTPMCompleted'       => WorkorderHasTpm::isTPMCompleted($workorder),
         ]);
     }
 
