@@ -20,7 +20,6 @@ class DowntimeApiController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $aRequest = [
             'machine_id'=> $request->mesin_id,
             'time'      => date('H:i:00',strtotime($request->time)),
@@ -57,8 +56,6 @@ class DowntimeApiController extends Controller
                     'message' => 'Downtime is already stopped'
                 ],400);
             }
-
-            
         }
 
         if($aRequest['status']=='run')
@@ -68,6 +65,20 @@ class DowntimeApiController extends Controller
             {
                 return response()->json([
                     'message' => 'Downtime is already running'
+                ],400);
+            }else{
+
+            }
+
+            //calculate downtime duration
+            $lastDowntimeRunTimestamp = strtotime($lastDowntimeRun->created_at);
+            $currentTimestamp = strtotime(date('Y-m-d H:i:s'));
+            $duration = $currentTimestamp - $lastDowntimeRunTimestamp;
+            if($duration <= 40)
+            {
+                $lastDowntimeRun->delete();
+                return response()->json([
+                    'message' => 'Downtime is less than 40 seconds'
                 ],400);
             }
 
