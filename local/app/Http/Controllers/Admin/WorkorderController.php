@@ -73,6 +73,8 @@ class WorkorderController extends Controller
         $request->fg_size_2 != $workorder->fg_size_2 ? $changeList[] = ['fg_size_2'=>$request->fg_size_2] : null;
         $request->tolerance_minus != $workorder->tolerance_minus ? $changeList[] = ['tolerance_minus'=>$request->tolerance_minus] : null;
         $request->tolerance_plus != $workorder->tolerance_plus ? $changeList[] = ['tolerance_plus'=>$request->tolerance_plus] : null;
+        $request->length_tolerance_minus != $workorder->length_tolerance_minus ? $changeList[] = ['length_tolerance_minus'=>$request->length_tolerance_minus] : null;
+        $request->length_tolerance_plus != $workorder->length_tolerance_plus ? $changeList[] = ['length_tolerance_plus'=>$request->length_tolerance_plus] : null;
         $request->straightness_standard != $workorder->straightness_standard ? $changeList[] = ['straightness_standard'=>$request->straightness_standard] : null;
         $request->fg_reduction_rate != $workorder->fg_reduction_rate ? $changeList[] = ['fg_reduction_rate'=>$request->fg_reduction_rate] : null;
         $request->fg_shape != $workorder->fg_shape ? $changeList[] = ['fg_shape'=>$request->fg_shape] : null;
@@ -103,6 +105,8 @@ class WorkorderController extends Controller
             'fg_size_2'             =>$request->fg_size_2,
             'tolerance_minus'       =>$request->tolerance_minus,
 			'tolerance_plus'        =>$request->tolerance_plus,
+            'length_tolerance_minus'=>$request->length_tolerance_minus,
+            'length_tolerance_plus' =>$request->length_tolerance_plus,
             'straightness_standard' =>$request->straightness_standard,
             'fg_reduction_rate'     =>$request->fg_reduction_rate,
             'fg_shape'              =>$request->fg_shape,
@@ -170,6 +174,8 @@ class WorkorderController extends Controller
             'fg_size_2'             =>$request->fg_size_2,
             'tolerance_minus'       =>$request->tolerance_minus,
 			'tolerance_plus'        =>$request->tolerance_plus,
+            'length_tolerance_minus'=>$request->length_tolerance_minus,
+            'length_tolerance_plus' =>$request->length_tolerance_plus,
             'straightness_standard' =>$request->straightness_standard,
             'fg_reduction_rate'     =>$request->fg_reduction_rate,
             'fg_shape'              =>$request->fg_shape,
@@ -235,6 +241,8 @@ class WorkorderController extends Controller
             'fg_size_2'             =>$request->fg_size_2,
             'tolerance_minus'       =>$request->tolerance_minus,
 			'tolerance_plus'        =>$request->tolerance_plus,
+            'length_tolerance_minus'=>$request->length_tolerance_minus,
+            'length_tolerance_plus' =>$request->length_tolerance_plus,
             'straightness_standard' =>$request->straightness_standard,
             'fg_reduction_rate'     =>$request->fg_reduction_rate,
             'fg_shape'              =>$request->fg_shape,

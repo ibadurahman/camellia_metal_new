@@ -33,6 +33,7 @@ return array(
     'App\\Http\\Controllers\\Admin\\UserController' => $baseDir . '/app/Http/Controllers/Admin/UserController.php',
     'App\\Http\\Controllers\\Admin\\WorkorderController' => $baseDir . '/app/Http/Controllers/Admin/WorkorderController.php',
     'App\\Http\\Controllers\\Api\\RealtimeApiController' => $baseDir . '/app/Http/Controllers/Api/RealtimeApiController.php',
+    'App\\Http\\Controllers\\Api\\WorkorderController' => $baseDir . '/app/Http/Controllers/Api/WorkorderController.php',
     'App\\Http\\Controllers\\BypassWorkorderController' => $baseDir . '/app/Http/Controllers/BypassWorkorderController.php',
     'App\\Http\\Controllers\\ChangePasswordController' => $baseDir . '/app/Http/Controllers/ChangePasswordController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',

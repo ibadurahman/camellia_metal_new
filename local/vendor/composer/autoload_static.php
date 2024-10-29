@@ -710,6 +710,7 @@ class ComposerStaticInit18b07a9ccba0a0616e8c07d20a7141cf
         'App\\Http\\Controllers\\Admin\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/UserController.php',
         'App\\Http\\Controllers\\Admin\\WorkorderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/WorkorderController.php',
         'App\\Http\\Controllers\\Api\\RealtimeApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/RealtimeApiController.php',
+        'App\\Http\\Controllers\\Api\\WorkorderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/WorkorderController.php',
         'App\\Http\\Controllers\\BypassWorkorderController' => __DIR__ . '/../..' . '/app/Http/Controllers/BypassWorkorderController.php',
         'App\\Http\\Controllers\\ChangePasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/ChangePasswordController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',

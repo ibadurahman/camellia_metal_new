@@ -71,6 +71,18 @@ class DowntimeApiController extends Controller
                 ],400);
             }
 
+            //calculate downtime duration
+            $lastDowntimeRunTimestamp = strtotime($lastDowntimeRun->created_at);
+            $currentTimestamp = strtotime(date('Y-m-d H:i:s'));
+            $duration = $currentTimestamp - $lastDowntimeRunTimestamp;
+            if($duration <= 40)
+            {
+                $lastDowntimeRun->delete();
+                return response()->json([
+                    'message' => 'Downtime is less than 40 seconds'
+                ],400);
+            }
+
             // $downtimeRunId = Downtime::where('workorder_id',$workorder[0]->id)->where('status', 'stop')->where('downtime_number', $lastDowntimeRun->downtime_number)->first();
             // if(!is_null($downtimeRunId)){
             //     $duration = date_diff(new DateTime($lastDowntimeRun->created_at), new DateTime($downtimeRunId->created_at));

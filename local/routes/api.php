@@ -28,4 +28,6 @@ Route::group(['middleware'=>'auth:api'],function(){
     Route::post('/downtime','Api\DowntimeApiController@store'); 
 });
 
+Route::get('/workorder','Api\WorkorderController@getWorkorders');
+
 

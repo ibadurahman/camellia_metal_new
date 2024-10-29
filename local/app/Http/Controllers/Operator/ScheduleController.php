@@ -49,6 +49,15 @@ class ScheduleController extends Controller
                 $combines = '(' . $model->tolerance_minus . ',' . (substr($model->tolerance_plus, 0, 1) !== '-' ? '+' : '') . $model->tolerance_plus . ')';
                 return $combines;
             })
+            ->addColumn('length_tolerance_combine', function(Workorder $model) {
+                //check if length tolerance is a number
+                if (is_numeric($model->length_tolerance_plus) && is_numeric($model->length_tolerance_minus)) {
+                    $combines = '('.$model->length_tolerance_plus.','.$model->length_tolerance_minus.')';
+                    return $combines;
+                }else{
+                    return '-';
+                }
+            })
             ->addColumn('color', function (Workorder $model) {
                 $color = Color::where('id', $model->color)->first();
                 return $color->name;
@@ -105,6 +114,15 @@ class ScheduleController extends Controller
             ->addColumn('tolerance_combine', function (Workorder $model) {
                 $combines = '(' . $model->tolerance_minus . ',' . (substr($model->tolerance_plus, 0, 1) !== '-' ? '+' : '') . $model->tolerance_plus . ')';
                 return $combines;
+            })
+            ->addColumn('length_tolerance_combine', function(Workorder $model) {
+                //check if length tolerance is a number
+                if (is_numeric($model->length_tolerance_plus) && is_numeric($model->length_tolerance_minus)) {
+                    $combines = '('.$model->length_tolerance_plus.','.$model->length_tolerance_minus.')';
+                    return $combines;
+                }else{
+                    return '-';
+                }
             })
             ->addColumn('color', function (Workorder $model) {
                 $color = Color::where('id', $model->color)->first();
