@@ -679,7 +679,6 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 @endsection
 
 @push('scripts')
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {{-- FORCE CLOSE FUNCTION --}}
 <script>
     $(document).ready(function() {

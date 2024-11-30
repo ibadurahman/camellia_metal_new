@@ -118,7 +118,6 @@
 @endsection
 
 @push('scripts')
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(function() {
             $('#reservationdatetime1').datetimepicker({
