@@ -27,32 +27,32 @@ class DataController extends Controller
     {
         $users = User::where('id','!=','24')->where('id','!=','16')->where('is_active',true)->get();
         return datatables()->of($users)
-                ->addColumn('role',function(User $model){
-                    if($model->hasRole('office-admin'))
-                    {
-                        return 'office-admin';
-                    }
-                    if($model->hasRole('operator'))
-                    {
-                        return 'operator';
-                    }
-                    if($model->hasRole('super-admin'))
-                    {
-                        return 'super-admin';
-                    }
-                    if($model->hasRole('supervisor'))
-                    {
-                        return 'supervisor';
-                    }
-                    if($model->hasRole('warehouse'))
-                    {
-                        return 'warehouse';
-                    }
-                    return 'undefined';
-                })
-                ->addColumn('action','admin.user.action')
-                ->addIndexColumn()
-                ->toJson();
+            ->addColumn('role',function(User $model){
+                if($model->hasRole('office-admin'))
+                {
+                    return 'office-admin';
+                }
+                if($model->hasRole('operator'))
+                {
+                    return 'operator';
+                }
+                if($model->hasRole('super-admin'))
+                {
+                    return 'super-admin';
+                }
+                if($model->hasRole('supervisor'))
+                {
+                    return 'supervisor';
+                }
+                if($model->hasRole('warehouse'))
+                {
+                    return 'warehouse';
+                }
+                return 'undefined';
+            })
+            ->addColumn('action','admin.user.action')
+            ->addIndexColumn()
+            ->toJson();
     }
 
     public function nonactiveUsers()
@@ -103,6 +103,15 @@ class DataController extends Controller
                 ->addColumn('tolerance_combine',function(Workorder $model){
                     $combines = '('.(substr($model->tolerance_plus,0,1)!=='-'?'+':'').$model->tolerance_plus.','.$model->tolerance_minus.')';
                     return $combines;
+                })
+                ->addColumn('length_tolerance_combine', function(Workorder $model) {
+                    //check if length tolerance is a number
+                    if (is_numeric($model->length_tolerance_plus) && is_numeric($model->length_tolerance_minus)) {
+                        $combines = '('.$model->length_tolerance_plus.','.$model->length_tolerance_minus.')';
+                        return $combines;
+                    }else{
+                        return '-';
+                    }
                 })
                 ->addColumn('color',function(Workorder $model){
                     $color = Color::where('id',$model->color)->first();
@@ -183,6 +192,15 @@ class DataController extends Controller
                 $combines = '('.(substr($model->tolerance_plus,0,1)!=='-'?'+':'').$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
+            ->addColumn('length_tolerance_combine', function(Workorder $model) {
+                //check if length tolerance is a number
+                if (is_numeric($model->length_tolerance_plus) && is_numeric($model->length_tolerance_minus)) {
+                    $combines = '('.$model->length_tolerance_plus.','.$model->length_tolerance_minus.')';
+                    return $combines;
+                }else{
+                    return '-';
+                }
+            })
             ->addColumn('color',function(Workorder $model){
                 $color = Color::where('id',$model->color)->first();
                 return $color->name;
@@ -259,6 +277,15 @@ class DataController extends Controller
                 $combines = '('.(substr($model->tolerance_plus,0,1)!=='-'?'+':'').$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
             })
+            ->addColumn('length_tolerance_combine', function(Workorder $model) {
+                //check if length tolerance is a number
+                if (is_numeric($model->length_tolerance_plus) && is_numeric($model->length_tolerance_minus)) {
+                    $combines = '('.$model->length_tolerance_plus.','.$model->length_tolerance_minus.')';
+                    return $combines;
+                }else{
+                    return '-';
+                }
+            })
             ->addColumn('color',function(Workorder $model){
                 $color = Color::where('id',$model->color)->first();
                 return $color->name;
@@ -322,6 +349,15 @@ class DataController extends Controller
             ->addColumn('tolerance_combine',function(Workorder $model){
                 $combines = '('.(substr($model->tolerance_plus,0,1)!=='-'?'+':'').$model->tolerance_plus.','.$model->tolerance_minus.')';
                 return $combines;
+            })
+            ->addColumn('length_tolerance_combine', function(Workorder $model) {
+                //check if length tolerance is a number
+                if (is_numeric($model->length_tolerance_plus) && is_numeric($model->length_tolerance_minus)) {
+                    $combines = '('.$model->length_tolerance_plus.','.$model->length_tolerance_minus.')';
+                    return $combines;
+                }else{
+                    return '-';
+                }
             })
             ->addColumn('color',function(Workorder $model){
                 $color = Color::where('id',$model->color)->first();

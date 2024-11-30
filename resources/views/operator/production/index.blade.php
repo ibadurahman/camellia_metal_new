@@ -49,7 +49,8 @@
                                         <th>Customer</th>
                                         <th>Straightness Std</th>
                                         <th>Size (mm x mm)</th>
-                                        <th>Tolerance (mm)</th>
+                                        <th>Diameter Tolerance (mm)</th>
+                                        <th>Length Tolerance (mm)</th>
                                         <th>Reduction Rate (%)</th>
                                         <th>Shape</th>
                                         <th>FG Qty (kg)</th>
@@ -131,6 +132,9 @@
                     },
                     {
                         data: 'tolerance_combine'
+                    },
+                    {
+                        data: 'length_tolerance_combine'
                     },
                     {
                         data: 'fg_reduction_rate'

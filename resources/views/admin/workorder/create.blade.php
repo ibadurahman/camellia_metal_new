@@ -151,22 +151,48 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Tolerance (+mm) <span class="text-danger">*</span></label>
-                                    <input id="customer-tolerance-plus" name="tolerance_plus" type="text"
-                                        class="form-control @error('tolerance_plus') is-invalid @enderror"
-                                        placeholder="Tolerance (+mm)" value="{{ old('tolerance_plus') }}">
-                                    @error('tolerance_plus')
-                                        <span class="text-danger help-block">{{ $message }}</span>
-                                    @enderror
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label for="">Diameter Tolerance (+mm) <span class="text-danger">*</span></label>
+                                            <input id="customer-tolerance-plus" name="tolerance_plus" type="text"
+                                                class="form-control @error('tolerance_plus') is-invalid @enderror"
+                                                placeholder="Diameter Tolerance (+mm)" value="{{ old('tolerance_plus') }}">
+                                            @error('tolerance_plus')
+                                                <span class="text-danger help-block">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="">Diameter Tolerance (-mm) <span class="text-danger">*</span></label>
+                                            <input id="customer-tolerance" name="tolerance_minus" type="text"
+                                                class="form-control @error('tolerance_minus') is-invalid @enderror"
+                                                placeholder="Diameter Tolerance (-mm)" value="{{ old('tolerance_minus') }}">
+                                            @error('tolerance_minus')
+                                                <span class="text-danger help-block">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Tolerance (-mm) <span class="text-danger">*</span></label>
-                                    <input id="customer-tolerance" name="tolerance_minus" type="text"
-                                        class="form-control @error('tolerance_minus') is-invalid @enderror"
-                                        placeholder="Tolerance (-mm)" value="{{ old('tolerance_minus') }}">
-                                    @error('tolerance_minus')
-                                        <span class="text-danger help-block">{{ $message }}</span>
-                                    @enderror
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label for="">Length Tolerance (+mm) <span class="text-danger">*</span></label>
+                                            <input id="length-tolerance-plus" name="length_tolerance_plus" type="text"
+                                                class="form-control @error('length_tolerance_plus') is-invalid @enderror"
+                                                placeholder="Length Tolerance (+mm)" value="{{ old('length_tolerance_plus') }}">
+                                            @error('length_tolerance_plus')
+                                                <span class="text-danger help-block">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="">Length Tolerance (-mm) <span class="text-danger">*</span></label>
+                                            <input id="length-tolerance-minus" name="length_tolerance_minus" type="text"
+                                                class="form-control @error('length_tolerance_minus') is-invalid @enderror"
+                                                placeholder="Length Tolerance (-mm)" value="{{ old('length_tolerance_minus') }}">
+                                            @error('length_tolerance_minus')
+                                                <span class="text-danger help-block">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Reduction Rate (%) <span class="text-danger">*</span></label>
@@ -213,7 +239,6 @@
                                         <span class="text-danger help-block">{{ $message }}</span>
                                     @enderror
                                 </div>
-
                                 <div class="form-group">
                                     <label for="">Chamfer</label>
                                     <br>
@@ -227,7 +252,6 @@
                                         <span class="text-danger help-block">{{ $message }}</span>
                                     @enderror
                                 </div>
-
                                 <div class="form-group">
                                     <label for="">Color <span class="text-danger">*</span></label>
                                     <select id="color-cmbbx" name="color"
@@ -242,7 +266,6 @@
                                         <span class="text-danger help-block">{{ $message }}</span>
                                     @enderror
                                 </div>
-
                                 <div class="form-group">
                                     <label for="">Machine <span class="text-danger">*</span></label>
                                     <select name="machine_id" class="form-control" id="">
@@ -397,7 +420,7 @@
             });
 
             function recalculate() {
-                if (localStorage.getItem('customer-tolerance-plus') != null) {
+                if (localStorage.getItem('customer-tolerance-plus') != null && !isNaN(localStorage.getItem('customer-tolerance-plus'))) {
                     $('#customer-tolerance-plus').val(localStorage.getItem('customer-tolerance-plus'));
                 } else {
                     $('#customer-tolerance-plus').val("+" + addTolerancePlus($('#customer-size-1').val()));
@@ -407,6 +430,7 @@
                 } else {
                     $('#customer-tolerance').val("-" + addTolerance($('#customer-size-1').val()));
                 }
+                
                 $('#customer-reduc-rate').val(calculateReducRate($('#supplier-diameter').val(), $(
                     '#customer-size-1').val()));
                 $('#pcs-per-bundle').val(calculatePcsPerBundle($('#kg-per-bundle').val(), $('#customer-shape')
