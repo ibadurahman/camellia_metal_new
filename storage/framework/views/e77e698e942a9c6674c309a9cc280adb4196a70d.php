@@ -1,0 +1,1 @@
+<a href="<?php echo e(url('supervisor/production/'.$model->id.'/show')); ?>" class="btn btn-primary">Check Workorder Report</a><?php /**PATH D:\2. Dokumen Ibad\11. Personal Business\Projects\2. Running\Camellia Maintenance\test_env\resources\views\supervisor\production\action.blade.php ENDPATH**/ ?>

@@ -16,27 +16,70 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        if (Carbon::now()->format('G') == '7') {
-            $schedule->command('downtime:close')->dailyAt('07:00');
-        }
-        if (Carbon::now()->format('G') == '11') {
-            $schedule->command('downtime:close')->dailyAt('11:30');
-        }
-        if (Carbon::now()->format('G') == '12') {
-            $schedule->command('downtime:close')->dailyAt('12:30');
-        }
-        if (Carbon::now()->format('G') == '16') {
-            $schedule->command('downtime:close')->dailyAt('16:00');
-        }
-        if (Carbon::now()->format('G') == '18') {
-            $schedule->command('downtime:close')->dailyAt('18:00');
-        }
-        if (Carbon::now()->format('G') == '19') {
-            $schedule->command('downtime:close')->dailyAt('19:00');
-        }
-        if (Carbon::now()->format('G') == '0') {
-            $schedule->command('downtime:close')->dailyAt('00:00');
-        }
+        // $schedule->command('downtime:close')->dailyAt('07:00');
+        // $schedule->command('downtime:close')->dailyAt('11:30');
+        // $schedule->command('downtime:close')->dailyAt('12:30');
+        // $schedule->command('downtime:close')->dailyAt('16:00');
+        // $schedule->command('downtime:close')->dailyAt('18:00');
+        // $schedule->command('downtime:close')->dailyAt('19:00');
+        // $schedule->command('downtime:close')->dailyAt('00:00');
+
+        // Normal day schedule monday to thursday
+        $schedule->command('downtime:close')->dailyAt('07:00')->when(function () {
+            return Carbon::now()->dayOfWeek !== Carbon::FRIDAY || Carbon::now()->dayOfWeek !== Carbon::SATURDAY || Carbon::now()->dayOfWeek !== Carbon::SUNDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('11:30')->when(function () {
+            return Carbon::now()->dayOfWeek !== Carbon::FRIDAY || Carbon::now()->dayOfWeek !== Carbon::SATURDAY || Carbon::now()->dayOfWeek !== Carbon::SUNDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('12:00')->when(function () {
+            return Carbon::now()->dayOfWeek !== Carbon::FRIDAY || Carbon::now()->dayOfWeek !== Carbon::SATURDAY || Carbon::now()->dayOfWeek !== Carbon::SUNDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('15:00')->when(function () {
+            return Carbon::now()->dayOfWeek !== Carbon::FRIDAY || Carbon::now()->dayOfWeek !== Carbon::SATURDAY || Carbon::now()->dayOfWeek !== Carbon::SUNDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('18:00')->when(function () {
+            return Carbon::now()->dayOfWeek !== Carbon::FRIDAY || Carbon::now()->dayOfWeek !== Carbon::SATURDAY || Carbon::now()->dayOfWeek !== Carbon::SUNDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('19:00')->when(function () {
+            return Carbon::now()->dayOfWeek !== Carbon::FRIDAY || Carbon::now()->dayOfWeek !== Carbon::SATURDAY || Carbon::now()->dayOfWeek !== Carbon::SUNDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('23:00')->when(function () {
+            return Carbon::now()->dayOfWeek !== Carbon::FRIDAY || Carbon::now()->dayOfWeek !== Carbon::SATURDAY || Carbon::now()->dayOfWeek !== Carbon::SUNDAY;
+        });
+
+        // Friday schedule
+        $schedule->command('downtime:close')->dailyAt('07:00')->when(function () {
+            return Carbon::now()->dayOfWeek === Carbon::FRIDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('11:30')->when(function () {
+            return Carbon::now()->dayOfWeek === Carbon::FRIDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('13:00')->when(function () {
+            return Carbon::now()->dayOfWeek === Carbon::FRIDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('15:00')->when(function () {
+            return Carbon::now()->dayOfWeek === Carbon::FRIDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('18:00')->when(function () {
+            return Carbon::now()->dayOfWeek === Carbon::FRIDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('19:00')->when(function () {
+            return Carbon::now()->dayOfWeek === Carbon::FRIDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('23:00')->when(function () {
+            return Carbon::now()->dayOfWeek === Carbon::FRIDAY;
+        });
+
+        // Saturday schedule
+        $schedule->command('downtime:close')->dailyAt('07:00')->when(function () {
+            return Carbon::now()->dayOfWeek === Carbon::SATURDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('12:00')->when(function () {
+            return Carbon::now()->dayOfWeek === Carbon::SATURDAY;
+        });
+        $schedule->command('downtime:close')->dailyAt('17:00')->when(function () {
+            return Carbon::now()->dayOfWeek === Carbon::SATURDAY;
+        });
     }
 
     /**
