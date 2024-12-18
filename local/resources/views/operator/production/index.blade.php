@@ -48,11 +48,11 @@
                                         <th>Qty (bundle)</th>
                                         <th>Customer</th>
                                         <th>Straightness Std</th>
+                                        <th>Shape</th>
                                         <th>Size (mm x mm)</th>
                                         <th>Diameter Tolerance (mm)</th>
                                         <th>Length Tolerance (mm)</th>
                                         <th>Reduction Rate (%)</th>
-                                        <th>Shape</th>
                                         <th>FG Qty (kg)</th>
                                         <th>FG Qty (pcs)</th>
                                         <th>Workorder Status</th>
@@ -128,6 +128,9 @@
                         data: 'straightness_standard'
                     },
                     {
+                        data: 'fg_shape'
+                    },
+                    {
                         data: 'fg_size_combine'
                     },
                     {
@@ -138,9 +141,6 @@
                     },
                     {
                         data: 'fg_reduction_rate'
-                    },
-                    {
-                        data: 'fg_shape'
                     },
                     {
                         data: 'fg_qty_kg'

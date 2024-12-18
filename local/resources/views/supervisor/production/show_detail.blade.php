@@ -1451,10 +1451,10 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 '<div class="description-block">' +
                 '<span class="description-text float-left">Customer: {{ $workorder->fg_customer }}</span><br>' +
                 '<span class="description-text float-left">Straightness Standard: {{ $workorder->straightness_standard }}</span><br>' +
+                '<span class="description-text float-left">Shape: {{ $workorder->fg_shape }}</span><br>' +
                 '<span class="description-text float-left">Size: {{ $workorder->fg_size_1 }} mm x {{ $workorder->fg_size_2 }} mm</span><br>' +
                 '<span class="description-text float-left">Tolerance: {{ (substr($workorder->tolerance_plus, 0, 1) !== '-' ? '+' : '') . $workorder->tolerance_plus }} mm, {{ $workorder->tolerance_minus }} mm</span><br>' +
                 '<span class="description-text float-left">Reduction rate: {{ $workorder->fg_reduction_rate }} %</span><br>' +
-                '<span class="description-text float-left">Shape: {{ $workorder->fg_shape }}</span><br>' +
                 '<span class="description-text float-left">QTY per Bundle (Kg): {{ $workorder->fg_qty_kg }} Kg</span><br>' +
                 '<span class="description-text float-left">QTY per Bundle (Pcs): {{ $workorder->fg_qty_pcs }} Pcs</span><br>' +
                 '<span class="description-text float-left">Chamfer: {{ $workorder->chamfer }}</span><br>' +
