@@ -44,7 +44,7 @@ class WorkorderHasTpm extends Model
             return false;
         }
 
-        if(!CustomHelpers::isContentValid($tpm->cutting_panjang) || !CustomHelpers::isContentValid($tpm->ukuran_dies_cutting_in) || (!CustomHelpers::isContentValid($tpm->ukuran_dies_cutting_out) && (!CustomHelpers::isContentValid($tpm->ukuran_dies_cutting_out_cutter_5) || !CustomHelpers::isContentValid($tpm->ukuran_dies_cutting_out_cutter_6) || !CustomHelpers::isContentValid($tpm->ukuran_dies_cutting_out_cutter_7) || !CustomHelpers::isContentValid($tpm->ukuran_dies_cutting_out_cutter_9)))){
+        if(!CustomHelpers::isContentValid($tpm->cutting_panjang) || !CustomHelpers::isContentValid($tpm->ukuran_dies_cutting_in) || (!CustomHelpers::isContentValid($tpm->ukuran_dies_cutting_out))){
             return false;
         }
 
