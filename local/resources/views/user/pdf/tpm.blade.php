@@ -217,28 +217,28 @@
                     <tr>
                         <td rowspan="9">Drawing</td>
                         <td rowspan="4">Speed Motor</td>
-                        <td colspan="2">Mesin OB: 20 - 80 mpm</td>
+                        <td colspan="2" style="text-align: left;">Mesin OB: 20 - 80 mpm</td>
                         <td>
                             {{$workorder->machine?->name === 'OB' ?
                             $workorderHasTpm->speed_motor : '-'}}
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">Mesin IB5: 20 - 80 mpm</td>
+                        <td colspan="2" style="text-align: left;">Mesin IB5: 20 - 80 mpm</td>
                         <td>
                             {{$workorder->machine?->name === 'IB5' ?
                             $workorderHasTpm->speed_motor : '-'}}
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">Mesin S2B: 20 - 80 mpm</td>
+                        <td colspan="2" style="text-align: left;">Mesin S2B: 20 - 80 mpm</td>
                         <td>
                             {{$workorder->machine?->name === 'S2B' ?
                             $workorderHasTpm->speed_motor : '-'}}
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">Mesin IB8: 20 - 80 mpm</td>
+                        <td colspan="2" style="text-align: left;">Mesin IB8: 20 - 80 mpm</td>
                         <td>
                             {{$workorder->machine?->name === 'IB8' ?
                             $workorderHasTpm->speed_motor : '-'}}
@@ -246,7 +246,7 @@
                     </tr>
                     <tr>
                         <td rowspan="4">Ukuran Slide</td>
-                        <td colspan="2">
+                        <td colspan="2" style="text-align: left;">
                             Mesin OB: <u>></u> 2mm dari diamter F/G
                         </td>
                         <td>
@@ -255,7 +255,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">
+                        <td colspan="2" style="text-align: left;">
                             Mesin IB5: <u>></u> 2mm dari diamter F/G
                         </td>
                         <td>
@@ -264,7 +264,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">
+                        <td colspan="2" style="text-align: left;">
                             Mesin S2B: <u>></u> 2mm dari diamter F/G
                         </td>
                         <td>
@@ -273,7 +273,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">
+                        <td colspan="2" style="text-align: left;">
                             Mesin IB8: <u>></u> 2mm dari diamter F/G
                         </td>
                         <td>
@@ -313,7 +313,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td rowspan="8">Cutting</td>
+                        <td rowspan="3">Cutting</td>
                         <td>Panjang</td>
                         <td colspan="2">-0, +30mm</td>
                         <td>{{$workorderHasTpm->cutting_panjang}}</td>
@@ -326,45 +326,11 @@
                         <td>{{$workorderHasTpm->ukuran_dies_cutting_in}}</td>
                     </tr>
                     <tr>
-                        <td>Ukuran Dies Cutting OUT (OB, IB5, S2B)</td>
+                        <td>Ukuran Dies Cutting OUT (OB, IB5, S2B, IB8)</td>
                         <td colspan="2">
                             Diameter lubang dies > 1mm - 2mm dari FG
                         </td>
                         <td>{{$workorderHasTpm->ukuran_dies_cutting_out ? $workorderHasTpm->ukuran_dies_cutting_out : '-'}}</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="5">Ukuran Dies Cutting OUT IB8</td>
-                        <td>Size</td>
-                        <td>No Cutter</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Dia. 10mm - Dia. 11mm</td>
-                        <td>5</td>
-                        <td>
-                            {{$workorderHasTpm->ukuran_dies_cutting_out_cutter_5 ? $workorderHasTpm->ukuran_dies_cutting_out_cutter_5 : '-'}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Dia. 11,1mm - Dia. 12mm</td>
-                        <td>6</td>
-                        <td>
-                            {{$workorderHasTpm->ukuran_dies_cutting_out_cutter_6 ? $workorderHasTpm->ukuran_dies_cutting_out_cutter_6 : '-'}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Dia. 12,1mm - Dia. 14mm</td>
-                        <td>7</td>
-                        <td>
-                            {{$workorderHasTpm->ukuran_dies_cutting_out_cutter_7 ? $workorderHasTpm->ukuran_dies_cutting_out_cutter_7 : '-'}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Dia. 14,1mm - Dia. 17mm</td>
-                        <td>9</td>
-                        <td>
-                            {{$workorderHasTpm->ukuran_dies_cutting_out_cutter_9 ? $workorderHasTpm->ukuran_dies_cutting_out_cutter_9 : '-'}}
-                        </td>
                     </tr>
                     <tr>
                         <td rowspan="6">Polishing</td>
@@ -503,7 +469,7 @@
                     <td style="border: none;"></td>
                     <td style="border: none; text-align: center">
                         <div style="width: 80%; border: 1px solid #000; float: right;">
-                            <p style="margin: 0.1rem">F.PP.11-PRD-012-REV.03</p>
+                            <p style="margin: 0.1rem">F.PP.11-PRD-012-REV.04</p>
                         </div>
                     </td>
                 </tr>
