@@ -231,14 +231,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="text-align: left;">Mesin S2B: 20 - 80 mpm</td>
+                        <td colspan="2" style="text-align: left;">Mesin S2B: 20 - 50 mpm</td>
                         <td>
                             {{$workorder->machine?->name === 'S2B' ?
                             $workorderHasTpm->speed_motor : '-'}}
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="text-align: left;">Mesin IB8: 20 - 80 mpm</td>
+                        <td colspan="2" style="text-align: left;">Mesin IB8: 20 - 50 mpm</td>
                         <td>
                             {{$workorder->machine?->name === 'IB8' ?
                             $workorderHasTpm->speed_motor : '-'}}
