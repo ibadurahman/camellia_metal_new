@@ -20,6 +20,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ProductionRequest;
 use App\Http\Resources\Downtime\DowntimeCollection;
+use App\Models\WorkorderHasTpm;
 
 class SpvProductionController extends Controller
 {
@@ -148,6 +149,10 @@ class SpvProductionController extends Controller
             if (!is_null($downtimeDataUncomplete)) {
                 return redirect(route('spvproduction.show', $workorder));
             }
+        }
+
+        if(!WorkorderHasTpm::isTPMCompleted($workorder)){
+            return redirect(route('spvproduction.show', $workorder));
         }
 
         $workorder->timestamps = false;
@@ -684,6 +689,7 @@ class SpvProductionController extends Controller
             // 'oee'                   => $oee,
             'downtimes'            => $downtimes,
             'changeRequests'       => $workorder->changeRequests,
+            'isTPMCompleted'       => WorkorderHasTpm::isTPMCompleted($workorder),
         ]);
     }
 
