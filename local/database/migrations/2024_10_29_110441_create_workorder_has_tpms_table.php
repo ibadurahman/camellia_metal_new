@@ -49,10 +49,6 @@ class CreateWorkorderHasTpmsTable extends Migration
             $table->string('cutting_panjang')->nullable();
             $table->string('ukuran_dies_cutting_in')->nullable();
             $table->string('ukuran_dies_cutting_out')->nullable();
-            $table->string('ukuran_dies_cutting_out_cutter_5')->nullable();
-            $table->string('ukuran_dies_cutting_out_cutter_6')->nullable();
-            $table->string('ukuran_dies_cutting_out_cutter_7')->nullable();
-            $table->string('ukuran_dies_cutting_out_cutter_9')->nullable();
             $table->enum('polishing_tidak_cacat', ['ok', 'ng']);
             $table->string('polishing_ukuran_plat_kuningan')->nullable();
             $table->string('polishing_ampere_motor')->nullable();
