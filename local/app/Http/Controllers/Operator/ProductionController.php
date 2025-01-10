@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Date;
 use App\Http\Requests\ProductionRequest;
 use App\Http\Resources\Downtime\DowntimeCollection;
 use App\Models\BypassWorkorder;
+use App\Models\WorkorderHasTpm;
 
 class ProductionController extends Controller
 {
@@ -71,6 +72,10 @@ class ProductionController extends Controller
             if (!is_null($downtimeDataUncomplete)) {
                 return redirect(route('operator.production.show', $workorder));
             }
+        }
+
+        if(!WorkorderHasTpm::isTPMCompleted($workorder)){
+            return redirect(route('operator.production.show', $workorder));
         }
 
         $workorder->timestamps = false;
@@ -637,6 +642,7 @@ class ProductionController extends Controller
             'downtimes'            => $downtimes,
             'bypass_workorder'    => BypassWorkorder::where('workorder_id', $workorder->id)->first(),
             'changeRequests'       => $workorder->changeRequests,
+            'isTPMCompleted'       => WorkorderHasTpm::isTPMCompleted($workorder),
         ]);
     }
 
