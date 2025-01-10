@@ -256,6 +256,451 @@
                         </div>
                     </div>
 
+                    {{-- TPM REPORT --}}
+                    <form class="row" action="{{route('workorderHasTpm.store', $workorder)}}" method="post" id="tpmForm">
+                        @csrf
+                        {{-- show error form --}}
+                        @if ($errors->any())
+                            <div class="col-12">
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        @endif
+                        <div class="col-12">
+                            <div class="card card-primary card-outline {{$isTPMCompleted ? 'collapsed-card' : ''}}">
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        <span class="mr-2">TPM Form</span>
+                                        @if ($isTPMCompleted)
+                                            <span class="badge badge-success">Done</span>
+                                            <a href="{{route('workorderHasTpm.printToPdf', $workorder)}}" style="text-decoration: none; margin-left: 1rem;">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                        @endif
+                                    </h5>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-{{$workorder->workorderHasTpm ? 'plus' : 'minus'}}"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <p class="mb-1">Mesin: {{ $workorder->machine->name }}</p>
+                                            <p class="mb-1">Job order: {{ $workorder->wo_number }}</p>
+                                            <p class="mb-1">Diameter: {{ $workorder->fg_size_1 }} MM</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="mb-1">Grade: {{ $workorder->bb_grade }}</p>
+                                            <p class="mb-1">Panjang: {{ $workorder->fg_size_2 }} MM</p>
+                                            <p class="mb-1">Tanggal: {{ $workorder->process_start }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <span><strong>Note:</strong> Use "." as a comma character</span>
+                                        </div>
+                                    </div>
+                                    <div class="row table-responsive">
+                                        <div class="col-12">
+                                            <table class="table table-hover table-sm table-bordered table-sm">
+                                                <thead class="thead-dark">
+                                                    <tr>
+                                                        <th rowspan="2" class="text-center align-middle">Proses</th>
+                                                        <th rowspan="2" class="text-center align-middle">Kode dies</th>
+                                                        <th rowspan="2" class="text-center align-middle">Diameter dies</th>
+                                                        <th rowspan="2" class="text-center align-middle">Toleransi</th>
+                                                        <th colspan="2" class="text-center">Diameter Aktual</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="text-center">Setelah Dies</th>
+                                                        <th class="text-center">Setelah Polishing</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Awal</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="kode_dies_awal" value="{{old('kode_dies_awal') ?? $workorder->workorderHasTpm?->kode_dies_awal}}">
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="diameter_dies_awal" value="{{old('diameter_dies_awal') ?? $workorder->workorderHasTpm?->diameter_dies_awal}}">
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            <span>Lihat tabel No:</span><br>
+                                                            <span>STD.PP.25-MTD-001</span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control"
+                                                                name="diameter_aktual_setelah_dies_awal" value="{{old('diameter_aktual_setelah_dies_awal')??$workorder->workorderHasTpm?->diameter_aktual_setelah_dies_awal}}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control"
+                                                                name="diameter_aktual_setelah_polishing_awal" value="{{old('diameter_aktual_setelah_polishing_awal')??$workorder->workorderHasTpm?->diameter_aktual_setelah_polishing_awal}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Akhir</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="kode_dies_akhir" value="{{old('kode_dies_akhir')??$workorder->workorderHasTpm?->kode_dies_akhir}}">
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="diameter_dies_akhir" value="{{old('diameter_dies_akhir')??$workorder->workorderHasTpm?->diameter_dies_akhir}}">
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            <span>Lihat tabel No:</span><br>
+                                                            <span>STD.PP.25-MTD-001</span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control"
+                                                                name="diameter_aktual_setelah_dies_akhir" value="{{old('diameter_aktual_setelah_dies_akhir')??$workorder->workorderHasTpm?->diameter_aktual_setelah_dies_akhir}}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control"
+                                                                name="diameter_aktual_setelah_polishing_akhir" value="{{old('diameter_aktual_setelah_polishing_akhir')??$workorder->workorderHasTpm?->diameter_aktual_setelah_polishing_akhir}}">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row table-responsive">
+                                        <div class="col-6">
+                                            <table class="table table-hover table-sm table-bordered table-sm">
+                                                <thead class="thead-dark">
+                                                    <tr>
+                                                        <th rowspan="2" class="text-center align-middle">Proses</th>
+                                                        <th rowspan="2" class="text-center align-middle">Visual barang</th>
+                                                        <th rowspan="2" class="text-center align-middle">Kelurusan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Awal</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="visual_barang_awal" value="{{old('visual_barang_awal') ?? $workorder->workorderHasTpm?->visual_barang_awal}}" placeholder="OK/NG">
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="kelurusan_awal" value="{{old('kelurusan_awal') ?? $workorder->workorderHasTpm?->kelurusan_awal}}" placeholder="OK/NG">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Akhir</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="visual_barang_akhir" value="{{old('visual_barang_akhir') ?? $workorder->workorderHasTpm?->visual_barang_akhir}}" placeholder="OK/NG">
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="kelurusan_akhir" value="{{old('kelurusan_akhir') ?? $workorder->workorderHasTpm?->kelurusan_akhir}}" placeholder="OK/NG">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row table-responsive">
+                                        <div class="col-12">
+                                            <table class="table table-hover table-sm table-bordered table-sm">
+                                                <thead class="thead-dark">
+                                                    <tr>
+                                                        <th rowspan="2" class="text-center align-middle">Unit</th>
+                                                        <th rowspan="2" class="text-center align-middle">Parameter</th>
+                                                        <th rowspan="2" colspan="2" class="text-center align-middle">Standar</th>
+                                                        <th rowspan="2" class="text-center align-middle">Aktual</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="2">Pre Straightening</td>
+                                                        <td class="text-center align-middle">Putaran Roller</td>
+                                                        <td class="text-center align-middle" colspan="2">Berputar</td>
+                                                        <td class="text-center align-middle">
+                                                            <select name="pre_straightening_putaran_roller_berputar" id="" class="form-control">
+                                                                <option value="">-- Select one --</option>
+                                                                <option value="ok" @if (old('pre_straightening_putaran_roller_berputar') == 'ok' || $workorder->workorderHasTpm?->pre_straightening_putaran_roller_berputar == 'ok') selected @endif>OK</option>
+                                                                <option value="ng" @if (old('pre_straightening_putaran_roller_berputar') == 'ng' || $workorder->workorderHasTpm?->pre_straightening_putaran_roller_berputar == 'ng') selected @endif>NG</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Kondisi Produk</td>
+                                                        <td class="text-center align-middle" colspan="2">Tidak Keluar Jalur</td>
+                                                        <td class="text-center align-middle">
+                                                            <select name="pre_straightening_kondisi_produk_tidak_keluar_jalur" id="" class="form-control">
+                                                                <option value="">-- Select one --</option>
+                                                                <option value="ok" @if (old('pre_straightening_kondisi_produk_tidak_keluar_jalur') == 'ok' || $workorder->workorderHasTpm?->pre_straightening_kondisi_produk_tidak_keluar_jalur == 'ok') selected @endif>OK</option>
+                                                                <option value="ng" @if (old('pre_straightening_kondisi_produk_tidak_keluar_jalur') == 'ng' || $workorder->workorderHasTpm?->pre_straightening_kondisi_produk_tidak_keluar_jalur == 'ng') selected @endif>NG</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="4">Shot Blasting</td>
+                                                        <td class="text-center align-middle">Ampere Impeller 1</td>
+                                                        <td class="text-center align-middle" colspan="2">30 - 40 A</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ampere_impeller_1" value="{{old('ampere_impeller_1') ?? $workorder->workorderHasTpm?->ampere_impeller_1}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Ampere Impeller 2</td>
+                                                        <td class="text-center align-middle" colspan="2">30 - 40 A</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ampere_impeller_2"  value="{{old('ampere_impeller_2')??$workorder->workorderHasTpm?->ampere_impeller_2}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Ampere Impeller 3</td>
+                                                        <td class="text-center align-middle" colspan="2">30 - 40 A</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ampere_impeller_3"  value="{{old('ampere_impeller_3') ?? $workorder->workorderHasTpm?->ampere_impeller_3}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Ampere Impeller 4</td>
+                                                        <td class="text-center align-middle" colspan="2">30 - 40 A</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ampere_impeller_4"  value="{{old('ampere_impeller_4') ?? $workorder->workorderHasTpm?->ampere_impeller_4}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="3">Drawing</td>
+                                                        <td class="text-center align-middle">Speed Motor</td>
+                                                        <td class="text-center align-middle" colspan="2">{{ $workorder->machine->name }} : 
+                                                            @if ($workorder->machine->name == 'OB')
+                                                                20-80 mpm
+                                                            @elseif($workorder->machine->name == 'IB5')
+                                                                20-80 mpm
+                                                            @elseif($workorder->machine->name == 'S2B')
+                                                                20-50 mpm
+                                                            @elseif($workorder->machine->name == 'IB8')
+                                                                20-50 mpm
+                                                            @else
+                                                                20-80 mpm
+                                                            @endif</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="speed_motor" value="{{old('speed_motor') ?? $workorder->workorderHasTpm?->speed_motor}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Ukuran Slide</td>
+                                                        <td class="text-center align-middle" colspan="2">{{ $workorder->machine->name }} : <u>></u> 2mm dari diameter F/G</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ukuran_slide" value="{{old('ukuran_slide') ?? $workorder->workorderHasTpm?->ukuran_slide}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Kondisi Pelumas</td>
+                                                        <td class="text-center align-middle" colspan="2">Lancar</td>
+                                                        <td class="text-center align-middle">
+                                                            <select name="kondisi_pelumas" id="" class="form-control">
+                                                                <option value="">-- Select one --</option>
+                                                                <option value="ok" @if (old('kondisi_pelumas') == 'ok' || $workorder->workorderHasTpm?->kondisi_pelumas == 'ok') selected @endif>OK</option>
+                                                                <option value="ng" @if (old('kondisi_pelumas') == 'ng' || $workorder->workorderHasTpm?->kondisi_pelumas == 'ng') selected @endif>NG</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="2">Straightening</td>
+                                                        <td class="text-center align-middle">Putaran Roller</td>
+                                                        <td class="text-center align-middle" colspan="2">Berputar</td>
+                                                        <td class="text-center align-middle">
+                                                            <select name="straightening_putaran_roller_berputar" id="" class="form-control">
+                                                                <option value="">-- Select one --</option>
+                                                                <option value="ok" @if (old('straightening_putaran_roller_berputar') == 'ok' || $workorder->workorderHasTpm?->straightening_putaran_roller_berputar == 'ok') selected @endif>OK</option>
+                                                                <option value="ng" @if (old('straightening_putaran_roller_berputar') == 'ng' || $workorder->workorderHasTpm?->straightening_putaran_roller_berputar == 'ng') selected @endif>NG</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Kondisi Produk</td>
+                                                        <td class="text-center align-middle" colspan="2">Tidak Keluar Jalur</td>
+                                                        <td class="text-center align-middle">
+                                                            <select name="straightening_kondisi_produk_tidak_keluar_jalur" id="" class="form-control">
+                                                                <option value="">-- Select one --</option>
+                                                                <option value="ok" @if (old('straightening_kondisi_produk_tidak_keluar_jalur') == 'ok' || $workorder->workorderHasTpm?->straightening_kondisi_produk_tidak_keluar_jalur == 'ok') selected @endif>OK</option>
+                                                                <option value="ng" @if (old('straightening_kondisi_produk_tidak_keluar_jalur') == 'ng' || $workorder->workorderHasTpm?->straightening_kondisi_produk_tidak_keluar_jalur == 'ng') selected @endif>NG</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="8">Cutting</td>
+                                                        <td class="text-center align-middle">Panjang</td>
+                                                        <td class="text-center align-middle" colspan="2">-0, +30mm</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="cutting_panjang" value="{{old('cutting_panjang') ?? $workorder->workorderHasTpm?->cutting_panjang}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Ukuran Dies Cutting IN (OB, IB5, S2B, IB8)</td>
+                                                        <td class="text-center align-middle" colspan="2">Diameter lubang dies > 0.2mm - 1mm dari FG</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_in" value="{{old('ukuran_dies_cutting_in') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_in}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Ukuran Dies Cutting OUT (OB, IB5, S2B)</td>
+                                                        <td class="text-center align-middle" colspan="2">Diameter lubang dies > 1mm - 2mm dari FG</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_out" value="{{old('ukuran_dies_cutting_out') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="5">Ukuran Dies Cutting OUT IB8</td>
+                                                        <td class="text-center align-middle">Size</td>
+                                                        <td class="text-center align-middle">NO Cutter</td>
+                                                        <td class="text-center align-middle"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Dia. 10mm - Dia. 11mm</td>
+                                                        <td class="text-center align-middle">5</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_5" value="{{old('ukuran_dies_cutting_out_cutter_5') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_5}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Dia. 11,1mm - Dia. 12mm</td>
+                                                        <td class="text-center align-middle">6</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_6" value="{{old('ukuran_dies_cutting_out_cutter_6') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_6}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Dia. 12,1mm - Dia. 14mm</td>
+                                                        <td class="text-center align-middle">7</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_7" value="{{old('ukuran_dies_cutting_out_cutter_7') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_7}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Dia. 14,1mm - Dia. 17mm</td>
+                                                        <td class="text-center align-middle">9</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_9" value="{{old('ukuran_dies_cutting_out_cutter_9') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_9}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="6">Polishing</td>
+                                                        <td class="text-center align-middle">Ring pelurus, Plakat cetakan, Roll penekan</td>
+                                                        <td class="text-center align-middle" colspan="2">Tidak Cacat/Kotor</td>
+                                                        <td class="text-center align-middle">
+                                                            <select name="polishing_tidak_cacat" id="" class="form-control">
+                                                                <option value="">-- Select one --</option>
+                                                                <option value="ok" @if (old('polishing_tidak_cacat') == 'ok' || $workorder->workorderHasTpm?->polishing_tidak_cacat == 'ok') selected @endif>OK</option>
+                                                                <option value="ng" @if (old('polishing_tidak_cacat') == 'ng' || $workorder->workorderHasTpm?->polishing_tidak_cacat == 'ng') selected @endif>NG</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle">Plat Kuningan/Nylon</td>
+                                                        <td class="text-center align-middle" colspan="2">Lebih kecil 2 - 4 mm dari Diameter Produk</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="polishing_ukuran_plat_kuningan" value="{{old('polishing_ukuran_plat_kuningan') ?? $workorder->workorderHasTpm?->polishing_ukuran_plat_kuningan}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="1">Ampere Motor</td>
+                                                        <td class="text-center align-middle" colspan="2">OB/ IB5/ IB8 <u><</u> 50A</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="polishing_ampere_motor" value="{{old('polishing_ampere_motor') ?? $workorder->workorderHasTpm?->polishing_ampere_motor}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="1">Ampere Motor</td>
+                                                        <td class="text-center align-middle" colspan="2">S2B <u><</u> 20A</td>
+                                                        <td class="text-center align-middle">
+                                                            <input type="text" class="form-control" name="polishing_ampere_motor_s2b" value="{{old('polishing_ampere_motor_s2b') ?? $workorder->workorderHasTpm?->polishing_ampere_motor_s2b}}">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" rowspan="2">Kondisi Pelumas</td>
+                                                        <td class="text-center align-middle" colspan="2">Lancar</td>
+                                                        <td class="text-center align-middle">
+                                                            <select name="polishing_kondisi_pelumas_lancar" id="" class="form-control">
+                                                                <option value="">-- Select one --</option>
+                                                                <option value="ok" @if (old('polishing_kondisi_pelumas_lancar') == 'ok' || $workorder->workorderHasTpm?->polishing_kondisi_pelumas_lancar == 'ok') selected @endif>OK</option>
+                                                                <option value="ng" @if (old('polishing_kondisi_pelumas_lancar') == 'ng' || $workorder->workorderHasTpm?->polishing_kondisi_pelumas_lancar == 'ng') selected @endif>NG</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-center align-middle" colspan="2">Penutup oli tertutup</td>
+                                                        <td class="text-center align-middle">
+                                                            <select name="polishing_penutup_oli_tertutup" id="" class="form-control">
+                                                                <option value="">-- Select one --</option>
+                                                                <option value="ok" @if (old('polishing_penutup_oli_tertutup') == 'ok' || $workorder->workorderHasTpm?->polishing_penutup_oli_tertutup == 'ok') selected @endif>OK</option>
+                                                                <option value="ng" @if (old('polishing_penutup_oli_tertutup') == 'ng' || $workorder->workorderHasTpm?->polishing_penutup_oli_tertutup == 'ng') selected @endif>NG</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-1">
+                                            <p class="mb-1">Hasil Setting:</p>
+                                        </div>
+                                        <div class="row col-6">
+                                            <div class="form-check col-2">
+                                                <input class="form-check-input" value="ok" type="radio" name="hasil_setting" id="hasilSettingOK" @if (old('hasil_setting') == 'ok' || $workorder->workorderHasTpm?->hasil_setting == 'ok') checked @endif>
+                                                <label class="form-check-label" for="hasilSettingOK">
+                                                    OK
+                                                </label>
+                                            </div>
+                                            <div class="form-check col-2">
+                                                <input class="form-check-input" value="ng" type="radio" name="hasil_setting" id="hasilSettingNG" @if (old('hasil_setting') == 'ng' || $workorder->workorderHasTpm?->hasil_setting == 'ng') checked @endif>
+                                                <label class="form-check-label" for="hasilSettingNG">
+                                                    NG
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <p class="ml-2 mb-1 my-auto">Quality Control PIC:</p>
+                                        <div class="col-3">
+                                            <input type="text" name="quality_control" class="form-control" value="{{old('quality_control') ?? $workorder->workorderHasTpm?->quality_control}}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <p class="mb-1">Catatan:</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-4">
+                                            <textarea name="catatan" id="" cols="50" rows="5" class="form-control">{{old('catatan') ?? $workorder->workorderHasTpm?->catatan}}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-5">
+                                        <div class="col-6"></div>
+                                        <div class="col-6 row">
+                                            <div class="col-3"></div>
+                                            <div class="col-6">
+                                                <p class="ml-2 mb-1 my-auto">Checked by:</p>
+                                                <input type="text" name="checked_by" class="form-control" value="{{old('checked_by') ?? $workorder->workorderHasTpm?->checked_by}}">
+                                            </div>
+                                            <div class="col-3">
+                                                <p class="ml-2 mb-1 my-auto">Created by:</p>
+                                                {{ Auth::user()->name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-8"></div>
+                                        <div class="col-4">
+                                            <button class="form-control btn btn-primary" id="tpm-form-button">Submit Form</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
                     {{-- Production Report Column --}}
                     <div class="row">
                         <div class="col-12">
