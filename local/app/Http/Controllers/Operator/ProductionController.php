@@ -640,7 +640,7 @@ class ProductionController extends Controller
             'smeltingInputList'     => $smeltingInputList,
             // 'oee'                   => $oee,
             'downtimes'            => $downtimes,
-            'bypass_workorder'    => BypassWorkorder::where('workorder_id', $workorder->id)->first(),
+            'bypass_workorder'     => BypassWorkorder::where('workorder_id', $workorder->id)->first(),
             'changeRequests'       => $workorder->changeRequests,
             'isTPMCompleted'       => WorkorderHasTpm::isTPMCompleted($workorder),
         ]);
