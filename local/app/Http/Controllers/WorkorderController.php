@@ -16,6 +16,7 @@ use App\Models\Workorder;
 use App\Models\Production;
 use Illuminate\Http\Request;
 use App\Models\DowntimeRemark;
+use App\Models\WorkorderHasTpm;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Round;
 
@@ -587,6 +588,7 @@ class WorkorderController extends Controller
             // 'oee'                   => $oee,
              'downtimes'            => $downtimes,
              'changeRequests'       => $workorder->changeRequests,
+             'isTPMCompleted'       => WorkorderHasTpm::isTPMCompleted($workorder),
         ]);
     }
 
