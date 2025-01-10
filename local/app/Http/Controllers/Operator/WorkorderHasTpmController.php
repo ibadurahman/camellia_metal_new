@@ -70,10 +70,6 @@ class WorkorderHasTpmController extends Controller
         $workorderHasTpm->cutting_panjang = $request->cutting_panjang;
         $workorderHasTpm->ukuran_dies_cutting_in = $request->ukuran_dies_cutting_in;
         $workorderHasTpm->ukuran_dies_cutting_out = $request->ukuran_dies_cutting_out;
-        $workorderHasTpm->ukuran_dies_cutting_out_cutter_5 = $request->ukuran_dies_cutting_out_cutter_5;
-        $workorderHasTpm->ukuran_dies_cutting_out_cutter_6 = $request->ukuran_dies_cutting_out_cutter_6;
-        $workorderHasTpm->ukuran_dies_cutting_out_cutter_7 = $request->ukuran_dies_cutting_out_cutter_7;
-        $workorderHasTpm->ukuran_dies_cutting_out_cutter_9 = $request->ukuran_dies_cutting_out_cutter_9;
         $workorderHasTpm->polishing_tidak_cacat = $request->polishing_tidak_cacat;
         $workorderHasTpm->polishing_ukuran_plat_kuningan = $request->polishing_ukuran_plat_kuningan;
         $workorderHasTpm->polishing_ampere_motor = $request->polishing_ampere_motor;
