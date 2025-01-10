@@ -528,7 +528,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="text-center align-middle" rowspan="8">Cutting</td>
+                                                        <td class="text-center align-middle" rowspan="3">Cutting</td>
                                                         <td class="text-center align-middle">Panjang</td>
                                                         <td class="text-center align-middle" colspan="2">-0, +30mm</td>
                                                         <td class="text-center align-middle">
@@ -543,44 +543,10 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="text-center align-middle">Ukuran Dies Cutting OUT (OB, IB5, S2B)</td>
+                                                        <td class="text-center align-middle">Ukuran Dies Cutting OUT (OB, IB5, S2B, IB8)</td>
                                                         <td class="text-center align-middle" colspan="2">Diameter lubang dies > 1mm - 2mm dari FG</td>
                                                         <td class="text-center align-middle">
                                                             <input type="text" class="form-control" name="ukuran_dies_cutting_out" value="{{old('ukuran_dies_cutting_out') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle" rowspan="5">Ukuran Dies Cutting OUT IB8</td>
-                                                        <td class="text-center align-middle">Size</td>
-                                                        <td class="text-center align-middle">NO Cutter</td>
-                                                        <td class="text-center align-middle"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Dia. 10mm - Dia. 11mm</td>
-                                                        <td class="text-center align-middle">5</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_5" value="{{old('ukuran_dies_cutting_out_cutter_5') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_5}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Dia. 11,1mm - Dia. 12mm</td>
-                                                        <td class="text-center align-middle">6</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_6" value="{{old('ukuran_dies_cutting_out_cutter_6') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_6}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Dia. 12,1mm - Dia. 14mm</td>
-                                                        <td class="text-center align-middle">7</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_7" value="{{old('ukuran_dies_cutting_out_cutter_7') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_7}}">
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center align-middle">Dia. 14,1mm - Dia. 17mm</td>
-                                                        <td class="text-center align-middle">9</td>
-                                                        <td class="text-center align-middle">
-                                                            <input type="text" class="form-control" name="ukuran_dies_cutting_out_cutter_9" value="{{old('ukuran_dies_cutting_out_cutter_9') ?? $workorder->workorderHasTpm?->ukuran_dies_cutting_out_cutter_9}}">
                                                         </td>
                                                     </tr>
                                                     <tr>
