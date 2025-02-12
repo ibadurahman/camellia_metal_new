@@ -1,33 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-    <style>
-        @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700");
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700");
 
-        *,
-        *:before,
-        *:after {
-            box-sizing: border-box;
-        }
+            *,
+            *:before,
+            *:after {
+                box-sizing: border-box;
+            }
 
-        body {
-            font-family: "Source Sans Pro", sans-serif;
-            font-size: 12px;
-            margin: 0;
-            padding: 0;
-        }
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
+            body {
+                font-family: sans-serif;
+                font-size: 12px;
+                margin: 0;
+                padding: 0;
+            }
+            table,
+            th,
+            td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
 
-        @page {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-    </style>
+            span.underline {
+                text-decoration: underline;
+            }
+
+            @page {
+                margin-top: 20px;
+                margin-bottom: 20px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+        </style>
+    </head>
 
     <body>
         <div style="padding: 1rem; padding-top: 0.1rem; padding-bottom: 0.1rem">
@@ -355,13 +362,13 @@
                     </tr>
                     <tr>
                         <td rowspan="2">Ampere Motor</td>
-                        <td colspan="2">OB/ IB5/ IB8 <u><</u> 50A</td>
+                        <td colspan="2">OB/ IB5/ IB8 <span class="underline">&lt;</span> 50A</td>
                         <td>
                             {{$workorderHasTpm->polishing_ampere_motor ? $workorderHasTpm->polishing_ampere_motor : '-'}}
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">S2B <u><</u> 20A</td>
+                        <td colspan="2">S2B <span class="underline">&lt;</span> 20A</td>
                         <td>
                             {{$workorderHasTpm->polishing_ampere_motor_s2b ? $workorderHasTpm->polishing_ampere_motor_s2b : '-'}}
                         </td>
