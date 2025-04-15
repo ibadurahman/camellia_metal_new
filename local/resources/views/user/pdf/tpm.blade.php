@@ -476,7 +476,7 @@
                     <td style="border: none;"></td>
                     <td style="border: none; text-align: center">
                         <div style="width: 80%; border: 1px solid #000; float: right;">
-                            <p style="margin: 0.1rem">F.PP.11-PRD-012-REV.04</p>
+                            <p style="margin: 0.1rem">F.PP.11-PRD-012-REV.05</p>
                         </div>
                     </td>
                 </tr>
