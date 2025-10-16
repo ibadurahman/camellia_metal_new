@@ -177,7 +177,7 @@
             </a>
           </li>
           @endhasanyrole
-          @hasanyrole('operator|super-admin|office-admin|warehouse|supervisor|owner')
+          @hasanyrole('super-admin|office-admin|warehouse|supervisor|owner')
           <li class="nav-item">
             <a href="{{route('dailyReport.index')}}" class="nav-link">
               <i class="nav-icon fas fa-file-alt"></i>
