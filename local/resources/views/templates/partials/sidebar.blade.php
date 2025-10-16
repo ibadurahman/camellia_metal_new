@@ -176,19 +176,21 @@
               <p>Realtimes</p>
             </a>
           </li>
+          @endhasanyrole
+          @hasanyrole('super-admin|office-admin|warehouse|supervisor|owner')
           <li class="nav-item">
             <a href="{{route('dailyReport.index')}}" class="nav-link">
               <i class="nav-icon fas fa-file-alt"></i>
               <p>Reports</p>
             </a>
           </li>
-          @endhasanyrole
           <li class="nav-item">
             <a href="{{route('workorder.index')}}" class="nav-link">
               <i class="nav-icon fas fa-file-word"></i>
               <p>Workorders</p>
             </a>
           </li>
+          @endhasanyrole
           @hasanyrole('operator|super-admin|owner')
             <li class="nav-header">OPERATOR</li>
             <li class="nav-item">
