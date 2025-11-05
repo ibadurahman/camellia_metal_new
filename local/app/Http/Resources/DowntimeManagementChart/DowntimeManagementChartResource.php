@@ -62,7 +62,7 @@ class DowntimeManagementChartResource extends JsonResource
             {
                 $reason = DowntimeRemark::select('downtime_reason')->where('downtime_id',$this->id)->first();
                 $downtimeIds = DowntimeRemark::select('downtime_id')->where('downtime_reason',$reason->downtime_reason)->get();
-                $totalDuration = 0;
+                $totalDurationSeconds = 0;
                 
                 foreach ($downtimeIds as $value) {
                     // Get the specific downtime record for this downtime_id
@@ -81,14 +81,14 @@ class DowntimeManagementChartResource extends JsonResource
                     }
                     $duration = date_diff(new DateTime($startTime->created_at),new DateTime($endTime->created_at));
                     // Convert to minutes correctly: days*1440 + hours*60 + minutes + seconds/60
-                    $durationMin = $duration->days * 24 * 60;    // days to minutes
-                    $durationMin += $duration->h * 60;           // hours to minutes
-                    $durationMin += $duration->i;                // minutes
-                    $durationMin += $duration->s / 60;           // seconds to minutes
+                    $durationSec = $duration->days * 24 * 60 * 60;    // days to minutes
+                    $durationSec += $duration->h * 60 * 60 ;           // hours to minutes
+                    $durationSec += $duration->i * 60;                // minutes
+                    $durationSec += $duration->s;           // seconds to minutes
 
-                    $totalDuration += $durationMin;
+                    $totalDurationSeconds += $durationSec;
                 }
-                return round($totalDuration, 2);
+                return round($totalDurationSeconds / 60, 2);
             })
         
         ];
