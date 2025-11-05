@@ -115,7 +115,7 @@
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-9">
                                                     <input oninput="updateWasteDtMax(this)" type="range"
-                                                        id="wasteDt-slider" min="" max="999000" value="100"
+                                                        id="wasteDt-slider" min="" max="2000" value="100"
                                                         style="width:100%">
                                                     <label for="">scale</label>
                                                 </div>
@@ -132,7 +132,7 @@
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-9">
                                                     <input oninput="updateManagementDtMax(this)" type="range"
-                                                        id="managementDt-slider" min="" max="999000"
+                                                        id="managementDt-slider" min="" max="2000"
                                                         value="100" style="width:100%">
                                                     <label for="">scale</label>
                                                 </div>
