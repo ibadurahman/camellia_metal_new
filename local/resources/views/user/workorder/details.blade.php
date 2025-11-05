@@ -836,6 +836,11 @@
                         uniqueDataList.push(dataList[i]);
                     }
                 }
+                console.log(labelList);
+                console.log(uniqueLabelList);
+                console.log(dataList);
+                console.log(uniqueDataList);
+                console.log(response.data)
 
                 // Bar chart Instance
                 var areaChartData = {

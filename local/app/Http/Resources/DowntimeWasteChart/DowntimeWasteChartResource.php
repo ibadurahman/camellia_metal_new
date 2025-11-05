@@ -61,7 +61,9 @@ class DowntimeWasteChartResource extends JsonResource
             'total_duration'    => call_user_func(function()
             {
                 $reason = DowntimeRemark::select('downtime_reason')->where('downtime_id',$this->id)->first();
-                $downtimeIds = DowntimeRemark::select('downtime_id')->where('downtime_reason',$reason->downtime_reason)->get();
+                $downtimeIds = DowntimeRemark::select('downtime_id')->where('downtime_reason',$reason->downtime_reason)->whereHas('downtime', function($query) {
+                    $query->where('workorder_id', $this->workorder->id);
+                })->get();
                 $totalDurationSeconds = 0;
                 
                 foreach ($downtimeIds as $value) {
@@ -80,8 +82,8 @@ class DowntimeWasteChartResource extends JsonResource
                         continue; // Skip incomplete downtimes, don't return 0 for the whole calculation
                     }
                     $duration = date_diff(new DateTime($startTime->created_at),new DateTime($endTime->created_at));
-                    // Convert to minutes correctly: days*1440 + hours*60 + minutes + seconds/60
-                    $durationSec = $duration->days * 24 * 60 * 60;    // days to minutes
+                    // Convert to seconds correctly: days*86400 + hours*3600 + minutes*60 + seconds
+                    $durationSec = $duration->days * 24 * 60 * 60;    // days to seconds
                     $durationSec += $duration->h * 60 * 60;           // hours to seconds
                     $durationSec += $duration->i * 60;                // minutes to seconds
                     $durationSec += $duration->s;                      // seconds
