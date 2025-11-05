@@ -36,20 +36,20 @@ class DowntimeWasteChartResource extends JsonResource
             }),
             'duration'          => call_user_func(function()
             {
-                $endTime = Downtime::select('downtime')->where('workorder_id',$this->workorder->id)
+                $startTime = Downtime::select('created_at')->where('workorder_id',$this->workorder->id)
+                            ->where('status','stop')->where('downtime_number',$this->downtime_number)->first();
+                $endTime = Downtime::select('created_at')->where('workorder_id',$this->workorder->id)
                             ->where('status','run')->where('downtime_number',$this->downtime_number)->first();
                 if(!$endTime)
                 {
-                    return Date('H:i',strtotime($this->time));
+                    return 0;
                 }
-                if(($endTime->downtime / 60) >= 1)
-                {
-                    $resultMin = round($endTime->downtime / 60,0);
-                    $resultSec = $endTime->downtime - ($resultMin*60);
-                    return $resultMin." Min ".$resultSec." Sec";
-                }
-                
-				return $endTime->downtime." Sec";
+                $downtime = date_diff(new DateTime($startTime->created_at),new DateTime($endTime->created_at));
+                $downtimeSec = $downtime->days * 24 * 60;
+                $downtimeSec += $downtime->h * 60;
+                $downtimeSec += $downtime->i;
+
+				return $downtimeSec;
             }),
             'downtime_category' => call_user_func(function()
             {
