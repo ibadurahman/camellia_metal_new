@@ -65,6 +65,15 @@ class DowntimeWasteChartResource extends JsonResource
                     $query->where('workorder_id', $this->workorder->id);
                 })->get();
                 $totalDurationSeconds = 0;
+                $seenDowntimeIds = [];
+                $downtimeIds = $downtimeIds->filter(function($item) use (&$seenDowntimeIds) {
+                    if (in_array($item->downtime_id, $seenDowntimeIds)) {
+                        return false;
+                    } else {
+                        $seenDowntimeIds[] = $item->downtime_id;
+                        return true;
+                    }
+                });
                 
                 foreach ($downtimeIds as $value) {
                     // Get the specific downtime record for this downtime_id
@@ -81,9 +90,10 @@ class DowntimeWasteChartResource extends JsonResource
                     {
                         continue; // Skip incomplete downtimes, don't return 0 for the whole calculation
                     }
+
                     $duration = date_diff(new DateTime($startTime->created_at),new DateTime($endTime->created_at));
-                    // Convert to seconds correctly: days*86400 + hours*3600 + minutes*60 + seconds
-                    $durationSec = $duration->days * 24 * 60 * 60;    // days to seconds
+                    // Convert to minutes correctly: days*1440 + hours*60 + minutes + seconds/60
+                    $durationSec = $duration->days * 24 * 60 * 60;    // days to minutes
                     $durationSec += $duration->h * 60 * 60;           // hours to seconds
                     $durationSec += $duration->i * 60;                // minutes to seconds
                     $durationSec += $duration->s;                      // seconds

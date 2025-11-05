@@ -65,6 +65,15 @@ class DowntimeManagementChartResource extends JsonResource
                     $query->where('workorder_id', $this->workorder->id);
                 })->get();
                 $totalDurationSeconds = 0;
+                $seenDowntimeIds = [];
+                $downtimeIds = $downtimeIds->filter(function($item) use (&$seenDowntimeIds) {
+                    if (in_array($item->downtime_id, $seenDowntimeIds)) {
+                        return false;
+                    } else {
+                        $seenDowntimeIds[] = $item->downtime_id;
+                        return true;
+                    }
+                });
                 
                 foreach ($downtimeIds as $value) {
                     // Get the specific downtime record for this downtime_id
