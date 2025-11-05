@@ -1163,10 +1163,10 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 }
                 var dataList = [];
                 response.data.forEach(element => {
-                    if (!element.total_duration) {
+                    if (!element.duration) {
                         return;
                     }
-                    dataList.push(element.total_duration);
+                    dataList.push(element.duration);
                 });
                 var uniqueDataList = [];
                 for (i = 0; i < dataList.length; i++) {
@@ -1259,10 +1259,10 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 }
                 var dataList = [];
                 response.data.forEach(element => {
-                    if (!element.total_duration) {
+                    if (!element.duration) {
                         return;
                     }
-                    dataList.push(element.total_duration);
+                    dataList.push(element.duration);
                 });
                 var uniqueDataList = [];
                 for (i = 0; i < dataList.length; i++) {
