@@ -932,6 +932,10 @@
                         uniqueDataList.push(dataList[i]);
                     }
                 }
+                console.log(labelList);
+                console.log(uniqueLabelList);
+                console.log(dataList);
+                console.log(uniqueDataList);
                 var areaChartData = {
                     labels: uniqueLabelList,
                     datasets: [{
