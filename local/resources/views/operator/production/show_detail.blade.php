@@ -115,14 +115,14 @@
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-9">
                                                     <input oninput="updateWasteDtMax(this)" type="range"
-                                                        id="wasteDt-slider" min="" max="999000" value="5000"
+                                                        id="wasteDt-slider" min="" max="999000" value="100"
                                                         style="width:100%">
                                                     <label for="">scale</label>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <input onchange="updateWasteDtMax(this)" type="number"
-                                                            id="wasteDt-input" class="form-control" value="5000">
+                                                            id="wasteDt-input" class="form-control" value="100">
                                                     </div>
                                                 </div>
                                             </div>
@@ -133,12 +133,12 @@
                                                 <div class="col-md-9">
                                                     <input oninput="updateManagementDtMax(this)" type="range"
                                                         id="managementDt-slider" min="" max="999000"
-                                                        value="5000" style="width:100%">
+                                                        value="100" style="width:100%">
                                                     <label for="">scale</label>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input onchange="updateManagementDtMax(this)" type="number"
-                                                        id="managementDt-input" class="form-control" value="5000">
+                                                        id="managementDt-input" class="form-control" value="100">
                                                 </div>
                                             </div>
                                         </div>
@@ -1339,7 +1339,7 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                 labelString: 'Minutes'
                             },
                             ticks: {
-                                max: 5000,
+                                max: 100,
                                 min: 0,
                                 stepSize: 0,
                                 beginAtZero: true, // minimum value will be 0.
@@ -1429,7 +1429,7 @@ aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                 display: true,
                             },
                             ticks: {
-                                max: 5000,
+                                max: 100,
                                 min: 0,
                                 stepSize: 0,
                                 beginAtZero: true, // minimum value will be 0.
