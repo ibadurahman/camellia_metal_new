@@ -35,21 +35,23 @@ class DowntimeManagementChartResource extends JsonResource
             }),
             'duration'          => call_user_func(function()
             {
-                $endTime = Downtime::select('downtime')->where('workorder_id',$this->workorder->id)
+                // Use consistent approach with WasteChart - calculate from timestamps
+                $startTime = Downtime::select('created_at')->where('workorder_id',$this->workorder->id)
+                            ->where('status','stop')->where('downtime_number',$this->downtime_number)->first();
+                $endTime = Downtime::select('created_at')->where('workorder_id',$this->workorder->id)
                             ->where('status','run')->where('downtime_number',$this->downtime_number)->first();
                 if(!$endTime)
                 {
-                    return Date('H:i',strtotime($this->time));
+                    return 0;
                 }
-                if(($endTime->downtime / 60) >= 1)
-                {
-                    $resultMin = round($endTime->downtime / 60,0);
-                    $resultSec = $endTime->downtime - ($resultMin*60);
-                    return $resultMin." Min ".$resultSec." Sec";
-                }
-                
-				return $endTime->downtime." Sec";
+                $downtime = date_diff(new DateTime($startTime->created_at),new DateTime($endTime->created_at));
+                // Convert to minutes correctly: days*1440 + hours*60 + minutes + seconds/60
+                $downtimeMin = $downtime->days * 24 * 60;      // days to minutes
+                $downtimeMin += $downtime->h * 60;             // hours to minutes  
+                $downtimeMin += $downtime->i;                  // minutes
+                $downtimeMin += $downtime->s / 60;             // seconds to minutes
 
+				return round($downtimeMin, 2);
             }),
             'downtime_category' => call_user_func(function()
             {
@@ -63,23 +65,30 @@ class DowntimeManagementChartResource extends JsonResource
                 $totalDuration = 0;
                 
                 foreach ($downtimeIds as $value) {
+                    // Get the specific downtime record for this downtime_id
+                    $downtimeRecord = Downtime::where('id', $value->downtime_id)->first();
+                    if (!$downtimeRecord) {
+                        continue;
+                    }
 
                     $startTime = Downtime::select('created_at')->where('workorder_id',$this->workorder->id)
-                                ->where('status','stop')->where('downtime_number',$this->downtime_number)->first();
+                                ->where('status','stop')->where('downtime_number',$downtimeRecord->downtime_number)->first();
                     $endTime = Downtime::select('created_at')->where('workorder_id',$this->workorder->id)
-                                ->where('status','run')->where('downtime_number',$this->downtime_number)->first();
+                                ->where('status','run')->where('downtime_number',$downtimeRecord->downtime_number)->first();
                     if(!$endTime)
                     {
-                        return 0;
+                        continue; // Skip incomplete downtimes, don't return 0 for the whole calculation
                     }
                     $duration = date_diff(new DateTime($startTime->created_at),new DateTime($endTime->created_at));
-                    $durationSec = $duration->days * 24 * 60;
-                    $durationSec += $duration->h * 60;
-                    $durationSec += $duration->i;
+                    // Convert to minutes correctly: days*1440 + hours*60 + minutes + seconds/60
+                    $durationMin = $duration->days * 24 * 60;    // days to minutes
+                    $durationMin += $duration->h * 60;           // hours to minutes
+                    $durationMin += $duration->i;                // minutes
+                    $durationMin += $duration->s / 60;           // seconds to minutes
 
-                    $totalDuration += $durationSec;
+                    $totalDuration += $durationMin;
                 }
-                return $totalDuration;
+                return round($totalDuration, 2);
             })
         
         ];
